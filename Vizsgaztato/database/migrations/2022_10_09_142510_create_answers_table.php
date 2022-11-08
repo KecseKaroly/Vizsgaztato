@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('score');
             $table->timestamps();   
 
-            $table->foreign('question_id')->references('id')->on('questions');
+            $table->foreign('question_id')->references('id')->on('questions')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

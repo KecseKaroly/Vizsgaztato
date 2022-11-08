@@ -1,6 +1,21 @@
 @extends('layouts.app')
-@section('content')
+@section('title', 'Vizsga feladatsor eredménye')
 
+@section('style')
+<style>
+    .correct {
+        border: 0.25em green solid;
+    }
+    .incorrect {
+        border: 0.25em red solid;
+    }
+    .missed {
+        border: 0.25em #FFFF66 solid;   
+    }
+</style>
+@endsection
+
+@section('content')
 <div class="mt-24 mb-24 select-none">
     <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
         <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor eredménye</p> 
@@ -32,25 +47,25 @@
                                 @foreach($question['answers'] as $answerIndex => $answer)
                                     @switch($task['type'])
                                          @case('TrueFalse')   
-                                             <div class="{{$answer['border_color']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300" id="answer_div_{{$answer['id']}}">
+                                             <div class="{{$answer['answer_class']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300" id="answer_div_{{$answer['id']}}">
                                                 <input  value="{{$answerIndex}}" id="answer_{{$answer['id']}}" type="radio"  name="answer_{{$question['id']}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" {{$answer['given']=="checked" ? "checked" : ""}} disabled>
                                                 <label for="answer_{{$answer['id']}}" class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900" >{{$answer['text']}}</label>
                                             </div> 
                                             @break
                                         @case('OneChoice')                                
-                                            <div class="{{$answer['border_color']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300" id="answer_div_{{$answer['id']}}">
+                                            <div class="{{$answer['answer_class']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300" id="answer_div_{{$answer['id']}}">
                                                 <input  id="answer_{{$answer['id']}}" type="radio"   name="answer_{{$question['id']}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" {{$answer['given']=="checked" ? "checked" : ""}} disabled>
                                                 <label for="answer_{{$answer['id']}}" class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900">{{$answer['text']}}</label>   
                                             </div> 
                                             @break
                                         @case('MultipleChoice')                                
-                                            <div class="{{$answer['border_color']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300" id="answer_div_{{$answer['id']}}">
+                                            <div class="{{$answer['answer_class']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300" id="answer_div_{{$answer['id']}}">
                                                 <input  id="answer_{{$answer['id']}}" type="checkbox"  name="answer_{{$question['id']}}" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" {{$answer['given']=="checked" ? "checked" : ""}} disabled>
                                                 <label for="answer_{{$answer['id']}}" class="break-words font-sans  pl-2 w-full text-md italic font-normal text-gray-900">{{$answer['text']}}</label>
                                             </div>
                                             @break
                                         @case('Sequence')                               
-                                            <div class="{{$answer['border_color']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-4 lg:py-2 mx-2 my-1 py-1 pl-6 flex items-center rounded bg-slate-100 hover:bg-slate-300">
+                                            <div class="{{$answer['answer_class']}} border-solid border-4 lg:mx-16 lg:px-8 lg:my-4 lg:py-2 mx-2 my-1 py-1 pl-6 flex items-center rounded bg-slate-100 hover:bg-slate-300">
                                                 <h4>{{$answer['text']}}</h4>
                                             </div>
                                             @break

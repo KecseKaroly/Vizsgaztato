@@ -150,8 +150,7 @@ class ExamTaskCreator extends Component
                 }
             }
         }
-
-        return view('test');
+        return  redirect()->route('test.index');
     }
 
     public function render()

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 @if(isset($error))
-<p>{{$error}}</p>
+    <p>{{$error}}</p>
 @else
     <div>
         @livewire('exam-task-write', ['testLiveWire' => $testLiveWire])        

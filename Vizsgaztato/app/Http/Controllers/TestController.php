@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
 use App\Models\answer;
 use App\Models\given_answer;
 use App\Models\question;
@@ -9,6 +8,8 @@ use App\Models\task;
 use App\Models\test;
 use App\Models\testAttempt;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -21,7 +22,8 @@ class TestController extends Controller
      */
     public function index()
     {
-        //
+        $tests = test::all();
+        return view('test.index')->with('tests', $tests);
     }
 
     /**
@@ -196,31 +198,34 @@ class TestController extends Controller
                 $act_answers = given_answer::where(['question_id' => $question->id, 'attempt_id'=> $attemptId])->orderBy('given')->get();
                 foreach($act_answers as $act_answer) {
                     $exp_answer = answer::find($act_answer->answer_id);
-                    
+
                     $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $exp_answer->score;
 
                     if($task->type == 'Sequence') {
                         if($exp_answer->solution == $act_answer->given)
                         {
-                            $border_color = "border-green-500";
+                            $answer_class = 'correct';
                             $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['achievedScore'] += $exp_answer->score;
                         }
                         else {
-                            $border_color = "border-red-500";
+                            $answer_class = 'incorrect';
                         }
                     }
+                    
                     else {
-                        if($exp_answer->solution == "checked" && $act_answer->given == $exp_answer->solution)
+                        $answer_class = "";
+                        if($exp_answer->solution == "checked" && $act_answer->given == "checked")
                         {
-                            $border_color = "border-green-500";
+                            $answer_class = 'correct';
                             $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['achievedScore'] += $exp_answer->score;
                         }
-                        else if($act_answer->given != $exp_answer->solution && $exp_answer->solution == "checked") {
-                            $border_color = "border-yellow-500";
+                        else if($act_answer->given != "checked" && $exp_answer->solution == "checked") {
+                            $answer_class = 'missed';
                         }
-                        else if($act_answer->given != $exp_answer->solution && $exp_answer->solution == "unchecked") {
-                            $border_color = "border-red-500";
+                        else if($act_answer->given == "checked" && $exp_answer->solution != "checked") {
+                            $answer_class = 'incorrect';
                         }
+                        Debugbar::log([$exp_answer->solution, $act_answer->given, $answer_class]);
                     }
                     array_push(
                         $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
@@ -230,7 +235,7 @@ class TestController extends Controller
                                 'expected_ans' => $exp_answer->solution,
                                 'actual_ans' => '',
                                 'score' => $exp_answer->score,
-                                'border_color' => $border_color,
+                                'answer_class' => $answer_class,
                                 'given' => $act_answer->given
                             ]
                         );
@@ -243,7 +248,18 @@ class TestController extends Controller
     }
 
     public function testResults($testId) {
-        $testResults = testAttempt::where(['user_id'=>Auth::id(),'test_id'=> $testId])->get();
-        return view('test.results.index')->with('testResults', $testResults);
+        $test = test::find($testId);
+        if(testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count() == 0)
+        {
+            return view('test.results.index', ['noAttempts'=> 'Még nincsen a testzhez próbálkozása!', 'test'=>$test]);
+        }
+        else
+        {
+            $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
+            return view('test.results.index', ['testAttempts'=> $testAttempts, 'test'=>$test]);
+        }
+           
+
+        
     }
 }

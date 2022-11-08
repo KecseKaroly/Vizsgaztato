@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('text');
             $table->timestamps();
 
-            $table->foreign('task_id')->references('id')->on('tasks');
+            $table->foreign('task_id')->references('id')->on('tasks')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('given');
             $table->timestamps();   
 
-            $table->foreign('attempt_id')->references('id')->on('test_attempts');
-            $table->foreign('question_id')->references('id')->on('questions');
-            $table->foreign('answer_id')->references('id')->on('answers');
+            $table->foreign('attempt_id')->references('id')->on('test_attempts')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('question_id')->references('id')->on('questions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('answer_id')->references('id')->on('answers')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
