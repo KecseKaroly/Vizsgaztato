@@ -16,7 +16,7 @@
 @endsection
 
 @section('content')
-<div class="mt-24 mb-24 select-none">
+<div class="mt-12">
     <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
         <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor eredménye</p> 
         <div class="md:flex ">
@@ -27,9 +27,9 @@
                         <hr class="mx-auto w-full h-1 bg-gray-900 rounded border-0 my-3">
                         @foreach($task['questions'] as $questionIndex => $question)
                             <div class="lg:px-12 md:px-8 px-4  py-6">
-                                <div class="flow-root flex sm:flex-row flex-col">
-                                    <p class="float-left text-lg font-bold">{{$question['text']}}</p>
-                                    <p class="float-right font-medium">{{$question['achievedScore']}}/{{$question['maxScore']}} pont</p>
+                                <div class="flex sm:flex-row flex-col justify-between">
+                                    <p class="text-lg font-bold">{{$question['text']}}</p>
+                                    <p class="font-medium">{{$question['achievedScore']}}/{{$question['maxScore']}} pont</p>
                                 </div>
                                 @switch($task['type'])
                                     @case('TrueFalse')
@@ -79,5 +79,12 @@
             </div>
         </div>
     </div>
+    <div class="flex flex-col items-center">
+        <button class="text-center my-8 mx-auto py-2.5 text-lg font-bold text-blue-900 bg-slate-100 w-3/12 rounded-md">
+            <a href="{{ route('checkTestResults', $test['id']) }}">Vissza az eredményekhez</a>
+        </button>
+    </div>
+    
+    
 </div>
 @endsection

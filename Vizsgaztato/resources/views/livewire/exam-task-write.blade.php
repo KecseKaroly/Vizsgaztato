@@ -9,15 +9,20 @@
                         <hr class="mx-auto w-full h-1 bg-gray-700 rounded border-0 my-3">
                         @foreach($task['questions'] as $questionIndex => $question)
                             <div class="lg:px-12 md:px-8 px-4  py-6">
-                                <div class="flow-root flex sm:flex-row flex-col">
-                                    <p class="float-left text-lg font-bold">{{$question['text']}}</p>
-                                    <p class="float-right font-medium">{{$question['maxScore']}} pont</p>
+                                <div class="flex  sm:flex-row flex-col justify-between">
+                                    <div>
+                                        <p class="text-lg font-bold break-words">{{$question['text']}}</p>
+                                    </div>
+                                    <div></div>
+                                    <div>
+                                        <p class="font-medium break-words">{{$question['maxScore']}} pont</p>
+                                    </div>
+                                    
                                 </div>
                                 @switch($task['type'])
                                     @case('TrueFalse')
                                         <div class="flex flex-col md:flex-row">                                
                                         @break
-                                    
                                     @case('Sequence')  
                                         <div wire:sortable="updateTaskOrder">
                                         @break

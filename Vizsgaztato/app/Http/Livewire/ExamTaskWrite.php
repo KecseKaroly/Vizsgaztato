@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use Illuminate\Support\Facades\Auth;
 use App\Models\answer;
+use App\Models\answer_value;
 use App\Models\given_answer;
 use App\Models\testAttempt;
 use Barryvdh\Debugbar\Facade as Debugbar;
@@ -65,25 +66,21 @@ class ExamTaskWrite extends Component
                     if($task['type'] == 'Sequence') {
                         if($answer['expected_ans'] == $tempAns)
                         {
-                            $border_color = "border-green-500";
                             $achievedScore += $answer['score'];
-                        }
-                        else {
-                            $border_color = "border-red-500";
                         }
                     }
                     else {
                         if($answer['expected_ans'] == "checked" && $tempAns == $answer['expected_ans'])
                         {
-                            $border_color = "border-green-500";
                             $achievedScore += $answer['score'];
                         }
                     }
+                    $answer_value = answer_value::where('text', $tempAns)->first();
                     $givenAnswer = new given_answer();
                     $givenAnswer->attempt_id = $attempt->id;
                     $givenAnswer->answer_id = $answer['id'];
                     $givenAnswer->question_id = $question['id'];
-                    $givenAnswer->given = $tempAns;
+                    $givenAnswer->given_id = $answer_value->id;
                     $givenAnswer->save();
                 }
             }

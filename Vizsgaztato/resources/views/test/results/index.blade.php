@@ -8,11 +8,11 @@
         <div class="md:flex ">
             <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-100 rounded-lg border  shadow-xl">
                 @if(isset($noAttempts))
-                    <div>{{ $noAttempts }}</div>
+                    <div class="text-red-500 text-center m-6">{{ $noAttempts }}</div>
                 @else
                     @foreach ($testAttempts as $testAttemptIndex => $testAttempt )
                     <a href="{{route('checkAttemptResult', [$test->id, $testAttempt->id])}}">
-                        <div class="flow-root lg:px-12 md:px-9sm:px-6 px-3 py-3 my-3 max-w w-full bg-gray-400 rounded-lg  shadow-lg mt-9">
+                        <div class="flow-root lg:px-12 md:px-9sm:px-6 px-3 py-3 my-3 max-w w-full bg-gray-400 rounded-lg  shadow-lg mt-9 ">
                             <div class="float-left text-2xl font-black font-mono">{{$test->title}}</div>
                             <div class="float-right">{{$testAttempt->achievedScore}} / {{$testAttempt->maxScore}}</div>
                         </div>
@@ -29,6 +29,11 @@
                     </div>
                 @endif
             </div>
+        </div>
+        <div class="flex flex-col items-center">
+            <button class="text-center my-8 mx-auto py-2.5 text-lg font-bold text-blue-900 bg-slate-100 w-3/12 rounded-md">
+                <a href="{{ route('test.index') }}">Vissza az eredményekhez</a>
+            </button>
         </div>
     </div>
 </div>

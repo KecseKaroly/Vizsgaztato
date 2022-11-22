@@ -12,7 +12,7 @@ class given_answer extends Model
 
     protected $primaryKey = 'id';
     
-    protected $fillable = ['attempt_id', 'question_id', 'answer_id', 'given'];
+    protected $fillable = ['attempt_id', 'question_id', 'answer_id', 'given_id'];
 
     public $timestamps = false;
 }

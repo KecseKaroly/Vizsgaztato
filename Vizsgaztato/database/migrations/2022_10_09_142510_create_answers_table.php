@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('question_id');
             $table->string('text');
-            $table->string('solution');
+            $table->foreignId('solution_id');
             $table->unsignedInteger('score');
             $table->timestamps();   
 
             $table->foreign('question_id')->references('id')->on('questions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('solution_id')->references('id')->on('answer_values')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

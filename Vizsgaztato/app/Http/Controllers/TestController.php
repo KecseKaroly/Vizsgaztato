@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\answer;
+use App\Models\answer_value;
 use App\Models\given_answer;
 use App\Models\question;
 use App\Models\task;
@@ -100,13 +101,14 @@ class TestController extends Controller
                 $answers = answer::where('question_id', $question->id)->get();
                 foreach($answers as $answer) {
                     $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $answer->score;
+                    $answer_value = answer_value::find($answer->solution_id);
                     if($task['type'] != "OneChoice" || $task['type'] != "TrueFalse")
                         array_push(
                             $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
                             [
                                 'id' => $answer->id,
                                 'text' => $answer->text,
-                                'expected_ans' => $answer->solution,
+                                'expected_ans' => $answer_value->text,
                                 'actual_ans' => '',
                                 'score' => $answer->score
                             ]
@@ -117,11 +119,10 @@ class TestController extends Controller
                             [
                                 'id' => $answer->id,
                                 'text' => $answer->text,
-                                'expected_ans' => $answer->solution,
+                                'expected_ans' => $answer_value->text,
                                 'score' => $answer->score
                             ]
                         );
-                        
                 }
                 shuffle($testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers']);
             }
@@ -166,13 +167,15 @@ class TestController extends Controller
     }
 
     public function showResult($testId, $attemptId) {
+        $attempt = testAttempt::find($attemptId);
+        if($attempt == null)
+            return redirect('/test/'.$testId.'/result/');
         $test = test::find($testId);
         $testResult = [
             'id' => $test->id,
             'title' => $test->title,
             'tasks' => []
         ];
-        
         $tasks = task::where('test_id', $test->id)->get();
         foreach($tasks as $taskIndex => $task) {
             array_push(
@@ -195,14 +198,15 @@ class TestController extends Controller
                         'answers' => []
                     ]
                 );
-                $act_answers = given_answer::where(['question_id' => $question->id, 'attempt_id'=> $attemptId])->orderBy('given')->get();
-                foreach($act_answers as $act_answer) {
-                    $exp_answer = answer::find($act_answer->answer_id);
-
+                $given_answers = given_answer::where(['question_id' => $question->id, 'attempt_id'=> $attemptId])->orderBy('given_id')->get();
+                foreach($given_answers as $given_answer) {
+                    $given_answer_value = answer_value::find($given_answer->given_id);
+                    $exp_answer = answer::find($given_answer->answer_id);
+                    $exp_answer_value = answer_value::find($exp_answer->solution_id);
                     $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $exp_answer->score;
 
                     if($task->type == 'Sequence') {
-                        if($exp_answer->solution == $act_answer->given)
+                        if($exp_answer_value->id == $given_answer_value->id)
                         {
                             $answer_class = 'correct';
                             $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['achievedScore'] += $exp_answer->score;
@@ -214,18 +218,18 @@ class TestController extends Controller
                     
                     else {
                         $answer_class = "";
-                        if($exp_answer->solution == "checked" && $act_answer->given == "checked")
+                        if($exp_answer_value->text == "checked" && $given_answer_value->text == "checked")
                         {
                             $answer_class = 'correct';
                             $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['achievedScore'] += $exp_answer->score;
                         }
-                        else if($act_answer->given != "checked" && $exp_answer->solution == "checked") {
+                        else if($given_answer_value->text != "checked" && $exp_answer_value->text == "checked") {
                             $answer_class = 'missed';
                         }
-                        else if($act_answer->given == "checked" && $exp_answer->solution != "checked") {
+                        else if($given_answer_value->text == "checked" && $exp_answer_value->text != "checked") {
                             $answer_class = 'incorrect';
                         }
-                        Debugbar::log([$exp_answer->solution, $act_answer->given, $answer_class]);
+                        Debugbar::log([$exp_answer->solution, $given_answer->given, $answer_class]);
                     }
                     array_push(
                         $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
@@ -236,7 +240,7 @@ class TestController extends Controller
                                 'actual_ans' => '',
                                 'score' => $exp_answer->score,
                                 'answer_class' => $answer_class,
-                                'given' => $act_answer->given
+                                'given' => $given_answer->given
                             ]
                         );
                 }
@@ -251,7 +255,7 @@ class TestController extends Controller
         $test = test::find($testId);
         if(testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count() == 0)
         {
-            return view('test.results.index', ['noAttempts'=> 'Még nincsen a testzhez próbálkozása!', 'test'=>$test]);
+            return view('test.results.index', ['noAttempts'=> 'Még nincsen a teszthez próbálkozása!', 'test'=>$test]);
         }
         else
         {

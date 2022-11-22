@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class answer extends Model
+class Answer_value extends Model
 {
     use HasFactory;
-    protected $table = 'answers';
+    protected $table = 'answer_values';
 
     protected $primaryKey = 'id';
     
-    protected $fillable = ['question_id', 'text', 'solution_id', 'score'];
+    protected $fillable = ['text'];
 
     public $timestamps = false;
 }

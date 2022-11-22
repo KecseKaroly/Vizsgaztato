@@ -5,6 +5,7 @@ use App\Models\test;
 use App\Models\task;
 use App\Models\question;
 use App\Models\answer;
+use App\Models\answer_value;
 use Livewire\Component;
 use Barryvdh\Debugbar\Facade as Debugbar;
 
@@ -127,24 +128,80 @@ class ExamTaskCreator extends Component
                         case 'TrueFalse':
                             if($answerIndex == $question['right_answer_index']) 
                             {
-                                $answerModel->solution = "checked";
+                                $answer_value = answer_value::where('text', 'checked')->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = "checked";
+                                    $answer_value->save();
+                                }
                                 $answer['score'] = 1;
                             }
                             else {
-                                $answerModel->solution = "unchecked";
+                                $answer_value = answer_value::where('text', 'unchecked')->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = "unchecked";
+                                    $answer_value->save();
+                                }
+                                $answer['score'] = 0;
                             }
+                            
                             break;
                         case 'OneChoice':
-                            $answerIndex == $question['right_answer_index'] ? $answerModel->solution = "checked": $answerModel->solution = "unchecked";
-
+                            if($answerIndex == $question['right_answer_index']) 
+                            {
+                                $answer_value = answer_value::where('text', 'checked')->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = "checked";
+                                    $answer_value->save();
+                                }
+                            }
+                            else {
+                                $answer_value = answer_value::where('text', 'unchecked')->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = "unchecked";
+                                    $answer_value->save();
+                                }
+                            }
                             break;
                         case 'MultipleChoice':
-                            $answer['solution'] >= 0 ?  $answerModel->solution = "checked" : $answerModel->solution = "unchecked";
+                            if($answer['solution'] >= 0) 
+                            {
+                                $answer_value = answer_value::where('text', 'checked')->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = "checked";
+                                    $answer_value->save();
+                                }
+                            }
+                            else {
+                                $answer_value = answer_value::where('text', 'unchecked')->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = "unchecked";
+                                    $answer_value->save();
+                                }
+                            }
                             break;
                         case 'Sequence':
-                            $answerModel->solution = $answerIndex;
+                            $answer_value = answer_value::where('text', $answerIndex)->first();
+                                if($answer_value === null)
+                                {
+                                    $answer_value = new answer_value();
+                                    $answer_value->text = $answerIndex;
+                                    $answer_value->save();
+                                }
                             break;
                     }
+                    $answerModel->solution_id = $answer_value->id;
                     $answerModel->score = $answer['score'];
                     $answerModel->save();
                 }

@@ -13,21 +13,30 @@
     @endif
     <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
         <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor kitöltése</p> 
-        <div class="flex lg:flex-row flex-col w-full relative h-16 mb-10">
-            <div class="w-11/12">
-                <input type="text"  wire:model="testTitle"  placeholder="Feladatlap címe" class="w-9/12 bg-orange-200 border-4 rounded-lg text-lg placeholder-[#716156]">
+        <div class="flex flex-col w-full relative">
+            <div class="flex flex-row justify-start">
+                <div class="w-4/12">
+                    <p><label for="titleOfTestAttempt">Feladatlap címe: </label></p>
+                </div>
+                <div class="ml-6 w-full">
+                    <input type="text" id="titleOfTestAttempt"  wire:model="testTitle" class="w-full bg-orange-200 border-4 rounded-lg text-lg placeholder-[#716156]">
+                </div>
             </div>
-            <div class="w-3/12">
-                <label for="numOfTestAttempt">Lehetséges kitöltések száma: </label>
-                <input type="text"  wire:model="testAttempts" id="numOfTestAttempt" class="w-full bg-orange-200 border-4 rounded-lg text-lg placeholder-[#716156]">
+            <div class="flex flex-row justify-start">
+                <div class="w-4/12">
+                    <p><label for="numOfTestAttempt">Lehetséges kitöltések száma: </label></p>
+                </div>
+                <div class="ml-6 w-full">
+                    <input type="text"  wire:model="testAttempts" id="numOfTestAttempt" class="w-full bg-orange-200 border-4 rounded-lg text-lg placeholder-[#716156]">
+                </div>
             </div>
-            <div class="pl-4 sm:mt-0 mt-4">
+            <div class="pl-4 sm:mt-2 mt-4">
                 <button wire:click="Add_Task" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                     <span class=" font-black pl-3">Új feladat hozzáadása</span>
                 </button>
             </div> 
         </div>
-       
+        
         <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-700 rounded-lgshadow-xl flex flex-col">
                 @foreach ($tasks as $taskIndex => $task)
                     <div class="lg:pl-12 lg:py-12 lg:my-12 md:pl-9 md:py-9 md:my-9 sm:pl-6 sm:py-6 sm:my-6  pl-3 pr-2 py-3 my-3 max-w w-full bg-white rounded-lg  shadow-lg">
