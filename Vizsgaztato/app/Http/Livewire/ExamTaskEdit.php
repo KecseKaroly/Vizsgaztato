@@ -9,13 +9,21 @@ use App\Models\answer_value;
 use Livewire\Component;
 use Barryvdh\Debugbar\Facade as Debugbar;
 
-class ExamTaskCreator extends Component
+class ExamTaskEdit extends Component
 {
-    public $tasks = [];
-    public $testTitle = "";
-    public $testAttempts = 1;
-    public function mount() {
+    public $deletedTasks = [];
+    public $deletedQuestions = [];
+    public $deletedAnswers = [];
 
+    public $tasks = [];
+    public $testTitle ='';
+    public $testAttempts = 1;
+    public $testId = 1;
+    public function mount($testLiveWire) {
+        $this->testId = $testLiveWire['id'];
+        $this->testTitle = $testLiveWire['title'];
+        $this->testAttempts = $testLiveWire['maxAttempts'];
+        $this->tasks = $testLiveWire['tasks'];
     }
 
     protected $listeners = ['taskTypeChanged'];
@@ -34,6 +42,9 @@ class ExamTaskCreator extends Component
             ]);
     }
     public function Remove_Task($taskIndex) {
+        if(array_key_exists('id', $this->tasks[$taskIndex])) {
+            array_push($this->deletedTasks, $this->tasks[$taskIndex]);
+        }
         unset($this->tasks[$taskIndex]);
     }
     public function Add_Question($index)
@@ -54,19 +65,32 @@ class ExamTaskCreator extends Component
                 ]
             ];
         }
-        array_unshift($this->tasks[$index]['questions'],
-                [
-                   'text' => '',
-                   'answers' => $answers,
-                   'right_answer_index' => '',
-                ]
-            );
+        if($this->tasks[$index]["type"] == "OneChoice" || $this->tasks[$index]["type"] == "TrueFalse")
+        {
+            array_unshift($this->tasks[$index]['questions'],
+            [
+               'text' => '',
+               'answers' => $answers,
+               'right_answer_index' => '',
+            ]
+           );
+        }
+        else {
+            array_unshift($this->tasks[$index]['questions'],
+         [
+            'text' => '',
+            'answers' => $answers,
+         ]
+        );
+        }
 
     }
     public function Remove_Question($taskIndex, $questionIndex) {
+        if(array_key_exists('id', $this->tasks[$taskIndex]['questions'][$questionIndex])) {
+            array_push($this->deletedQuestions, $this->tasks[$taskIndex]['questions'][$questionIndex]);
+        }
         unset($this->tasks[$taskIndex]['questions'][$questionIndex]);
     }
-
     public function Add_Answer($taskIndex, $questionIndex)
     {
         $solution = '';
@@ -87,35 +111,48 @@ class ExamTaskCreator extends Component
         );
     }
     public function Remove_Answer($taskIndex, $questionIndex, $answerIndex) {
+        if(array_key_exists('id', $this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex])) {
+            array_push($this->deletedAnswers, $this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex]);
+        }
         unset($this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex]);
-
     }
     public function Save_Test()
     {
-        $testModel = new test;
+        $testModel = test::find($this->testId);
         $testModel->title = $this->testTitle;
         $testModel->maxAttempts = $this->testAttempts;
         $testModel->save();
+
         foreach($this->tasks as $taskIndex => $task) {
-            $taskModel = new task;
+            if(array_key_exists('id', $task)) {
+                $taskModel = task::find($task['id']);
+            }
+            else $taskModel = new task;
             $taskModel->test_id = $testModel->id;
             $taskModel->text = $task['text'];
             $taskModel->type = $task['type'];
             $taskModel->save();
 
             foreach($task['questions'] as $questionIndex => $question) {
-                $questionModel = new question;
+                if(array_key_exists('id', $question)) {
+                    $questionModel = question::find($question['id']);
+                }
+                else $questionModel = new question;
                 $questionModel->task_id = $taskModel['id'];
                 $questionModel->text = $question['text'];
                 $questionModel->save();
 
                 foreach($question['answers'] as $answerIndex => $answer) {
-                    $answerModel = new answer;
+                    $answerModel = answer::find($answer['id']);
+                    if($answerModel == null) {
+                        $answerModel = new answer;
+                    }
                     $answerModel->question_id = $questionModel['id'];
                     $answerModel->text = $answer['text'];
+
                     switch($taskModel->type) {
                         case 'TrueFalse':
-                            if($answerIndex == $question['right_answer_index'])
+                            if($answer['id'] == $question['right_answer_index'])
                             {
                                 $answer_value = answer_value::where('text', 'checked')->first();
                                 if($answer_value === null)
@@ -138,7 +175,7 @@ class ExamTaskCreator extends Component
                             }
                             break;
                         case 'OneChoice':
-                            if($answerIndex == $question['right_answer_index'])
+                            if($answer['id'] == $question['right_answer_index'])
                             {
                                 $answer_value = answer_value::where('text', 'checked')->first();
                                 if($answer_value === null)
@@ -161,7 +198,7 @@ class ExamTaskCreator extends Component
                             }
                             break;
                         case 'MultipleChoice':
-                            if($answer['solution'] >= 0)
+                            if($answer['solution'] != '' && $answer['solution'] >= 0)
                             {
                                 $answer_value = answer_value::where('text', 'checked')->first();
                                 if($answer_value === null)
@@ -199,15 +236,29 @@ class ExamTaskCreator extends Component
                 }
             }
         }
+        foreach($this->deletedTasks as $task) {
+            $task = task::find($task['id']);
+            $task->delete();
+        }
+        foreach($this->deletedQuestions as $question) {
+            $question = question::find($question['id']);
+            $question->delete();
+
+        }
+        foreach($this->deletedAnswers as $answer) {
+            $answer = answer::find($answer['id']);
+            $answer->delete();
+
+        }
         return  redirect()->route('test.index');
     }
 
     public function render()
     {
-        return view('livewire.exam-task-creator');
+        return view('livewire.exam-task-edit');
     }
 
-    public function updateTaskOrder($list) {
+    public function updateAnswerOrder($list) {
         $newAnswers = [];
         foreach($list as $element) {
             $indexek = explode("_",$element["value"]);

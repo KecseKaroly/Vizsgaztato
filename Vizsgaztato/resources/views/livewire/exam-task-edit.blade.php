@@ -1,15 +1,15 @@
-<div class="mt-24 mb-24">
+<div class="mt-8 mb-24">
     @if(0 < count($tasks) && $testTitle != "")
-        <div class="absolute right-0 bottom-0">
-            <button type="button" class=" flex items-center py-3 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                wire:click="Save_Test">
-                <svg class="h-7 w-7 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                    <polyline points="17 21 17 13 7 13 7 21" />  <polyline points="7 3 7 8 15 8" />
-                </svg>
-                <span class="pl-3 font-black">Mentés</span>
-            </button>
-        </div>
+
+            <div class="fixed bottom-0 right-0">
+                <button type="button" class=" flex items-center py-3 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" wire:click="Save_Test">
+                    <svg class="h-7 w-7 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />  <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    <span class="pl-3 font-black">Mentés</span>
+                </button>
+            </div>
     @endif
     <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
         <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor kitöltése</p>
@@ -43,7 +43,8 @@
                         <div class="flex flex-col">
                                 <div class="flex sm:flex-row flex-col mb-2">
                                     <div>
-                                        <select name="task-types{{$taskIndex}}" wire:model="tasks.{{$taskIndex}}.type"
+                                        <select name="task-types{{$taskIndex}}"
+                                        wire:model="tasks.{{$taskIndex}}.type"
                                         wire:change="$emit('taskTypeChanged', {{$taskIndex}})"
                                         class="bg-orange-300 border-gray-300 text-orange-900 text-sm rounded-lg  font-bold
                                             focus:ring-orange-100 focus:border-orange-800 block  py-3 w-fit">
@@ -71,16 +72,16 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <input type="text"  wire:model="tasks.{{ $taskIndex }}.text"  placeholder="Feladat szövege"
-                                    class="bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156] w-11/12">
+                                    <input type="text"  wire:model="tasks.{{ $taskIndex }}.text"  placeholder="Feladat szövege" class="bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156] w-11/12">
                                 </div>
                         </div>
 
                         @foreach($task['questions'] as $questionIndex => $question)
+
                             <div class="lg:px-12 md:px-8 px-4  py-6">
                                 <div class="flex sm:flex-row flex-col">
                                         <div class="w-full h-full">
-                                            <input type="text"  wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.text"  placeholder="{{$questionIndex+1}}. Kérdés szövege"
+                                            <input type="text"  wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.text"  placeholder="{{$questionIndex}}. Kérdés szövege"
                                             class="w-11/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                         </div>
                                         <div class="flex sm:my-0 my-2">
@@ -104,7 +105,7 @@
                                             <div class="flex flex-col md:flex-row md:items-center md:justify-center">
                                             @break
                                         @case('Sequence')
-                                            <div wire:sortable="updateTaskOrder">
+                                            <div wire:sortable="updateAnswerOrder">
                                             @break
                                         @default
                                             <div>
@@ -115,46 +116,53 @@
                                                 <div class="lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
                                                     <label>
                                                         {{$answer["text"]}}
-                                                        <input type="radio" name="Answer_{{$taskIndex}}_{{$questionIndex}}" value="{{$answerIndex}}" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.right_answer_index">
+                                                        <input type="radio" name="Answer_{{$taskIndex}}_{{$questionIndex}}" value="{{$answer['id']}}" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.right_answer_index">
                                                     </label>
                                                 </div>
                                                 @break
                                             @case("OneChoice")
                                                 <div class="sm:flex-row flex-col lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
-                                                <div class="w-full">
-                                                    <label>
-                                                        <input type="radio" name="Answer_{{$taskIndex}}_{{$questionIndex}}" value="{{$answerIndex}}" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.right_answer_index">Ez a helyes
-                                                    </label>
-                                                    <input type="text"  wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.text"  placeholder="{{$answerIndex}}. Válasz szövege" class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
+                                                    <div class="w-full select-none	">
+                                                        <label>
+                                                            <input type="radio"  name="Answer_{{$taskIndex}}_{{$questionIndex}}" value="{{$answer['id']}}" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.right_answer_index">Ez a helyes
+                                                        </label>
+                                                        <input type="text"  wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.text"  placeholder="{{$answerIndex}}. Válasz szövege" class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
+                                                    </div>
+                                                    <div class="grid place-items-center my-3">
+                                                        @if($answerIndex == $question['right_answer_index'])
+                                                        <input type="number" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.score"/>
+                                                        @endif
+                                                        <button wire:click="Remove_Answer({{$taskIndex}},{{$questionIndex}}, {{$answerIndex}})" class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="grid place-items-center my-3">
-                                                    <button wire:click="Remove_Answer({{$taskIndex}},{{$questionIndex}}, {{$answerIndex}})" class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                </div>
+
                                                 @break
                                             @case("MultipleChoice")
                                                 <div class="sm:flex-row flex-col lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
-                                                <div class="w-full">
-                                                    <label>
-                                                        <input type="checkbox" name="Answer_{{$taskIndex}}_{{$questionIndex}}" value="{{$answerIndex}}" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.solution">
-                                                    </label>
-                                                    <input type="text" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.text"  placeholder="{{$answerIndex}}. Válasz szövege" class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
-                                                </div>
-                                                <div class="grid place-items-center my-3">
-                                                    <button wire:click="Remove_Answer({{$taskIndex}},{{$questionIndex}}, {{$answerIndex}})" class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
+                                                    <div class="w-full">
+                                                        <label>
+                                                            <input type="checkbox" name="Answer_{{$taskIndex}}_{{$questionIndex}}" value="{{$answerIndex}}" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.solution">
+                                                        </label>
+                                                        <input type="text" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.text"  placeholder="{{$answerIndex}}. Válasz szövege" class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
+                                                    </div>
+                                                    <div class="grid place-items-center my-3">
+                                                        @if($answer['solution'] != "")
+                                                        <input type="number" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.score"/>
+                                                        @endif
+                                                        <button wire:click="Remove_Answer({{$taskIndex}},{{$questionIndex}}, {{$answerIndex}})" class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 @break
                                             @case("Sequence")
-                                                <div class="sm:flex-row flex-col lg:ml-16 lg:px-8 lg:my-2 lg:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300" wire:sortable.item="{{$taskIndex}}_{{$questionIndex}}_{{ $answerIndex }}_{{ $answer['id'] }}" wire:key="task-{{ $answer['id'] }}" wire:sortable.handle>
+                                                <div class="select-none sm:flex-row flex-col lg:ml-16 lg:px-8 lg:my-2 lg:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300" wire:sortable.item="{{$taskIndex}}_{{$questionIndex}}_{{ $answerIndex }}_{{ $answer['id'] }}" wire:key="task-{{ $answer['id'] }}" wire:sortable.handle>
                                                     <div class="w-full">
                                                         <input type="text" value="#{{$answerIndex}}Answer" wire:model="tasks.{{ $taskIndex }}.questions.{{$questionIndex}}.answers.{{$answerIndex}}.text"  placeholder="{{$answerIndex}}. Válasz szövege" class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                                     </div>

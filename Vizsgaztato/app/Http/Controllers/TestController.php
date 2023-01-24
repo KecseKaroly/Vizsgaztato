@@ -58,7 +58,7 @@ class TestController extends Controller
     {
         $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count();
         if($testAttempts >= $test->maxAttempts)
-            return view('test.write')->with('error', "Too many attempts!");
+            return view('test.write')->with('error', "Túllépte a megengedett próbálkozásokat!");
 
         $testLiveWire = [
             'id' => $test->id,
@@ -74,60 +74,38 @@ class TestController extends Controller
                     'text' => $task->text,
                     'type' => $task->type,
                     'questions' => [],
-                ]);  
+                ]);
             $questions = question::where('task_id', $task->id)->get();
             foreach($questions as $questionIndex => $question) {
-                if($task['type'] == "OneChoice" || $task['type'] == "TrueFalse")
-                    array_push(
-                        $testLiveWire['tasks'][$taskIndex]['questions'], 
-                        [
-                            'id' => $question->id,
-                            'text' => $question->text,
-                            'maxScore' => 0,
-                            'answers' => [],
-                            'achievedScore' => 0,
-                            'actual_ans' => ''
-                        ]);
-                else
-                    array_push(
-                        $testLiveWire['tasks'][$taskIndex]['questions'], 
-                        [
-                            'id' => $question->id,
-                            'text' => $question->text,
-                            'maxScore' => 0,
-                            'achievedScore' => 0,
-                            'answers' => []
-                        ]);
+                array_push(
+                    $testLiveWire['tasks'][$taskIndex]['questions'],
+                    [
+                        'id' => $question->id,
+                        'text' => $question->text,
+                        'maxScore' => 0,
+                        'answers' => [],
+                        'achievedScore' => 0,
+                        'actual_ans' => ''
+                    ]);
                 $answers = answer::where('question_id', $question->id)->get();
                 foreach($answers as $answer) {
                     $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $answer->score;
                     $answer_value = answer_value::find($answer->solution_id);
-                    if($task['type'] != "OneChoice" || $task['type'] != "TrueFalse")
-                        array_push(
-                            $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
-                            [
-                                'id' => $answer->id,
-                                'text' => $answer->text,
-                                'expected_ans' => $answer_value->text,
-                                'actual_ans' => '',
-                                'score' => $answer->score
-                            ]
-                        );
-                    else
-                        array_push(
-                            $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
-                            [
-                                'id' => $answer->id,
-                                'text' => $answer->text,
-                                'expected_ans' => $answer_value->text,
-                                'score' => $answer->score
-                            ]
-                        );
+                    array_push(
+                        $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
+                        [
+                            'id' => $answer->id,
+                            'text' => $answer->text,
+                            'expected_ans' => $answer_value->text,
+                            'actual_ans' => '',
+                            'score' => $answer->score
+                        ]
+                    );
                 }
                 shuffle($testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers']);
             }
             shuffle($testLiveWire['tasks'][$taskIndex]['questions']);
-        }        
+        }
         shuffle($testLiveWire['tasks']);
         return view('test.write')->with('testLiveWire', $testLiveWire);
     }
@@ -140,7 +118,68 @@ class TestController extends Controller
      */
     public function edit(test $test)
     {
-        //
+        $testLiveWire = [
+            'id' => $test->id,
+            'title' => $test->title,
+            'maxAttempts' => $test->maxAttempts,
+            'tasks' => []
+        ];
+
+        $tasks = task::where('test_id', $test->id)->get();
+        foreach($tasks as $taskIndex => $task) {
+            array_push(
+                $testLiveWire['tasks'],
+                [
+                    'id' => $task->id,
+                    'text' => $task->text,
+                    'type' => $task->type,
+                    'questions' => [],
+                ]);
+            $questions = question::where('task_id', $task->id)->get();
+            foreach($questions as $questionIndex => $question) {
+                array_push(
+                    $testLiveWire['tasks'][$taskIndex]['questions'],
+                    [
+                        'id' => $question->id,
+                        'text' => $question->text,
+                        'answers' => [],
+                        'right_answer_index' => '',
+                    ]);
+                $answers = answer::where('question_id', $question->id)->get();
+                foreach($answers as $answer) {
+                    $answer_value = answer_value::find($answer->solution_id);
+                    if($task['type'] != "OneChoice" && $task['type'] != "TrueFalse" && $task['type'] != "Sequence")
+                    {
+                        array_push(
+                            $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
+                            [
+                                'id' => $answer->id,
+                                'text' => $answer->text,
+                                'score' => $answer->score,
+                                'solution' => $answer_value->text == "checked" ? $answer->id : '',
+                            ]
+                        );
+                    }
+                    else
+                    {
+                        array_push(
+                            $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
+                            [
+                                'id' => $answer->id,
+                                'text' => $answer->text,
+                                'score' => $answer->score
+                            ]
+                        );
+                        if($task['type'] == "OneChoice" || $task['type'] == "TrueFalse") {
+                            $solution = answer_value::find($answer->solution_id);
+                            if($solution->text == "checked")
+                                $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['right_answer_index'] = $answer->id;
+                        }
+                    }
+                }
+            }
+        }
+        return view('test.edit')->with('testLiveWire', $testLiveWire);
     }
 
     /**
@@ -152,7 +191,23 @@ class TestController extends Controller
      */
     public function update(Request $request, test $test)
     {
-        //
+
+        $attempts = testAttempt::where('test_id', $test->id);
+        foreach($attempts as $attempt) {
+            $given_answers = given_answer::where('attempt_id', $attempt->id);
+            $maxScore = 0;
+            $achievedScore = 0;
+            foreach($given_answers as $given_answer) {
+                $answer = answer::find($given_answer->answer_id);
+                if($given_answer->given_id == $answer->solution_id)
+                    $achievedScore += $answer->score;
+                $maxScore = $answer->score;
+            }
+            $attempt->maxScore = $maxScore;
+            $attempt->achievedScore = $achievedScore;
+            $attempt->save();
+        }
+
     }
 
     /**
@@ -185,11 +240,11 @@ class TestController extends Controller
                     'text' => $task->text,
                     'type' => $task->type,
                     'questions' => [],
-                ]);  
+                ]);
             $questions = question::where('task_id', $task->id)->get();
             foreach($questions as $questionIndex => $question) {
                 array_push(
-                    $testResult['tasks'][$taskIndex]['questions'], 
+                    $testResult['tasks'][$taskIndex]['questions'],
                     [
                         'id' => $question->id,
                         'text' => $question->text,
@@ -198,7 +253,7 @@ class TestController extends Controller
                         'answers' => []
                     ]
                 );
-                $given_answers = given_answer::where(['question_id' => $question->id, 'attempt_id'=> $attemptId])->orderBy('given_id')->get();
+                $given_answers = given_answer::where(['question_id' => $question->id, 'attempt_id'=> $attemptId])->get();
                 foreach($given_answers as $given_answer) {
                     $given_answer_value = answer_value::find($given_answer->given_id);
                     $exp_answer = answer::find($given_answer->answer_id);
@@ -215,7 +270,6 @@ class TestController extends Controller
                             $answer_class = 'incorrect';
                         }
                     }
-                    
                     else {
                         $answer_class = "";
                         if($exp_answer_value->text == "checked" && $given_answer_value->text == "checked")
@@ -229,7 +283,6 @@ class TestController extends Controller
                         else if($given_answer_value->text == "checked" && $exp_answer_value->text != "checked") {
                             $answer_class = 'incorrect';
                         }
-                        Debugbar::log([$exp_answer->solution, $given_answer->given, $answer_class]);
                     }
                     array_push(
                         $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
@@ -244,10 +297,10 @@ class TestController extends Controller
                             ]
                         );
                 }
-                
+
             }
         }
-        
+
         return view('test.results.show')->with('test', $testResult);
     }
 
@@ -262,8 +315,8 @@ class TestController extends Controller
             $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
             return view('test.results.index', ['testAttempts'=> $testAttempts, 'test'=>$test]);
         }
-           
 
-        
+
+
     }
 }

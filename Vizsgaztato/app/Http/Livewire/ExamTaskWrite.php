@@ -40,7 +40,6 @@ class ExamTaskWrite extends Component
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
-        
         foreach($this->test['tasks'] as $taskIndex => $task) {
             foreach($task['questions'] as $questionIndex => $question) {
                 foreach($question['answers'] as $answerIndex => $answer) {
@@ -48,32 +47,20 @@ class ExamTaskWrite extends Component
                     switch($task['type']) {
                         case "TrueFalse":
                             $tempAns = $answerIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
-                            //Debugbar::log("TrueFalse: ".$answer['text'].", Expected: ".$answer['expected_ans'].", Actual:". $tempAns);
                             break;
                         case "OneChoice":
                             $tempAns = $answerIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
-                            //Debugbar::log("OneChoice: ".$answer['text'].", Expected: ".$answer['expected_ans'].", Actual:". $tempAns);
                             break;
                         case "MultipleChoice":
-                            $tempAns = $answer['actual_ans'] == '' ? "unchecked" : "checked"; 
-                            //Debugbar::log("MultipleChoice: ".$answer['text'].", Expected: ".$answer['expected_ans'].", Actual:". $tempAns);
+                            $tempAns = $answer['actual_ans'] == '' ? "unchecked" : "checked";
                             break;
                         case "Sequence":
-                            $tempAns = $answerIndex;
-                            //Debugbar::log("Sequence: ".$answer['text'].", Expected: ".$answer['expected_ans'].", Actual:". $answerIndex);
+                            $tempAns = $answerIndex+1;
                             break;
                     }
-                    if($task['type'] == 'Sequence') {
-                        if($answer['expected_ans'] == $tempAns)
-                        {
-                            $achievedScore += $answer['score'];
-                        }
-                    }
-                    else {
-                        if($answer['expected_ans'] == "checked" && $tempAns == $answer['expected_ans'])
-                        {
-                            $achievedScore += $answer['score'];
-                        }
+                    if($tempAns == $answer['expected_ans'])
+                    {
+                        $achievedScore += $answer['score'];
                     }
                     $answer_value = answer_value::where('text', $tempAns)->first();
                     $givenAnswer = new given_answer();

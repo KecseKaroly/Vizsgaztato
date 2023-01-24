@@ -5,9 +5,12 @@ module.exports = {
     "./resources/**/*.js",
     "./resources/**/*.vue",
     "./resources/views/livewire/*.blade.php",
+    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin'),
+  ],
 }

@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('layouts.app');
 });
+Route::get('/home', function () {
+    return view('layouts.app');
+});
 Route::resource('test', TestController::class)->middleware('auth');
 Route::get('/test/{test_id}/result/{attempt_id}', [TestController::class, 'showResult'])->middleware('auth')->name('checkAttemptResult');
 Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
