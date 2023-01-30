@@ -5,20 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class test extends Model
+class group_join_request extends Model
 {
     use HasFactory;
 
-    protected $table = 'tests';
+    protected $table = 'group_join_requests';
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['title','maxAttempts'];
+    protected $fillable = ['requester_id', 'group_id'];
 
     public $timestamps = false;
-
-    public function tasks()
-    {
-        return $this->hasMany(task::class);
-    }
 }

@@ -5,20 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class test extends Model
+class group_inv extends Model
 {
     use HasFactory;
 
-    protected $table = 'tests';
+    protected $table = 'group_invs';
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['title','maxAttempts'];
+    protected $fillable = ['sender_id', 'group_id'];
 
     public $timestamps = false;
-
-    public function tasks()
-    {
-        return $this->hasMany(task::class);
-    }
 }

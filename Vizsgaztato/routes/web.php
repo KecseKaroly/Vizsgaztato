@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupJoinRequestController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -24,4 +26,7 @@ Route::get('/home', function () {
 Route::resource('test', TestController::class)->middleware('auth');
 Route::get('/test/{test_id}/result/{attempt_id}', [TestController::class, 'showResult'])->middleware('auth')->name('checkAttemptResult');
 Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
+
+Route::resource('groups', GroupController::class)->middleware('auth');
+Route::post('/submit_join_request', [GroupJoinRequestController::class, 'SubmitRequest'])->middleware('auth')->name('JoinRequestSubmit');
 Auth::routes();
