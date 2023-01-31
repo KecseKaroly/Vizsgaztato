@@ -29,4 +29,8 @@ Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middle
 
 Route::resource('groups', GroupController::class)->middleware('auth');
 Route::post('/submit_join_request', [GroupJoinRequestController::class, 'SubmitRequest'])->middleware('auth')->name('JoinRequestSubmit');
+Route::get('/group/{id}/join_requests', [GroupJoinRequestController::class, 'index'])->middleware('auth')->name('join_requests');
+Route::post('/accept_join_request', [GroupJoinRequestController::class, 'AcceptRequest'])->middleware('auth')->name('acceptGroupJoinRequest');
+Route::delete('/decline_join_request', [GroupJoinRequestController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupJoinRequest');
+
 Auth::routes();

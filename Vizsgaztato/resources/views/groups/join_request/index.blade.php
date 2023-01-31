@@ -1,0 +1,34 @@
+@extends('layouts.app')
+@section('content')
+<div class="mt-24 mb-24">
+    <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
+        <div class="flex">
+            <div class="text-center mb-12 font-black text-3xl w-full">Csoport csatlakozási kérelmei</div>
+        </div>
+        <div>
+
+        </div>
+        <div class="bg-slate-50 w-11/12 rounded-xl">
+            @foreach($join_requests as $join_request)
+                <div id="request-{{ $join_request->id }}">
+                    <div>{{ $join_request->name }}</div>
+                    <div>
+                        <form method="POST">
+                            @csrf
+                            <input type="hidden" name="join_request_id" value="{{ $join_request->id }}">
+                            <input type="hidden" name="requester_id" value="{{ $join_request->requester_id }}">
+                            <button type="submit" data-id="{{ $join_request->id }}" data-requester_id="{{ $join_request->requester_id }}" data-group_id="{{ $join_request->group_id }}" class="acceptJoinRequest">Elfogad</button>
+                        </form>
+                    </div>
+                    <div>
+                        <form method="POST">
+                            @csrf
+                            <button type="submit" data-id="{{ $join_request->id }}" class="declineJoinRequest">Elutasít</button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endsection

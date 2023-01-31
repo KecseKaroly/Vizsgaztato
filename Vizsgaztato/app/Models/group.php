@@ -13,7 +13,7 @@ class group extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['invCode','name'];
+    protected $fillable = ['invCode','name', 'creator_id'];
 
     public $timestamps = false;
 }

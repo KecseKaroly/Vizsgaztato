@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\group;
+use App\Models\group_join_request;
 use App\Models\groups_users;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -20,11 +21,14 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = DB::table("groups")->select('*')
+        $groups = DB::table('groups')->select('*')
             ->whereIn('id',function($query){
                $query->select('group_id')->from('groups_users')->where('user_id', Auth::id());
             })
             ->get();
+        foreach($groups as $group) {
+            $group->join_requests = group_join_request::where('group_id', $group->id)->groupBy('group_id')->count();
+        }
         return view('groups.index')->with('groups',$groups);
     }
 
@@ -56,6 +60,7 @@ class GroupController extends Controller
         $group = new group;
         $group->name = $request->group_name;
         $group->invCode = $request->group_invCode;
+        $group->creator_id = Auth::id();
         $group->save();
         $groups_users = new groups_users;
         $groups_users->user_id = Auth::id();

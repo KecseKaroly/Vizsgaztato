@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="mt-24 mb-24 select-none">
+<div class="mt-24 mb-24">
     <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
         <div class="flex">
             <div class="text-center mb-12 font-black text-3xl w-9/12">Csoportok</div>
@@ -22,18 +22,25 @@
                 </div>
 
                 <div class="form-group">
-                    <button class="btn btn-success btn-submit">Submit</button>
+                    <button class="btn btn-success btn-submit">Jelentkezés</button>
                 </div>
 
             </form>
         </div>
         <div class="bg-slate-50 w-11/12 rounded-xl">
             @foreach($groups as $group)
-                <a href="{{ route('groups.show', $group->id) }}">
+
                     <div class="bg-slate-600 w-10/12 mx-auto my-2 text-gray-100 px-3">
                         <div>{{ $group->name }}</div>
+                        <div>{{ $group->invCode }}</div>
+                        @if($group->creator_id == Auth::id())
+                            <a href="{{ route('join_requests', $group->id) }}">
+                                <div>
+                                    Jelentkezési kérelmek száma: {{ $group->join_requests }}
+                                </div>
+                            </a>
+                        @endif
                     </div>
-                </a>
             @endforeach
         </div>
     </div>
