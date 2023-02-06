@@ -17,7 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('maxAttempts');
-            $table->timestamps();   
+            $table->foreignId('creator_id');
+            $table->timestamps();
+
+            $table->foreign('creator_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
 
         });
     }

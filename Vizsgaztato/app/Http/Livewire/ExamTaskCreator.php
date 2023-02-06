@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Http\Livewire;
+
+use App\Http\Controllers\TestsGroupsController;
 use App\Models\test;
 use App\Models\task;
 use App\Models\question;
+use App\Models\group;
 use App\Models\answer;
 use App\Models\answer_value;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facade as Debugbar;
 
 class ExamTaskCreator extends Component
@@ -14,8 +18,40 @@ class ExamTaskCreator extends Component
     public $tasks = [];
     public $testTitle = "";
     public $testAttempts = 1;
+
+    public $searchValue;
+    public $searchResults;
+    public $selectedResults;
+
+    public function updatedSearchValue() {
+        $this->searchResults = group::where('name', 'LIKE', '%'.$this->searchValue.'%')->get()->toArray();
+    }
+
+    public function addToSelectedResults($index) {
+        if(!in_array($this->searchResults[$index], $this->selectedResults)){
+            $this->searchValue = '';
+            array_push($this->selectedResults, $this->searchResults[$index]);
+        }
+    }
+
+    public function removeFromSelectedResults($index) {
+        unset($this->selectedResults[$index]);
+    }
+
+    public function saveSelectedResults($testId) {
+        $result = (new TestsGroupsController)->store($this->selectedResults, $testId);
+    }
+
     public function mount() {
 
+        $this->selectedResults = [];
+        $this->ResetInputField();
+    }
+
+    public function ResetInputField() {
+
+        $this->searchValue = "";
+        $this->searchResults = [];
     }
 
     protected $listeners = ['taskTypeChanged'];
@@ -95,6 +131,7 @@ class ExamTaskCreator extends Component
         $testModel = new test;
         $testModel->title = $this->testTitle;
         $testModel->maxAttempts = $this->testAttempts;
+        $testModel->creator_id = Auth::id();
         $testModel->save();
         foreach($this->tasks as $taskIndex => $task) {
             $taskModel = new task;
@@ -199,6 +236,7 @@ class ExamTaskCreator extends Component
                 }
             }
         }
+        $this->saveSelectedResults($testModel->id);
         return  redirect()->route('test.index');
     }
 

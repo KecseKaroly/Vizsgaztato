@@ -5,20 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class test extends Model
+class TestsGroups extends Model
 {
     use HasFactory;
-
-    protected $table = 'tests';
+    protected $table = 'tests_groups';
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['title','maxAttempts', 'creator_id'];
+    protected $fillable = ['test_id', 'group_id', 'enabled_from', 'enabled_until'];
 
     public $timestamps = false;
-
-    public function tasks()
-    {
-        return $this->hasMany(task::class);
-    }
 }

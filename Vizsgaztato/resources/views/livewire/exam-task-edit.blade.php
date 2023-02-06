@@ -12,7 +12,7 @@
             </div>
     @endif
     <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
-        <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor kitöltése</p>
+        <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor szerkesztése</p>
         <div class="flex flex-col w-full relative">
             <div class="flex flex-row justify-start">
                 <div class="w-4/12">
@@ -30,6 +30,29 @@
                     <input type="text"  wire:model="testAttempts" id="numOfTestAttempt" class="w-full bg-orange-200 border-4 rounded-lg text-lg placeholder-[#716156]">
                 </div>
             </div>
+
+            <div id="groupInputContainer">
+                <input type="text" wire:model.debounce.500ms="searchValue" id="groupInputField" autocomplete="off"/>
+                @if(!empty($searchValue))
+                    <div id="searchResults">
+                        @if(!empty($searchResults))
+                                @foreach($searchResults as $index => $searchResult)
+                                    <button wire:click="addToSelectedResults({{ $index }})" class="hover:bg-blue-300">{{ $searchResult['name'] }}</button>
+                                @endforeach
+                        @else
+                            <div>Nincs találat...</div>
+                        @endif
+                    </div>
+                @endif
+            </div>
+
+            @foreach ($selectedResults as $index => $selectedResult)
+                <div>
+                    {{ $selectedResult['name'] }}
+                    <button wire:click="removeFromSelectedResults({{ $index }})"> (x)</button>
+                </div>
+            @endforeach
+
             <div class="pl-4 sm:mt-2 mt-4">
                 <button wire:click="Add_Task" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                     <span class=" font-black pl-3">Új feladat hozzáadása</span>

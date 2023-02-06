@@ -5,7 +5,6 @@ $.ajaxSetup({
 });
 
 $(".btn-submit").click(function(e){
-
     e.preventDefault();
     var invCode = $("input[name=invCode]").val();
     $.ajax({
@@ -19,7 +18,6 @@ $(".btn-submit").click(function(e){
         alert("Valami hiba történt...");
        }
     });
-
 });
 
 $(".declineJoinRequest").click(function(e){
@@ -85,6 +83,59 @@ $(".acceptInvRequest").click(function(e){
        success:function(data){
           alert(data.success);
           document.getElementById(`request-${reqId}`).remove();
+       }
+    });
+});
+
+$(".user_id").click(function(e){
+    const params = $(this).data();
+    const user_id = params["user_id"];
+    const group_id = params["group_id"];
+    let element = document.getElementById(`attempts_of_user${user_id}_${group_id}`);
+    if(element.style.display === "none")
+        element.style.display = "block";
+    else element.style.display = "none";
+});
+
+$(".group_id").click(function(e){
+    const params = $(this).data();
+    const group_id = params["group_id"];
+    let element = document.getElementById(`attempts_of_group${group_id}`);
+    if(element.style.display === "none")
+        element.style.display = "block";
+    else element.style.display = "none";
+});
+
+$(".updateTestGroups").click(function(e){
+    e.preventDefault();
+    var test_group_id = $(this).data()["test_group_id"];
+    var enabled_from = $("input[name=enabled_from]").val();
+    var enabled_until = $("input[name=enabled_until]").val();
+    $.ajax({
+       type:'POST',
+       url:"/test/groups",
+       data:{test_group_id:test_group_id, enabled_from:enabled_from, enabled_until:enabled_until},
+       success:function(data){
+          alert("Sikeres módosítás");
+       },
+       error:function(data) {
+        alert("Valami hiba történt...");
+       }
+    });
+});
+
+$(".deleteTestGroups").click(function(e){
+    e.preventDefault();
+    var test_group_id = $(this).data()["test_group_id"];
+    $.ajax({
+       type:'DELETE',
+       url:"/test/groups/delete",
+       data:{test_group_id:test_group_id},
+       success:function(data){
+          document.getElementById(`test_group${test_group_id}`).style.display="none";
+       },
+       error:function(data) {
+        alert("Valami hiba történt...");
        }
     });
 });

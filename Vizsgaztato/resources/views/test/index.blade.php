@@ -16,11 +16,20 @@
         <div class="md:flex">
             <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-100 rounded-lg border  shadow-xl">
                 @foreach ($tests as $test )
-                <a href="{{route('checkTestResults', [$test->id])}}">
+                @if( $test->creator_id == Auth::id())
+                <a href="{{ route('checkTestInfo', [$test->id])}}">
                     <div class="flex flex-col lg:px-12 md:px-9sm:px-6 px-3 py-3 max-w w-full bg-gray-400 rounded-lg  shadow-lg my-9">
                         <div class="md:flex">
                             <div class="text-2xl font-black font-mono truncate w-10/12">{{$test->title}}</div>
                             <div class="block"><a href="{{ route('test.edit', $test->id) }}">Szerkesztés</a></div>
+                        </div>
+                    </div>
+                </a>
+                @else
+                <a href="{{ route('checkTestResults', [$test->id])}}">
+                    <div class="flex flex-col lg:px-12 md:px-9sm:px-6 px-3 py-3 max-w w-full bg-gray-400 rounded-lg  shadow-lg my-9">
+                        <div class="md:flex">
+                            <div class="text-2xl font-black font-mono truncate w-10/12">{{$test->title}}</div>
                         </div>
                         <div>
                             <div class="md:flex justify-between">
@@ -31,6 +40,7 @@
                         </div>
                     </div>
                 </a>
+                @endif
                 @endforeach
             </div>
         </div>

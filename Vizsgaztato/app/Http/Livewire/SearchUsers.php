@@ -20,8 +20,10 @@ class SearchUsers extends Component
     }
 
     public function addToSelectedResults($index) {
-        if(!in_array($this->searchResults[$index], $this->selectedResults))
+        if(!in_array($this->searchResults[$index], $this->selectedResults)) {
+            $this->searchValue = '';
             array_push($this->selectedResults, $this->searchResults[$index]);
+        }
     }
 
     public function removeFromSelectedResults($index) {

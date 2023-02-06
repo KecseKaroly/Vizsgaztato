@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\group;
+use App\Models\groups_users;
 use App\Models\answer;
 use App\Models\answer_value;
 use App\Models\given_answer;
 use App\Models\question;
 use App\Models\task;
 use App\Models\test;
+use App\Models\User;
 use App\Models\testAttempt;
+use App\Models\TestsGroups;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +27,10 @@ class TestController extends Controller
      */
     public function index()
     {
-        $tests = test::all();
+        $myGroups = groups_users::where('user_id', Auth::id())->pluck('group_id')->toArray();
+        $myGroupsTests = TestsGroups::whereIn('group_id', $myGroups)->distinct()->pluck('test_id')->toArray();
+
+        $tests = test::whereIn('id', $myGroupsTests)->orWhereIn('creator_id', [Auth::id()])->get();
         return view('test.index')->with('tests', $tests);
     }
 
@@ -179,7 +186,21 @@ class TestController extends Controller
                 }
             }
         }
-        return view('test.edit')->with('testLiveWire', $testLiveWire);
+
+        $groupIds = TestsGroups::where('test_id',$test->id)->pluck('group_id')->toArray();
+
+        $groups = DB::table('groups')
+        ->join('tests_groups', 'tests_groups.group_id', '=', 'groups.id')
+        ->select('groups.*')
+        ->whereIn('groups.id', $groupIds)
+        ->get()
+        ->toArray();
+        $groupArray = [];
+        foreach($groups as $object)
+        {
+            array_push($groupArray, (array)$object);
+        }
+        return view('test.edit', ['testLiveWire'=>$testLiveWire, 'groups'=>$groupArray]);
     }
 
     /**
@@ -315,8 +336,31 @@ class TestController extends Controller
             $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
             return view('test.results.index', ['testAttempts'=> $testAttempts, 'test'=>$test]);
         }
+    }
 
+    public function testInfo($testId) {
+        $test = test::find($testId);
+        if(testAttempt::where(['test_id' => $test->id])->count() == 0)
+        {
+            return view('test.info.show', ['noAttempts'=> 'Még nincsen a teszthez próbálkozás!', 'test'=>$test]);
+        }
+        else
+        {
+            $testAttempts = DB::table('test_attempts')
+            ->join('users', 'users.id', '=', 'test_attempts.user_id')
+            ->select('test_attempts.*', 'users.name')
+            ->where('test_attempts.test_id', $testId)
+            ->orderBy('user_id')
+            ->get();
 
+            $userIds = testAttempt::where('test_id', $testId)->pluck('user_id')->toArray();
+            $users = User::whereIn('id', $userIds)->get();
 
+            $groupIds = TestsGroups::where('test_id', $testId)->pluck('group_id')->toArray();
+            $groups = group::whereIn('id', $groupIds)->get();
+
+            $groups_users = groups_users::whereIn('group_id', $groupIds)->whereIn('user_id', $userIds)->get();
+            return view('test.info.show', ['testAttempts'=> $testAttempts, 'test'=>$test, 'users'=>$users, 'groups'=>$groups, 'groups_users'=>$groups_users]);
+        }
     }
 }

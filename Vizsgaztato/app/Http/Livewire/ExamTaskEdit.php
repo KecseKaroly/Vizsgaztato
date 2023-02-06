@@ -6,7 +6,11 @@ use App\Models\task;
 use App\Models\question;
 use App\Models\answer;
 use App\Models\answer_value;
+use App\Models\TestsGroups;
 use Livewire\Component;
+use App\Http\Controllers\TestsGroupsController;
+use App\Models\group;
+
 use Barryvdh\Debugbar\Facade as Debugbar;
 
 class ExamTaskEdit extends Component
@@ -19,11 +23,46 @@ class ExamTaskEdit extends Component
     public $testTitle ='';
     public $testAttempts = 1;
     public $testId = 1;
-    public function mount($testLiveWire) {
+
+    public $searchValue;
+    public $searchResults;
+    public $selectedResults;
+    public $givenGroups;
+    public function updatedSearchValue() {
+        $this->searchResults = group::where('name', 'LIKE', '%'.$this->searchValue.'%')->get()->toArray();
+    }
+
+    public function addToSelectedResults($index) {
+        if(!in_array($this->searchResults[$index], $this->selectedResults)){
+            $this->searchValue = '';
+            array_push($this->selectedResults, $this->searchResults[$index]);
+        }
+    }
+
+    public function removeFromSelectedResults($index) {
+        unset($this->selectedResults[$index]);
+
+    }
+
+    public function saveSelectedResults($testId) {
+        $result = (new TestsGroupsController)->store($this->selectedResults, $testId);
+    }
+
+    public function mount($testLiveWire, $groups) {
         $this->testId = $testLiveWire['id'];
         $this->testTitle = $testLiveWire['title'];
         $this->testAttempts = $testLiveWire['maxAttempts'];
         $this->tasks = $testLiveWire['tasks'];
+
+        $this->selectedResults = $groups;
+        $this->givenGroups = $groups;
+        $this->ResetInputField();
+    }
+
+    public function ResetInputField() {
+
+        $this->searchValue = "";
+        $this->searchResults = [];
     }
 
     protected $listeners = ['taskTypeChanged'];
@@ -236,6 +275,7 @@ class ExamTaskEdit extends Component
                 }
             }
         }
+        $this->saveSelectedResults($testModel->id);
         foreach($this->deletedTasks as $task) {
             $task = task::find($task['id']);
             $task->delete();
@@ -250,6 +290,13 @@ class ExamTaskEdit extends Component
             $answer->delete();
 
         }
+        foreach($this->givenGroups as $givenGroup) {
+            if (!in_array($givenGroup, $this->selectedResults)) {
+                $test_group = TestsGroups::where(['group_id'=>$givenGroup['id'], 'test_id'=>$this->testId]);
+                $test_group->delete();
+            }
+        }
+
         return  redirect()->route('test.index');
     }
 

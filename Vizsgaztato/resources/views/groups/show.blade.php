@@ -14,7 +14,7 @@
             <a href="{{ route('groups.edit', $group->id) }}"><div>Szerkesztés</div></a>-->
         </div>
 
-        @if($myRole === 'Admin')
+        @if($myRole === 'admin')
         <div>
            @livewire('search-users', ['groupId'=>$group->id])
         </div>
