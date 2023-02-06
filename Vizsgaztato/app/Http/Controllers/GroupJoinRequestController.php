@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Response;
 use App\Models\group_join_request;
 use App\Models\group;
+use App\Models\group_inv;
 use App\Models\groups_users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,8 +42,13 @@ class GroupJoinRequestController extends Controller
         $groups_users_connetion->group_id =  $request->group_id;
         $groups_users_connetion->role = "member";
         $groups_users_connetion->save();
+
         $join_request = group_join_request::find($request->join_request_id);
         $join_request->delete();
+
+        $join_request = group_inv::where(['invited_id'=>$request->requester_id, 'group_id'=>$request->group_id]);
+        if($join_request->exists())
+            $join_request->delete();
         return response()->json(['success'=>'Csatlakozási kérelem elfogadva']);
     }
 

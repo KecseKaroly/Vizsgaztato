@@ -85,7 +85,8 @@ class GroupController extends Controller
             })
             ->get();
         Session::forget('gid');
-        return view('groups.show', ['members'=> $members, 'group' => $group]);
+        $myRole = groups_users::where(['user_id'=>Auth::id(), 'group_id'=>$group->id])->first()->role;
+        return view('groups.show', ['members'=> $members, 'group' => $group, 'myRole'=>$myRole]);
     }
 
     /**

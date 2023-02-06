@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sender_id');
             $table->foreignId('group_id');
+            $table->foreignId('invited_id');
             $table->timestamps();
 
             $table->foreign('sender_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('invited_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
         });
     }

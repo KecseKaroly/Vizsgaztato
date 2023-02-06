@@ -40,6 +40,10 @@
                                 </div>
                             </a>
                         @endif
+                        <div>
+                            <a href="{{ route('groups.show', $group->id) }}">
+                                <i class="fa-solid fa-angles-right"></i></a>
+                        </div>
                     </div>
             @endforeach
         </div>

@@ -53,5 +53,38 @@ $(".acceptJoinRequest").click(function(e){
           document.getElementById(`request-${reqId}`).remove();
        }
     });
+});
 
+$(".declineInvRequest").click(function(e){
+    e.preventDefault();
+    const params = $(this).data();
+    const reqId = params["id"];
+    $.ajax({
+       type:'DELETE',
+       url:"/decline_inv_request",
+       data:{inv_request_id:reqId},
+       success:function(data){
+          alert(data.success);
+          document.getElementById(`request-${reqId}`).remove();
+       }
+    });
+
+});
+
+$(".acceptInvRequest").click(function(e){
+    e.preventDefault();
+    const params = $(this).data();
+    const reqId = params["id"];
+    const invited_id = params["invited_id"];
+    const sender_id = params["sender_id"];
+    const group_id = params["group_id"];
+    $.ajax({
+       type:'POST',
+       url:"/accept_inv_request",
+       data:{inv_request_id:reqId,sender_id:sender_id,group_id:group_id,invited_id:invited_id},
+       success:function(data){
+          alert(data.success);
+          document.getElementById(`request-${reqId}`).remove();
+       }
+    });
 });

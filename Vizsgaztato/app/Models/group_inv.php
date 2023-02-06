@@ -13,7 +13,7 @@ class group_inv extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['sender_id', 'group_id'];
+    protected $fillable = ['sender_id', 'group_id', 'invited_id'];
 
     public $timestamps = false;
 }

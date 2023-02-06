@@ -6,25 +6,19 @@
             <div class="text-center mb-12 font-black text-3xl w-10/12">Csoport</div>
         </div>
         <div>
-            <form method="POST" action="{{route('groups.destroy', $group->id) }}"  >
+            <!--<form method="POST" action="{{route('groups.destroy', $group->id) }}"  >
                 @method('DELETE')
                 @csrf
                 <button type="submit">Csoport törlése</button>
             </form>
-            <a href="{{ route('groups.edit', $group->id) }}"><div>Szerkesztés</div></a>
+            <a href="{{ route('groups.edit', $group->id) }}"><div>Szerkesztés</div></a>-->
         </div>
 
+        @if($myRole === 'Admin')
         <div>
-            <div>Felhasználó meghívása a csoportba</div>
-            <div>
-                <div>
-                    <label for="email">E-mail:</label>
-                </div>
-                <div>
-                    <input type="email" name="email" id="email" required autofocus/>
-                </div>
-            </div>
+           @livewire('search-users', ['groupId'=>$group->id])
         </div>
+        @endif
         <div class="bg-slate-50 w-11/12 rounded-xl">
             @foreach($members as $member)
 

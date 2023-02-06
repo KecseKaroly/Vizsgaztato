@@ -3,83 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Models\group_inv;
+use App\Models\group;
+use App\Models\group_join_request;
+use App\Models\groups_users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GroupInvController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+   public function store($selectedResults, $groupId) {
+        foreach($selectedResults as $selectedResult) {
+            if( !(groups_users::where(['group_id'=>$groupId, 'user_id'=>$selectedResult['id']]))->exists() &&
+                !(group_inv::where(['group_id'=>$groupId, 'invited_id'=>$selectedResult['id']]))->exists())
+            {
+                $group_inv = new group_inv;
+                $group_inv->sender_id = Auth::id();
+                $group_inv->group_id = $groupId;
+                $group_inv->invited_id = $selectedResult['id'];
+                $group_inv->save();
+            }
+        }
+   }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+   public function index() {
+    $inv_requests = DB::table('group_invs')
+        ->join('users', 'users.id', '=', 'group_invs.sender_id')
+        ->join('groups', 'groups.id', '=', 'group_invs.group_id')
+        ->select('users.name as USERNAME', 'groups.name', 'group_invs.*')
+        ->where('group_invs.invited_id', Auth::id())
+        ->get();
+    return view('groups.inv_request.index')->with('inv_requests', $inv_requests);
+}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+public function AcceptRequest(Request $request) {
+    $groups_users_connetion = new groups_users;
+    $groups_users_connetion->user_id =  $request->invited_id;
+    $groups_users_connetion->group_id =  $request->group_id;
+    $groups_users_connetion->role = "member";
+    $groups_users_connetion->save();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\group_inv  $group_inv
-     * @return \Illuminate\Http\Response
-     */
-    public function show(group_inv $group_inv)
-    {
-        //
-    }
+    $inv_request = group_inv::find($request->inv_request_id);
+    $inv_request->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\group_inv  $group_inv
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(group_inv $group_inv)
-    {
-        //
-    }
+    $join_request = group_join_request::where(['requester_id'=>$request->invited_id, 'group_id'=>$request->group_id]);
+    if($join_request->exists())
+        $join_request->delete();
+    return response()->json(['success'=>'Meghívás elfogadva']);
+}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\group_inv  $group_inv
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, group_inv $group_inv)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\group_inv  $group_inv
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(group_inv $group_inv)
-    {
-        //
-    }
+public function RejectRequest(Request $request) {
+    $inv_request = group_inv::find($request->inv_request_id);
+    $inv_request->delete();
+    return response()->json(['success'=>'Meghívás elutasítva']);
+}
 }
