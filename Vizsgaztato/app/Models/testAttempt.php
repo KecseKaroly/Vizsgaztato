@@ -11,8 +11,8 @@ class testAttempt extends Model
     protected $table = 'test_attempts';
 
     protected $primaryKey = 'id';
-    
+
     protected $fillable = ['user_id', 'test_id', 'maxScore', 'achievedScore'];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }

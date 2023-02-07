@@ -14,5 +14,5 @@ class groups_users extends Model
 
     protected $fillable = ['user_id', 'group_id', 'role'];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }

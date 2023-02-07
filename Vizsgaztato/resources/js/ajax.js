@@ -91,19 +91,16 @@ $(".user_id").click(function(e){
     const params = $(this).data();
     const user_id = params["user_id"];
     const group_id = params["group_id"];
-    let element = document.getElementById(`attempts_of_user${user_id}_${group_id}`);
-    if(element.style.display === "none")
-        element.style.display = "block";
-    else element.style.display = "none";
+    $(`#attempts_of_user${user_id}_${group_id}`).toggle('fast');
+    $(`#arrow_of_user${user_id}_${group_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up', 1000);
+
 });
 
 $(".group_id").click(function(e){
     const params = $(this).data();
     const group_id = params["group_id"];
-    let element = document.getElementById(`attempts_of_group${group_id}`);
-    if(element.style.display === "none")
-        element.style.display = "block";
-    else element.style.display = "none";
+    $(`#attempts_of_group${group_id}`).toggle('fast');
+    $(`#arrow_of_group${group_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up');
 });
 
 $(".updateTestGroups").click(function(e){
