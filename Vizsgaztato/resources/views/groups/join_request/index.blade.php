@@ -8,27 +8,30 @@
         <div>
 
         </div>
-        <div class="bg-slate-50 w-11/12 rounded-xl">
+        <div class="bg-slate-50 w-11/12 rounded-xl divide-y">
             @foreach($join_requests as $join_request)
-                <div id="request-{{ $join_request->id }}">
-                    <div>{{ $join_request->name }}</div>
-                    <div>
-                        <form method="POST">
-                            @csrf
-                            <input type="hidden" name="join_request_id" value="{{ $join_request->id }}">
-                            <input type="hidden" name="requester_id" value="{{ $join_request->requester_id }}">
-                            <button type="submit" data-id="{{ $join_request->id }}" data-requester_id="{{ $join_request->requester_id }}" data-group_id="{{ $join_request->group_id }}" class="acceptJoinRequest">Elfogad</button>
-                        </form>
-                    </div>
-                    <div>
-                        <form method="POST">
-                            @csrf
-                            <button type="submit" data-id="{{ $join_request->id }}" class="declineJoinRequest">Elutasít</button>
-                        </form>
+                <div id="request-{{ $join_request->id }}" class="flex justify-between p-4 text-center">
+                    <div class="font-medium ml-12 my-auto">{{ $join_request->name }}</div>
+                    <div class="flex  text-4xl">
+                        <div class="md:mx-24">
+                            <form method="POST">
+                                @csrf
+                                <input type="hidden" name="join_request_id" value="{{ $join_request->id }}">
+                                <input type="hidden" name="requester_id" value="{{ $join_request->requester_id }}">
+                                <button type="submit" data-id="{{ $join_request->id }}" data-requester_id="{{ $join_request->requester_id }}" data-group_id="{{ $join_request->group_id }}" class="acceptJoinRequest"><i class="fa-solid fa-circle-check" style="color: green;"></i></button>
+                            </form>
+                        </div>
+                        <div class="md:mx-24">
+                            <form method="POST">
+                                @csrf
+                                <button type="submit" data-id="{{ $join_request->id }}" class="declineJoinRequest"><i class="fa-solid fa-circle-xmark" style="color: red;"></i></button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
     </div>
 </div>
+
 @endsection

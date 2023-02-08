@@ -22,7 +22,7 @@
         </div>
     @endforeach
     <div>
-        <button wire:click="saveSelectedResults()">Meghívás</button>
+        <button wire:click="saveSelectedResults()" class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-2 rounded-lg"><i class="fa-solid fa-user-plus"></i> Meghívás</button>
     </div>
     <script>
         //https://stackoverflow.com/questions/15369572/jquery-focusout-for-entire-div-and-children

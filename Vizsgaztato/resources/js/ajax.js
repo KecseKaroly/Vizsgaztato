@@ -4,7 +4,7 @@ $.ajaxSetup({
     }
 });
 
-$(".btn-submit").click(function(e){
+$("#sendInvCode").click(function(e){
     e.preventDefault();
     var invCode = $("input[name=invCode]").val();
     $.ajax({
@@ -136,3 +136,13 @@ $(".deleteTestGroups").click(function(e){
        }
     });
 });
+$(".copyInvCode").click(function(e) {
+    const params = $(this).data();
+    const invCode = params["invcode"];
+    navigator.clipboard.writeText(invCode);
+    $("#invCodeCopiedMessage").show();
+    $("#copyMessage").html(`Vágólapra másolva`);
+    setTimeout(function (){
+        $("#invCodeCopiedMessage").fadeOut(400);
+    }, 3000);
+})

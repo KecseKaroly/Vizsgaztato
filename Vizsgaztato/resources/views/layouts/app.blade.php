@@ -24,7 +24,7 @@
     @livewireStyles
 </head>
 <body class="bg-slate-300">
-    <div id="app">
+    <div id="app" class="relative h-screen">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-5">
             <div class="container">
                 <div class="flex justify-between">
@@ -89,7 +89,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main>
             @yield('content')
         </main>
     </div>
