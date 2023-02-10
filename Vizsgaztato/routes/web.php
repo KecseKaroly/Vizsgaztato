@@ -5,6 +5,8 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupJoinRequestController;
 use App\Http\Controllers\GroupInvController;
+use App\Http\Controllers\GroupsUsersController;
+use App\Http\Controllers\TestAttemptController;
 use App\Http\Controllers\TestsGroupsController;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,4 +47,7 @@ Route::delete('/decline_join_request', [GroupJoinRequestController::class, 'Reje
 Route::post('/accept_inv_request', [GroupInvController::class, 'AcceptRequest'])->middleware('auth')->name('declineGroupInvRequest');
 Route::delete('/decline_inv_request', [GroupInvController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupInvRequest');
 
+Route::delete('/removeUserFromGroup', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('removeUserFromGroup');
+Route::delete('/leaveFromGroup', [GroupsUsersController::class, 'leave'])->middleware('auth')->name('leaveFromGroup');
+Route::delete('/deleteTestAttempt', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
 Auth::routes();

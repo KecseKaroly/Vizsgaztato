@@ -14,6 +14,9 @@
             </div>
         </div>
         <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2">
+            @if(isset($noAttempts))
+                Még nincsen kitöltve
+            @else
             @foreach($groups as $group)
                 <div class="my-6">
                     <div class="bg-slate-600 rounded-lg">
@@ -24,45 +27,50 @@
                     </div>
 
                     <div id="attempts_of_group{{ $group->id }}" style="display: none;">
-                            @foreach($groups_users as $group_user)
-                                @if($group_user->group_id == $group->id)
-                                    @foreach($users as $user)
-                                    @if($user->id == $group_user->user_id)
-                                        <div class="user_id bg-slate-500" data-user_id="{{ $user->id }}" data-group_id="{{ $group->id }}">
-                                            <div class="hover:bg-blue-400 rounded-md flex w-full justify-between text-lg hover:cursor-pointer py-2 px-3 pl-12">
-                                                <div class="flex font-semibold hover:underline">
-                                                    {{ $user->name }}
-                                                </div>
-                                                <div class="pr-6"><i class="fa-solid fa-angles-down" id="arrow_of_user{{ $user->id }}_{{ $group->id }}"></i></div>
+                        @foreach($groups_users as $group_user)
+                            @if($group_user->group_id == $group->id)
+                                @foreach($users as $user)
+                                @if($user->id == $group_user->user_id)
+                                    <div class="user_id bg-slate-500" data-user_id="{{ $user->id }}" data-group_id="{{ $group->id }}">
+                                        <div class="hover:bg-blue-400 rounded-md flex w-full justify-between text-lg hover:cursor-pointer py-2 px-3 pl-12">
+                                            <div class="flex font-semibold hover:underline">
+                                                {{ $user->name }}
                                             </div>
+                                            <div class="pr-6"><i class="fa-solid fa-angles-down" id="arrow_of_user{{ $user->id }}_{{ $group->id }}"></i></div>
                                         </div>
-                                        <div id="attempts_of_user{{ $user->id }}_{{ $group->id }}" style="display: none;">
-                                            @foreach ($testAttempts as $testAttempt )
-                                                @if($testAttempt->user_id == $user->id)
-                                                <div class="bg-slate-400">
-                                                    <div class="hover:bg-blue-400 rounded-md flex w-full justify-between text-lg hover:cursor-pointer pl-24 px-6 py-1">
-                                                        <div class="mr-12">
-                                                            <a href="{{ route('checkAttemptResult', [$test->id, $testAttempt->id]) }}">test#{{ $testAttempt->id }}</a>
-                                                        </div>
-                                                        <div class="mr-12">
-                                                            {{ $testAttempt->achievedScore }}/{{ $testAttempt->maxScore }}
-                                                        </div>
-                                                        <div>
-                                                            Dátum: {{ $testAttempt->created_at }}
-                                                        </div>
+                                    </div>
+                                    <div id="attempts_of_user{{ $user->id }}_{{ $group->id }}" style="display: none;">
+                                        @foreach ($testAttempts as $testAttempt )
+                                            @if($testAttempt->user_id == $user->id)
+                                            <div class="bg-slate-400" id="testAttempt#{{ $testAttempt->id }}">
+                                                <div class="hover:bg-blue-400 rounded-md flex w-full justify-between text-lg pl-24 px-6 py-1">
+                                                    <div class="mr-12">
+                                                        <a href="{{ route('checkAttemptResult', [$test->id, $testAttempt->id]) }}">test#{{ $testAttempt->id }}</a>
+                                                    </div>
+                                                    <div class="mr-12">
+                                                        {{ $testAttempt->achievedScore }}/{{ $testAttempt->maxScore }}
+                                                    </div>
+                                                    <div>
+                                                        Dátum: {{ $testAttempt->created_at }}
+                                                    </div>
+                                                    <div>
+                                                        <form>
+                                                            <button data-id="{{ $testAttempt->id }}" class="deleteTestAttempt"><i class="fa-solid fa-trash-can"></i></button>
+                                                        </form>
                                                     </div>
                                                 </div>
-
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                    @endforeach
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 @endif
-                            @endforeach
+                                @endforeach
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             @endforeach
+            @endif
         </div>
     </div>
 </div>

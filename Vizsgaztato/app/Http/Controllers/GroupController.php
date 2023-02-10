@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\group;
 use App\Models\group_join_request;
+use App\Models\group_inv;
 use App\Models\groups_users;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -29,7 +30,8 @@ class GroupController extends Controller
         foreach($groups as $group) {
             $group->join_requests = group_join_request::where('group_id', $group->id)->groupBy('group_id')->count();
         }
-        return view('groups.index')->with('groups',$groups);
+        $inv_requests = group_inv::where('invited_id', Auth::id())->count();
+        return view('groups.index', ['groups'=>$groups, 'inv_requests'=>$inv_requests]);
     }
 
     /**
@@ -78,13 +80,12 @@ class GroupController extends Controller
      */
     public function show(group $group)
     {
-        Session::put('gid', $group->id);
-        $members = DB::table("users")->select('*')
-            ->whereIn('id',function($query){
-               $query->select('user_id')->from('groups_users')->where('group_id', Session::get('gid'));
-            })
+        $members = DB::table('groups_users')
+            ->join('users', 'users.id', '=', 'groups_users.user_id')
+            ->select('users.*', 'groups_users.role', 'groups_users.id as GUID')
+            ->where('groups_users.group_id',$group->id)
+            ->orderBy('groups_users.role')
             ->get();
-        Session::forget('gid');
         $myRole = groups_users::where(['user_id'=>Auth::id(), 'group_id'=>$group->id])->first()->role;
         return view('groups.show', ['members'=> $members, 'group' => $group, 'myRole'=>$myRole]);
     }

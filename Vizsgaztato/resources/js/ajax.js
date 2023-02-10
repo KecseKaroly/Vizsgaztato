@@ -146,3 +146,37 @@ $(".copyInvCode").click(function(e) {
         $("#invCodeCopiedMessage").fadeOut(400);
     }, 3000);
 })
+$(".removeUserFromGroup").click(function(e){
+    e.preventDefault();
+    const params = $(this).data();
+    const reqId = params["id"];
+    console.log(reqId);
+    $.ajax({
+       type:'DELETE',
+       url:"/removeUserFromGroup",
+       data:{groups_users_id:reqId},
+       success:function(data){
+          alert(data.success);
+          document.getElementById(`group_user-${reqId}`).remove();
+       }
+    });
+
+});
+
+$(".deleteTestAttempt").click(function(e){
+    if(confirm("Biztosan törölni szeretné?")) {
+        e.preventDefault();
+        const params = $(this).data();
+        const reqId = params["id"];
+        console.log(reqId);
+        $.ajax({
+           type:'DELETE',
+           url:"/deleteTestAttempt",
+           data:{testAttemptId:reqId},
+           success:function(data){
+              alert(data.success);
+              document.getElementById(`testAttempt#${reqId}`).remove();
+           }
+        });
+    }
+});

@@ -30,34 +30,52 @@
                     <input type="text"  wire:model="testAttempts" id="numOfTestAttempt" class="w-full bg-orange-200 border-4 rounded-lg text-lg placeholder-[#716156]">
                 </div>
             </div>
-
-
-
-            <div id="groupInputContainer">
-                <input type="text" wire:model.debounce.500ms="searchValue" id="groupInputField" autocomplete="off"/>
-                @if(!empty($searchValue))
-                    <div id="searchResults">
-                        @if(!empty($searchResults))
-                                @foreach($searchResults as $index => $searchResult)
-                                    <button wire:click="addToSelectedResults({{ $index }})" class="hover:bg-blue-300">{{ $searchResult['name'] }}</button>
-                                @endforeach
-                        @else
-                            <div>Nincs találat...</div>
-                        @endif
+            <div id="container">
+                <div class="lg:flex">
+                    <div class="mb-2">
+                        <div class="w-full ">
+                            <input type="text" wire:model.debounce.500ms="searchValue" id="emailInputField" placeholder="Minta Csoport" autocomplete="off" class="font-semibold text-md focus:border-blue-800 focus:bg-blue-100 bg-blue-50 rounded-t-lg border-blue-300  lg:w-fit w-full" size="40"/>
+                            <div class="w-full relative">
+                                @if(!empty($searchValue))
+                                    <div id="searchResults" wire:loading.remove class="text-md absolute z-10 top-0 -left-0.5 -right-0.5 divide-y-2">
+                                        @if(!empty($searchResults))
+                                            @foreach($searchResults as $index => $searchResult)
+                                                <div class="px-2 py-1 font-semibold text-md hover:bg-blue-400 border-x-2 border-blue-800 bg-blue-50 w-full">
+                                                    <button wire:click="addToSelectedResults({{ $index }})">{{ $searchResult['name'] }}</button>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                        <div class="px-2 py-1 border-x-4 border-blue-300 hover:bg-blue-200 bg-blue-50 border-b-2">Nincs találat...</div>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                @endif
+                </div>
+            </div>
+            <div class="flex flex-wrap mt-2">
+                @foreach ($selectedResults as $index => $selectedResult)
+                    <div class="bg-stone-50 border-2 border-stone-800 text-stone-500 rounded-full py-1 w-fit flex content-center text-sm divide-x-2">
+                        <div class="mx-2"><i class="fa-solid fa-users"></i></div>
+                        <div class="flex pl-1.5">
+                            {{ $selectedResult['name'] }}
+                            <div class="mx-1">
+                                <button wire:click="removeFromSelectedResults({{ $index }})">
+                                    <span class="fa-stack" style="font-size: 0.75em;">
+                                        <i class="fa-solid fa-circle-xmark fa-stack-2x text-red-500"></i>
+                                        <i class="fa-solid fa-xmark fa-stack-1x fa-inverse"></i>
+                                      </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
-            @foreach ($selectedResults as $index => $selectedResult)
-                <div>
-                    {{ $selectedResult['name'] }}
-                    <button wire:click="removeFromSelectedResults({{ $index }})"> (x)</button>
-                </div>
-            @endforeach
-
-            <div class="pl-4 sm:mt-2 mt-4">
+            <div class="sm:mt-2 mt-4">
                 <button wire:click="Add_Task" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                    <span class=" font-black pl-3">Új feladat hozzáadása</span>
+                    <span class=" font-black ">Új feladat hozzáadása</span>
                 </button>
             </div>
         </div>

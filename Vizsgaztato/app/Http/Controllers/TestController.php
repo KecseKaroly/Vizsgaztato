@@ -188,11 +188,11 @@ class TestController extends Controller
         }
 
         $groupIds = TestsGroups::where('test_id',$test->id)->pluck('group_id')->toArray();
-
         $groups = DB::table('groups')
         ->join('tests_groups', 'tests_groups.group_id', '=', 'groups.id')
         ->select('groups.*')
         ->whereIn('groups.id', $groupIds)
+        ->where('tests_groups.test_id', $test->id)
         ->get()
         ->toArray();
         $groupArray = [];
@@ -340,6 +340,7 @@ class TestController extends Controller
 
     public function testInfo($testId) {
         $test = test::find($testId);
+
         if(testAttempt::where(['test_id' => $test->id])->count() == 0)
         {
             return view('test.info.show', ['noAttempts'=> 'Még nincsen a teszthez próbálkozás!', 'test'=>$test]);

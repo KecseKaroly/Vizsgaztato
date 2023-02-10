@@ -18,8 +18,15 @@
                 <a href="{{ route('checkTestInfo', [$test->id])}}">
                     <div class="flex flex-col lg:px-12 md:px-9 sm:px-6 px-3 py-3 max-w w-full bg-gray-400 rounded-lg shadow-lg my-9  align-middle md:align-bottom">
                         <div class="md:flex w-full justify-between items-center">
-                            <div class="text-2xl font-black font-mono w-full  hover:underline">{{$test->title}}</div>
-                            <div><a href="{{ route('test.edit', $test->id) }}" ><button class="bg-white border rounded-lg text-yellow-300 p-3 font-semibold text-lg"><i class="fa-regular fa-pen-to-square fa-xl"></i>Szerkesztés</a></button></div>
+                            <div class="text-2xl font-black font-mono w-full  hover:underline  md:text-left text-center">{{$test->title}}</div>
+                            <div>
+                                <a href="{{ route('test.edit', $test->id) }}" >
+                                    <button class="bg-yellow-50 hover:bg-yellow-300 text-yellow-300 hover:text-yellow-50 border-4 border-yellow-300 hover:border-yellow-50 rounded-lg  font-semibold text-lg md:w-fit w-full py-1.5 px-2 mt-1.5 mb-2.5">
+                                        <i class="fa-regular fa-pen-to-square fa-xl"></i> Csoport Szerkesztése
+                                    </button>
+                                </a>
+
+                                </div>
                         </div>
                     </div>
                 </a>

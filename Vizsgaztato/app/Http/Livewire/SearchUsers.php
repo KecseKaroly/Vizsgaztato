@@ -32,6 +32,7 @@ class SearchUsers extends Component
 
     public function saveSelectedResults() {
         $result = (new GroupInvController)->store($this->selectedResults, $this->groupId);
+        $this->selectedResults = [];
     }
 
     public function render()

@@ -86,6 +86,7 @@ class ExamTaskEdit extends Component
         }
         unset($this->tasks[$taskIndex]);
     }
+
     public function Add_Question($index)
     {
         $answers = [];
