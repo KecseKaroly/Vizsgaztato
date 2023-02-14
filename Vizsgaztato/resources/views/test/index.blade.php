@@ -14,31 +14,39 @@
         <div class="md:flex">
             <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-100 rounded-lg border  shadow-xl">
                 @foreach ($tests as $test )
-                @if( $test->creator_id == Auth::id())
-                <a href="{{ route('checkTestInfo', [$test->id])}}">
-                    <div class="flex flex-col lg:px-12 md:px-9 sm:px-6 px-3 py-3 max-w w-full bg-gray-400 rounded-lg shadow-lg my-9  align-middle md:align-bottom">
-                        <div class="md:flex w-full justify-between items-center">
-                            <div class="text-2xl font-black font-mono w-full  hover:underline  md:text-left text-center">{{$test->title}}</div>
-                            <div>
-                                <a href="{{ route('test.edit', $test->id) }}" >
-                                    <button class="bg-yellow-50 hover:bg-yellow-300 text-yellow-300 hover:text-yellow-50 border-4 border-yellow-300 hover:border-yellow-50 rounded-lg  font-semibold text-lg md:w-fit w-full py-1.5 px-2 mt-1.5 mb-2.5">
-                                        <i class="fa-regular fa-pen-to-square fa-xl"></i> Csoport Szerkesztése
-                                    </button>
-                                </a>
+                <div class="bg-slate-600 w-10/12 mx-auto mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
+                    <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
+                        <a href="{{ route('checkTestInfo', [$test->id]) }}">
+                         {{$test->title}}
+                        </a>
+                    </div>
+                    <div class="md:mt-0 my-2 lg:text-right w-fit font-medium relative">
+                        @if($test->creator_id == Auth::id())
+                            <a href="{{ route('test.edit', $test->id) }}" >
+                                <button class="bg-yellow-50 hover:bg-yellow-300 text-yellow-300 hover:text-yellow-50 border-4 border-yellow-300 hover:border-yellow-50 rounded-lg  font-semibold text-lg md:w-fit w-full py-1.5 px-2 mt-1.5 mb-2.5">
+                                    <i class="fa-regular fa-pen-to-square fa-xl"></i> Feladatlap Szerkesztése
+                                </button>
+                            </a>
+                        @endif
+                    </div>
+                    <div>
+                        @if($test->creator_id == Auth::id())
+                            <a href="{{ route('checkTestInfo', [$test->id]) }}">
+                                <button class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
+                                    <i class="fa-solid fa-angles-right"></i>
+                                </button>
+                            </a>
+                        @else
+                            <a href="{{ route('checkTestResults', [$test->id]) }}">
+                                <button class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
+                                    <i class="fa-solid fa-angles-right"></i>
+                                </button>
+                            </a>
+                        @endif
+                    </div>
+                </div>
 
-                                </div>
-                        </div>
-                    </div>
-                </a>
-                @else
-                <a href="{{ route('checkTestResults', [$test->id])}}">
-                    <div class="flex flex-col lg:px-12 md:px-9sm:px-6 px-3 py-3 max-w w-full bg-gray-400 rounded-lg  shadow-lg my-9">
-                        <div class="md:flex">
-                            <div class="text-2xl font-black font-mono truncate w-10/12">{{$test->title}}</div>
-                        </div>
-                    </div>
-                </a>
-                @endif
+
                 @endforeach
             </div>
         </div>

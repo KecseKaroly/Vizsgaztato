@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('maxAttempts');
+            $table->integer('duration');
+            $table->foreignId('creator_id');
             $table->foreignId('creator_id');
             $table->timestamps();
 

@@ -36,7 +36,7 @@
                     </a>
                 </div>
                 <div class="w-full">
-                    @foreach($groups as $group)
+                @foreach($groups as $group)
                     <div class="bg-slate-600 w-10/12 mx-auto mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
                         <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
                             <a href="{{ route('groups.show', $group->id) }}">
@@ -60,7 +60,7 @@
                                 </a>
                             @endif
                         </div>
-                        <div class="">
+                        <div>
                             <a href="{{ route('groups.show', $group->id) }}">
                                 <button class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
                                     <i class="fa-solid fa-angles-right"></i>
@@ -68,7 +68,7 @@
                             </a>
                         </div>
                     </div>
-            @endforeach
+                @endforeach
                 </div>
 
             </div>

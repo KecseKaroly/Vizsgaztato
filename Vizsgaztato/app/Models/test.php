@@ -13,9 +13,9 @@ class test extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['title','maxAttempts', 'creator_id'];
+    protected $fillable = ['title','maxAttempts', 'duration', 'creator_id'];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function tasks()
     {

@@ -59,16 +59,19 @@ class GroupController extends Controller
         if(group::where('invCode', $request->group_invCode)->exists()) {
             return redirect()->route('groups.index');
         }
+
         $group = new group;
         $group->name = $request->group_name;
         $group->invCode = $request->group_invCode;
         $group->creator_id = Auth::id();
         $group->save();
+
         $groups_users = new groups_users;
         $groups_users->user_id = Auth::id();
         $groups_users->group_id = $group->id;
         $groups_users->role = "admin";
         $groups_users->save();
+
         return redirect()->route('groups.index');
     }
 

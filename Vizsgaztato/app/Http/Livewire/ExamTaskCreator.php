@@ -15,14 +15,15 @@ use Barryvdh\Debugbar\Facade as Debugbar;
 
 class ExamTaskCreator extends Component
 {
-    public $tasks = [];
-    public $testTitle = "";
-    public $testAttempts = 1;
+    public $tasks;
+    public $testTitle;
+    public $testAttempts;
+    public $durationHour;
+    public $durationMinute;
 
     public $searchValue;
     public $searchResults;
     public $selectedResults;
-
     public function updatedSearchValue() {
         $this->searchResults = group::where('name', 'LIKE', '%'.$this->searchValue.'%')->get()->toArray();
     }
@@ -43,8 +44,12 @@ class ExamTaskCreator extends Component
     }
 
     public function mount() {
-
+        $this->tasks = [];
         $this->selectedResults = [];
+        $this->testTitle = "";
+        $this->testAttempts = 1;
+        $this->durationHour = 0;
+        $this->durationMinute = 1;
         $this->ResetInputField();
     }
 
@@ -131,6 +136,7 @@ class ExamTaskCreator extends Component
         $testModel = new test;
         $testModel->title = $this->testTitle;
         $testModel->maxAttempts = $this->testAttempts;
+        $testModel->duration = $this->durationHour*60 + $this->durationMinute;
         $testModel->creator_id = Auth::id();
         $testModel->save();
         foreach($this->tasks as $taskIndex => $task) {

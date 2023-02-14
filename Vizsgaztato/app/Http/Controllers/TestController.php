@@ -70,6 +70,7 @@ class TestController extends Controller
         $testLiveWire = [
             'id' => $test->id,
             'title' => $test->title,
+            'duration' => $test->duration,
             'tasks' => []
         ];
         $tasks = task::where('test_id', $test->id)->get();
@@ -129,6 +130,7 @@ class TestController extends Controller
             'id' => $test->id,
             'title' => $test->title,
             'maxAttempts' => $test->maxAttempts,
+            'duration' => $test->duration,
             'tasks' => []
         ];
 
@@ -349,11 +351,10 @@ class TestController extends Controller
         {
             $testAttempts = DB::table('test_attempts')
             ->join('users', 'users.id', '=', 'test_attempts.user_id')
-            ->select('test_attempts.*', 'users.name')
+            ->select('test_attempts.*', 'users.*')
             ->where('test_attempts.test_id', $testId)
             ->orderBy('user_id')
             ->get();
-
             $userIds = testAttempt::where('test_id', $testId)->pluck('user_id')->toArray();
             $users = User::whereIn('id', $userIds)->get();
 
@@ -361,6 +362,24 @@ class TestController extends Controller
             $groups = group::whereIn('id', $groupIds)->get();
 
             $groups_users = groups_users::whereIn('group_id', $groupIds)->whereIn('user_id', $userIds)->get();
+
+            foreach($groups as $group) {
+                $group->users = DB::table('groups_users')
+                                ->join('users', 'users.id', '=', 'groups_users.user_id')
+                                ->join('groups', 'groups.id', '=', 'groups_users.group_id')
+                                ->select('users.*')
+                                ->where('groups_users.group_id', $group->id)
+                                ->orderBy('user_id')
+                                ->get();
+                foreach($group->users as $user) {
+                    $user->attempts = DB::table('test_attempts')
+                                        ->join('users', 'users.id', '=', 'test_attempts.user_id')
+                                        ->select('test_attempts.*')
+                                        ->where('test_attempts.user_id', $user->id)
+                                        ->orderBy('user_id')
+                                        ->get();
+                }
+            }
             return view('test.info.show', ['testAttempts'=> $testAttempts, 'test'=>$test, 'users'=>$users, 'groups'=>$groups, 'groups_users'=>$groups_users]);
         }
     }

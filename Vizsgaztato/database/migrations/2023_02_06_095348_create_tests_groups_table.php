@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('test_id');
             $table->foreignId('group_id');
-            $table->date('enabled_from')->nullable()->default(NULL);
-            $table->date('enabled_until')->nullable()->default(NULL);
+            $table->dateTime('enabled_from')->nullable()->default(NULL);
+            $table->dateTime('enabled_until')->nullable()->default(NULL);
             $table->timestamps();
 
             $table->foreign('test_id')->references('id')->on('tests')->onUpdate('cascade')->onDelete('cascade');

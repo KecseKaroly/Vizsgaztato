@@ -16,12 +16,11 @@ class ExamTaskWrite extends Component
         return view('livewire.exam-task-write');
     }
     public $test;
-
     public function mount($testLiveWire)
     {
        $this->test = $testLiveWire;
     }
-
+    protected $listeners = ['timeRanOut'];
     public function updateTaskOrder($list) {
         $newAnswers = [];
         foreach($list as $element) {
@@ -76,5 +75,9 @@ class ExamTaskWrite extends Component
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
         return redirect('/test/'.$this->test['id'].'/result/'.$attempt->id);
+    }
+
+    public function timeRanOut() {
+        $this->endTest();
     }
 }

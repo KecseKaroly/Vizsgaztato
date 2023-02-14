@@ -19,6 +19,8 @@ class ExamTaskEdit extends Component
     public $deletedQuestions = [];
     public $deletedAnswers = [];
 
+    public $durationHour;
+    public $durationMinute;
     public $tasks = [];
     public $testTitle ='';
     public $testAttempts = 1;
@@ -49,6 +51,8 @@ class ExamTaskEdit extends Component
     }
 
     public function mount($testLiveWire, $groups) {
+        $this->durationHour = floor($testLiveWire['duration']/60);
+        $this->durationMinute = $testLiveWire['duration'] - $this->durationHour*60;
         $this->testId = $testLiveWire['id'];
         $this->testTitle = $testLiveWire['title'];
         $this->testAttempts = $testLiveWire['maxAttempts'];
@@ -161,6 +165,7 @@ class ExamTaskEdit extends Component
         $testModel = test::find($this->testId);
         $testModel->title = $this->testTitle;
         $testModel->maxAttempts = $this->testAttempts;
+        $testModel->duration = $this->durationHour*60 + $this->durationMinute;
         $testModel->save();
 
         foreach($this->tasks as $taskIndex => $task) {
