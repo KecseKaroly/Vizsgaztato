@@ -21,7 +21,6 @@
     <script src="https://kit.fontawesome.com/9b89b1cf87.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
     @vite('resources/js/ajax.js')
-    @vite('resources/js/custom.js')
     @livewireStyles
 </head>
 <body class="bg-slate-300">

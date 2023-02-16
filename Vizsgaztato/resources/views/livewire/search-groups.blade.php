@@ -12,6 +12,9 @@
                                        size="40"/>
                                 <div class="w-full relative">
                                     @if(!empty($searchValue))
+                                        <div class="fixed top-0 bottom-0 left-0 right-0"
+                                             wire:click="ResetFields()"></div>
+
                                         <div id="searchResults" wire:loading.remove
                                              class="text-md absolute z-10 top-0 -left-0.5 -right-0.5 divide-y-2">
                                             @if(!empty($searchResults))
