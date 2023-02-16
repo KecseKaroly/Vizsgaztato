@@ -16,11 +16,11 @@
                                              class="text-md absolute z-10 top-0 -left-0.5 -right-0.5 divide-y-2">
                                             @if(!empty($searchResults))
                                                 @foreach($searchResults as $index => $searchResult)
-                                                    <div
-                                                        class="px-2 py-1 font-semibold text-md hover:bg-blue-400 border-x-2 border-blue-800 bg-blue-50 w-full">
-                                                        <button
-                                                            wire:click="addToSelectedResults({{ $index }})">{{ $searchResult['name'] }}</button>
-                                                    </div>
+
+                                                    <button
+                                                        class="text-left px-2 py-1 font-semibold text-md hover:bg-blue-400 border-x-2 border-blue-800 bg-blue-50 w-full"
+                                                        wire:click="addToSelectedResults({{ $index }})">{{ $searchResult['name'] }}</button>
+
                                                 @endforeach
                                             @else
                                                 <div
