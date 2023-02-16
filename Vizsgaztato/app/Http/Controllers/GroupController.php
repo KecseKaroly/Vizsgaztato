@@ -96,7 +96,7 @@ class GroupController extends Controller
      */
     public function edit(group $group)
     {
-        return view('groups.edit');
+        return view('groups.edit')->with('group', $group);
     }
 
     /**
@@ -108,7 +108,9 @@ class GroupController extends Controller
      */
     public function update(Request $request, group $group)
     {
-        //
+        $group->name = $request->group_name;
+        $group->save();
+        return back()->with('message', 'Record Successfully Updated!');
     }
 
     /**
