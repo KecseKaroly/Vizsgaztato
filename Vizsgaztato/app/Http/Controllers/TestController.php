@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\group;
 use App\Models\groups_users;
 use App\Models\answer;
@@ -31,6 +32,7 @@ class TestController extends Controller
         $myGroupsTests = TestsGroups::whereIn('group_id', $myGroups)->distinct()->pluck('test_id')->toArray();
 
         $tests = test::whereIn('id', $myGroupsTests)->orWhereIn('creator_id', [Auth::id()])->get();
+
         return view('test.index')->with('tests', $tests);
     }
 
@@ -47,7 +49,7 @@ class TestController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -58,13 +60,13 @@ class TestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\test  $test
+     * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
     public function show(test $test)
     {
         $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count();
-        if($testAttempts >= $test->maxAttempts)
+        if ($testAttempts >= $test->maxAttempts)
             return view('test.write')->with('error', "Túllépte a megengedett próbálkozásokat!");
 
         $testLiveWire = [
@@ -74,7 +76,7 @@ class TestController extends Controller
             'tasks' => []
         ];
         $tasks = task::where('test_id', $test->id)->get();
-        foreach($tasks as $taskIndex => $task) {
+        foreach ($tasks as $taskIndex => $task) {
             array_push(
                 $testLiveWire['tasks'],
                 [
@@ -84,7 +86,7 @@ class TestController extends Controller
                     'questions' => [],
                 ]);
             $questions = question::where('task_id', $task->id)->get();
-            foreach($questions as $questionIndex => $question) {
+            foreach ($questions as $questionIndex => $question) {
                 array_push(
                     $testLiveWire['tasks'][$taskIndex]['questions'],
                     [
@@ -96,7 +98,7 @@ class TestController extends Controller
                         'actual_ans' => ''
                     ]);
                 $answers = answer::where('question_id', $question->id)->get();
-                foreach($answers as $answer) {
+                foreach ($answers as $answer) {
                     $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $answer->score;
                     $answer_value = answer_value::find($answer->solution_id);
                     array_push(
@@ -121,7 +123,7 @@ class TestController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\test  $test
+     * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
     public function edit(test $test)
@@ -135,7 +137,7 @@ class TestController extends Controller
         ];
 
         $tasks = task::where('test_id', $test->id)->get();
-        foreach($tasks as $taskIndex => $task) {
+        foreach ($tasks as $taskIndex => $task) {
             array_push(
                 $testLiveWire['tasks'],
                 [
@@ -145,7 +147,7 @@ class TestController extends Controller
                     'questions' => [],
                 ]);
             $questions = question::where('task_id', $task->id)->get();
-            foreach($questions as $questionIndex => $question) {
+            foreach ($questions as $questionIndex => $question) {
                 array_push(
                     $testLiveWire['tasks'][$taskIndex]['questions'],
                     [
@@ -155,10 +157,9 @@ class TestController extends Controller
                         'right_answer_index' => '',
                     ]);
                 $answers = answer::where('question_id', $question->id)->get();
-                foreach($answers as $answer) {
+                foreach ($answers as $answer) {
                     $answer_value = answer_value::find($answer->solution_id);
-                    if($task['type'] != "OneChoice" && $task['type'] != "TrueFalse" && $task['type'] != "Sequence")
-                    {
+                    if ($task['type'] != "OneChoice" && $task['type'] != "TrueFalse" && $task['type'] != "Sequence") {
                         array_push(
                             $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
                             [
@@ -168,9 +169,7 @@ class TestController extends Controller
                                 'solution' => $answer_value->text == "checked" ? $answer->id : '',
                             ]
                         );
-                    }
-                    else
-                    {
+                    } else {
                         array_push(
                             $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
                             [
@@ -179,9 +178,9 @@ class TestController extends Controller
                                 'score' => $answer->score
                             ]
                         );
-                        if($task['type'] == "OneChoice" || $task['type'] == "TrueFalse") {
+                        if ($task['type'] == "OneChoice" || $task['type'] == "TrueFalse") {
                             $solution = answer_value::find($answer->solution_id);
-                            if($solution->text == "checked")
+                            if ($solution->text == "checked")
                                 $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['right_answer_index'] = $answer->id;
                         }
                     }
@@ -189,40 +188,39 @@ class TestController extends Controller
             }
         }
 
-        $groupIds = TestsGroups::where('test_id',$test->id)->pluck('group_id')->toArray();
+        $groupIds = TestsGroups::where('test_id', $test->id)->pluck('group_id')->toArray();
         $groups = DB::table('groups')
-        ->join('tests_groups', 'tests_groups.group_id', '=', 'groups.id')
-        ->select('groups.*')
-        ->whereIn('groups.id', $groupIds)
-        ->where('tests_groups.test_id', $test->id)
-        ->get()
-        ->toArray();
+            ->join('tests_groups', 'tests_groups.group_id', '=', 'groups.id')
+            ->select('groups.*')
+            ->whereIn('groups.id', $groupIds)
+            ->where('tests_groups.test_id', $test->id)
+            ->get()
+            ->toArray();
         $groupArray = [];
-        foreach($groups as $object)
-        {
+        foreach ($groups as $object) {
             array_push($groupArray, (array)$object);
         }
-        return view('test.edit', ['testLiveWire'=>$testLiveWire, 'groups'=>$groupArray]);
+        return view('test.edit', ['testLiveWire' => $testLiveWire, 'groups' => $groupArray]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\test  $test
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, test $test)
     {
 
         $attempts = testAttempt::where('test_id', $test->id);
-        foreach($attempts as $attempt) {
+        foreach ($attempts as $attempt) {
             $given_answers = given_answer::where('attempt_id', $attempt->id);
             $maxScore = 0;
             $achievedScore = 0;
-            foreach($given_answers as $given_answer) {
+            foreach ($given_answers as $given_answer) {
                 $answer = answer::find($given_answer->answer_id);
-                if($given_answer->given_id == $answer->solution_id)
+                if ($given_answer->given_id == $answer->solution_id)
                     $achievedScore += $answer->score;
                 $maxScore = $answer->score;
             }
@@ -236,7 +234,7 @@ class TestController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\test  $test
+     * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
     public function destroy(test $test)
@@ -244,10 +242,11 @@ class TestController extends Controller
         //
     }
 
-    public function showResult($testId, $attemptId) {
+    public function showResult($testId, $attemptId)
+    {
         $attempt = testAttempt::find($attemptId);
-        if($attempt == null)
-            return redirect('/test/'.$testId.'/result/');
+        if ($attempt == null)
+            return redirect('/test/' . $testId . '/result/');
         $test = test::find($testId);
         $testResult = [
             'id' => $test->id,
@@ -255,7 +254,7 @@ class TestController extends Controller
             'tasks' => []
         ];
         $tasks = task::where('test_id', $test->id)->get();
-        foreach($tasks as $taskIndex => $task) {
+        foreach ($tasks as $taskIndex => $task) {
             array_push(
                 $testResult['tasks'],
                 [
@@ -265,7 +264,7 @@ class TestController extends Controller
                     'questions' => [],
                 ]);
             $questions = question::where('task_id', $task->id)->get();
-            foreach($questions as $questionIndex => $question) {
+            foreach ($questions as $questionIndex => $question) {
                 array_push(
                     $testResult['tasks'][$taskIndex]['questions'],
                     [
@@ -276,49 +275,43 @@ class TestController extends Controller
                         'answers' => []
                     ]
                 );
-                $given_answers = given_answer::where(['question_id' => $question->id, 'attempt_id'=> $attemptId])->get();
-                foreach($given_answers as $given_answer) {
+                $given_answers = given_answer::where(['question_id' => $question->id, 'attempt_id' => $attemptId])->get();
+                foreach ($given_answers as $given_answer) {
                     $given_answer_value = answer_value::find($given_answer->given_id);
                     $exp_answer = answer::find($given_answer->answer_id);
                     $exp_answer_value = answer_value::find($exp_answer->solution_id);
                     $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $exp_answer->score;
 
-                    if($task->type == 'Sequence') {
-                        if($exp_answer_value->id == $given_answer_value->id)
-                        {
+                    if ($task->type == 'Sequence') {
+                        if ($exp_answer_value->id == $given_answer_value->id) {
                             $answer_class = 'correct';
                             $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['achievedScore'] += $exp_answer->score;
-                        }
-                        else {
+                        } else {
                             $answer_class = 'incorrect';
                         }
-                    }
-                    else {
+                    } else {
                         $answer_class = "";
-                        if($exp_answer_value->text == "checked" && $given_answer_value->text == "checked")
-                        {
+                        if ($exp_answer_value->text == "checked" && $given_answer_value->text == "checked") {
                             $answer_class = 'correct';
                             $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['achievedScore'] += $exp_answer->score;
-                        }
-                        else if($given_answer_value->text != "checked" && $exp_answer_value->text == "checked") {
+                        } else if ($given_answer_value->text != "checked" && $exp_answer_value->text == "checked") {
                             $answer_class = 'missed';
-                        }
-                        else if($given_answer_value->text == "checked" && $exp_answer_value->text != "checked") {
+                        } else if ($given_answer_value->text == "checked" && $exp_answer_value->text != "checked") {
                             $answer_class = 'incorrect';
                         }
                     }
                     array_push(
                         $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
-                            [
-                                'id' => $exp_answer->id,
-                                'text' => $exp_answer->text,
-                                'expected_ans' => $exp_answer->solution,
-                                'actual_ans' => '',
-                                'score' => $exp_answer->score,
-                                'answer_class' => $answer_class,
-                                'given' => $given_answer->given
-                            ]
-                        );
+                        [
+                            'id' => $exp_answer->id,
+                            'text' => $exp_answer->text,
+                            'expected_ans' => $exp_answer->solution,
+                            'actual_ans' => '',
+                            'score' => $exp_answer->score,
+                            'answer_class' => $answer_class,
+                            'given' => $given_answer->given
+                        ]
+                    );
                 }
 
             }
@@ -327,34 +320,37 @@ class TestController extends Controller
         return view('test.results.show')->with('test', $testResult);
     }
 
-    public function testResults($testId) {
+    public function testResults($testId)
+    {
         $test = test::find($testId);
-        if(testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count() == 0)
-        {
-            return view('test.results.index', ['noAttempts'=> 'Még nincsen a teszthez próbálkozása!', 'test'=>$test]);
-        }
-        else
-        {
+        if (testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count() == 0) {
+            return view('test.results.index', ['noAttempts' => 'Még nincsen a teszthez próbálkozása!', 'test' => $test]);
+        } else {
             $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
-            return view('test.results.index', ['testAttempts'=> $testAttempts, 'test'=>$test]);
+            return view('test.results.index', ['testAttempts' => $testAttempts, 'test' => $test]);
         }
     }
 
-    public function testInfo($testId) {
-        $test = test::find($testId);
+    public function testInfo($testId)
+    {
+        $test = test::with(
+            [
+                'groups.users.attempts' => function ($query) use ($testId) {
+                    $query->where('test_attempts.test_id', 'like', $testId);
+                },
+            ]
+        )
+            ->where('id', $testId)->first();
 
-        if(testAttempt::where(['test_id' => $test->id])->count() == 0)
-        {
-            return view('test.info.show', ['noAttempts'=> 'Még nincsen a teszthez próbálkozás!', 'test'=>$test]);
-        }
-        else
-        {
-            $testAttempts = DB::table('test_attempts')
-            ->join('users', 'users.id', '=', 'test_attempts.user_id')
-            ->select('test_attempts.*', 'users.*')
-            ->where('test_attempts.test_id', $testId)
-            ->orderBy('user_id')
-            ->get();
+        if (testAttempt::where(['test_id' => $test->id])->count() == 0) {
+            return view('test.info.show', ['noAttempts' => 'Még nincsen a teszthez próbálkozás!', 'test' => $test]);
+        } else {
+            /*$testAttempts = DB::table('test_attempts')
+                ->join('users', 'users.id', '=', 'test_attempts.user_id')
+                ->select('test_attempts.*', 'users.*')
+                ->where('test_attempts.test_id', $testId)
+                ->orderBy('user_id')
+                ->get();
             $userIds = testAttempt::where('test_id', $testId)->pluck('user_id')->toArray();
             $users = User::whereIn('id', $userIds)->get();
 
@@ -363,24 +359,24 @@ class TestController extends Controller
 
             $groups_users = groups_users::whereIn('group_id', $groupIds)->whereIn('user_id', $userIds)->get();
 
-            foreach($groups as $group) {
+            foreach ($groups as $group) {
                 $group->users = DB::table('groups_users')
-                                ->join('users', 'users.id', '=', 'groups_users.user_id')
-                                ->join('groups', 'groups.id', '=', 'groups_users.group_id')
-                                ->select('users.*')
-                                ->where('groups_users.group_id', $group->id)
-                                ->orderBy('user_id')
-                                ->get();
-                foreach($group->users as $user) {
+                    ->join('users', 'users.id', '=', 'groups_users.user_id')
+                    ->join('groups', 'groups.id', '=', 'groups_users.group_id')
+                    ->select('users.*')
+                    ->where('groups_users.group_id', $group->id)
+                    ->orderBy('user_id')
+                    ->get();
+                foreach ($group->users as $user) {
                     $user->attempts = DB::table('test_attempts')
-                                        ->join('users', 'users.id', '=', 'test_attempts.user_id')
-                                        ->select('test_attempts.*')
-                                        ->where('test_attempts.user_id', $user->id)
-                                        ->orderBy('user_id')
-                                        ->get();
+                        ->join('users', 'users.id', '=', 'test_attempts.user_id')
+                        ->select('test_attempts.*')
+                        ->where('test_attempts.user_id', $user->id)
+                        ->orderBy('user_id')
+                        ->get();
                 }
-            }
-            return view('test.info.show', ['testAttempts'=> $testAttempts, 'test'=>$test, 'users'=>$users, 'groups'=>$groups, 'groups_users'=>$groups_users]);
+            }*/
+            return view('test.info.show', ['test' => $test]);
         }
     }
 }
