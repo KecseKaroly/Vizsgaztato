@@ -24,6 +24,6 @@ class group extends Model
             'groups_users',
             'group_id',
             'user_id')
-            ->withPivot(['role']);
+            ->withPivot(['id', 'role']);
     }
 }

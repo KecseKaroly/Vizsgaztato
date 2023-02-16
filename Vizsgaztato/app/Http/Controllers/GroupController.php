@@ -23,15 +23,15 @@ class GroupController extends Controller
     public function index()
     {
         $groups = DB::table('groups')->select('*')
-            ->whereIn('id',function($query){
-               $query->select('group_id')->from('groups_users')->where('user_id', Auth::id());
+            ->whereIn('id', function ($query) {
+                $query->select('group_id')->from('groups_users')->where('user_id', Auth::id());
             })
             ->get();
-        foreach($groups as $group) {
+        foreach ($groups as $group) {
             $group->join_requests = group_join_request::where('group_id', $group->id)->groupBy('group_id')->count();
         }
         $inv_requests = group_inv::where('invited_id', Auth::id())->count();
-        return view('groups.index', ['groups'=>$groups, 'inv_requests'=>$inv_requests]);
+        return view('groups.index', ['groups' => $groups, 'inv_requests' => $inv_requests]);
     }
 
     /**
@@ -42,7 +42,7 @@ class GroupController extends Controller
     public function create()
     {
         $invCode = Str::random(15);
-        while(group::where('invCode', $invCode)->exists()) {
+        while (group::where('invCode', $invCode)->exists()) {
             $invCode = Str::random(15);
         }
         return view('groups.create')->with('invCode', $invCode);
@@ -51,12 +51,12 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoregroupRequest  $request
+     * @param \App\Http\Requests\StoregroupRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if(group::where('invCode', $request->group_invCode)->exists()) {
+        if (group::where('invCode', $request->group_invCode)->exists()) {
             return redirect()->route('groups.index');
         }
 
@@ -78,25 +78,20 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\group  $group
+     * @param \App\Models\group $group
      * @return \Illuminate\Http\Response
      */
     public function show(group $group)
     {
-        $members = DB::table('groups_users')
-            ->join('users', 'users.id', '=', 'groups_users.user_id')
-            ->select('users.*', 'groups_users.role', 'groups_users.id as GUID')
-            ->where('groups_users.group_id',$group->id)
-            ->orderBy('groups_users.role')
-            ->get();
-        $myRole = groups_users::where(['user_id'=>Auth::id(), 'group_id'=>$group->id])->first()->role;
-        return view('groups.show', ['members'=> $members, 'group' => $group, 'myRole'=>$myRole]);
+        $groups = group::find($group->id)->with('users')->get();
+        $myRole = groups_users::where(['user_id' => Auth::id(), 'group_id' => $group->id])->first()->role;
+        return view('groups.show', ['groups' => $groups, 'group' => $group, 'myRole' => $myRole]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\group  $group
+     * @param \App\Models\group $group
      * @return \Illuminate\Http\Response
      */
     public function edit(group $group)
@@ -107,8 +102,8 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdategroupRequest  $request
-     * @param  \App\Models\group  $group
+     * @param \App\Http\Requests\UpdategroupRequest $request
+     * @param \App\Models\group $group
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, group $group)
@@ -119,12 +114,12 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\group  $group
+     * @param \App\Models\group $group
      * @return \Illuminate\Http\Response
      */
     public function destroy(group $group)
     {
         $group->delete();
-       return redirect()->route('groups.index');
+        return redirect()->route('groups.index');
     }
 }

@@ -32,9 +32,8 @@ Route::get('/test/{test_id}/result/{attempt_id}', [TestController::class, 'showR
 Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
 Route::get('/test/{id}/info/', [TestController::class, 'testInfo'])->middleware('auth')->name('checkTestInfo');
 
-Route::get('/test/{id}/groups', [TestsGroupsController::class, 'show'])->middleware('auth')->name('showTestGroups');
 Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->middleware('auth')->name('updateTestGroup');
-Route::delete('/test/groups/delete', [TestsGroupsController::class, 'delete'])->middleware('auth')->name('deleteTestGroups');
+//Route::delete('/test/groups/delete', [TestsGroupsController::class, 'delete'])->middleware('auth')->name('deleteTestGroups');
 
 Route::get('/groups/invites', [GroupInvController::class, 'index'])->middleware('auth')->name('inv_requests');
 Route::resource('groups', GroupController::class)->middleware('auth');

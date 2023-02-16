@@ -3,35 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\TestsGroups;
+use App\Models\test;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class TestsGroupsController extends Controller
 {
-    public function store($selectedResults, $testId)
+    public function store($selectedResults, $deletedResults, test $test)
     {
-        $test = test::find($testId);
         foreach ($selectedResults as $selectedResult) {
-            if (!$test->groups->contains($selectedResult['id']))
-                $test->groups->attach($selectedResult);
+            if (!$test->groups->contains($selectedResult['id'])) {
+                $test->groups()->attach($selectedResult['id']);
+            }
         }
+        foreach ($deletedResults as $selectedResult) {
+            if ($test->groups->contains($selectedResult['id'])) {
+                $test->groups()->detach($selectedResult['id']);
+            }
+        }
+        return redirect()->route('checkTestInfo', $test);
     }
 
-    public function show($testId)
+    /*public function delete(Request $request)
     {
-        $test_groups = DB::table('tests_groups')
-            ->join('groups', 'groups.id', '=', 'tests_groups.group_id')
-            ->select('groups.*', 'tests_groups.id', 'tests_groups.enabled_from', 'tests_groups.enabled_until')
-            ->where('tests_groups.test_id', $testId)
-            ->get();
-        return view('test.groups.show', ['test_groups' => $test_groups, 'testId' => $testId]);
-    }
-
-    public function delete(Request $request)
-    {
-        $test_group = TestsGroups::find($request->test_group_id);
-        $test_group->delete();
-    }
+        TestsGroups::destroy($request->test_group_id);
+    }*/
 
     public function update(Request $request)
     {

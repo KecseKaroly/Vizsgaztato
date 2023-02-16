@@ -7,9 +7,10 @@
                 <div class="text-center mb-12 font-black text-3xl italic">Kitöltött feladatlapok</div>
                 <div class="pb-5">
                     <div class="w-48 ml-auto">
-                        <button type="button"
+                        <button data-modal-target="testGroups"
+                                data-modal-toggle="testGroups"
                                 class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg">
-                            <a href="{{ route('showTestGroups', $test->id) }}">Csoportok kezelése</a>
+                            Csoportok kezelése
                         </button>
                     </div>
                 </div>
@@ -58,7 +59,7 @@
                                 </div>
                             </div>
                             <div id="attempts_of_group{{ $group->id }}" style="display: none;">
-                                @foreach($group->users as $user)
+                                @forelse($group->users as $user)
                                     <div
                                         class="bg-slate-500 rounded-md flex w-11/12 justify-between text-xl font-semibold py-2 px-3 ml-16">
                                         <div class="flex divide-x-2">
@@ -78,18 +79,18 @@
                                     </div>
                                     <div id="attempts_of_user{{ $user->id }}_{{ $group->id }}"
                                          style="display: none;">
-                                        @foreach ($user->attempts as $testAttempt )
+                                        @forelse($user->attempts as $testAttempt )
                                             <div id="testAttempt#{{ $testAttempt->id }}"
-                                                 class="hover:bg-blue-400 bg-slate-400 rounded-md flex w-10/12 justify-between text-sm px-6 py-1 ml-32">
-                                                <div class="mr-12">
+                                                 class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-base px-12 py-2 ml-32">
+                                                <div>
                                                     <a href="{{ route('checkAttemptResult', [$test->id, $testAttempt->id]) }}">
                                                         <button
-                                                            class="bg-lime-200 p-1.5 border rounded-lg text-lime-900 hover:bg-lime-100">
+                                                            class="bg-lime-500 hover:bg-lime-300 p-1.5 border rounded-lg text-lime-900 ">
                                                             <i class="fa-solid fa-eye"></i> Megtekint
                                                         </button>
                                                     </a>
                                                 </div>
-                                                <div class="mr-12">
+                                                <div>
                                                     {{ $testAttempt->achievedScore }}
                                                     /{{ $testAttempt->maxScore }}
                                                 </div>
@@ -105,9 +106,26 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        @empty
+                                            <div
+
+                                                class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-xl px-12 py-3 ml-32">
+                                                <div>
+                                                    Nincsen kitöltött teszt...
+                                                </div>
+                                            </div>
+                                        @endforelse
                                     </div>
-                                @endforeach
+                                @empty
+                                    <div
+                                        class="bg-slate-500 rounded-md flex w-11/12 justify-between text-xl font-semibold py-3 px-3 ml-16">
+                                        <div class="flex divide-x-2">
+                                            <div class="px-4 flex font-semibold">
+                                                Úgy tűnik, üres a csoport...
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     @endforeach
@@ -151,6 +169,25 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="testGroups" tabindex="-1"
+         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+        <div class="relative w-full h-full max-w-2xl md:h-auto">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Hozzárendelt csoportok...
+                    </h3>
+                    <button data-modal-hide="testGroups" type="button"
+                            class="text-gray-400 bg-transparent hover:bg-red-500 hover:text-white rounded-lg p-1.5">
+                        <i class="fa-solid fa-xmark fa-2xl"></i>
+                        <span class="sr-only">Bezárás</span>
+                    </button>
+                </div>
+                @livewire('search-groups', ['currentGroups'=>$test->groups, 'test'=>$test])
             </div>
         </div>
     </div>

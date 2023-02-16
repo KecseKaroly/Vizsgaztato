@@ -21,47 +21,20 @@ class ExamTaskCreator extends Component
     public $durationHour;
     public $durationMinute;
 
-    public $searchValue;
-    public $searchResults;
-    public $selectedResults;
-    public function updatedSearchValue() {
-        $this->searchResults = group::where('name', 'LIKE', '%'.$this->searchValue.'%')->get()->toArray();
-    }
-
-    public function addToSelectedResults($index) {
-        if(!in_array($this->searchResults[$index], $this->selectedResults)){
-            $this->searchValue = '';
-            array_push($this->selectedResults, $this->searchResults[$index]);
-        }
-    }
-
-    public function removeFromSelectedResults($index) {
-        unset($this->selectedResults[$index]);
-    }
-
-    public function saveSelectedResults($testId) {
-        $result = (new TestsGroupsController)->store($this->selectedResults, $testId);
-    }
-
-    public function mount() {
+    public function mount()
+    {
         $this->tasks = [];
-        $this->selectedResults = [];
         $this->testTitle = "";
         $this->testAttempts = 1;
         $this->durationHour = 0;
         $this->durationMinute = 1;
-        $this->ResetInputField();
-    }
-
-    public function ResetInputField() {
-
-        $this->searchValue = "";
-        $this->searchResults = [];
     }
 
     protected $listeners = ['taskTypeChanged'];
-    public function taskTypeChanged($taskIndex) {
-        if($this->tasks[$taskIndex]['type'] == 'TrueFalse' || $this->tasks[$taskIndex]['type'] == 'Sequence')
+
+    public function taskTypeChanged($taskIndex)
+    {
+        if ($this->tasks[$taskIndex]['type'] == 'TrueFalse' || $this->tasks[$taskIndex]['type'] == 'Sequence')
             $this->tasks[$taskIndex]['questions'] = [];
     }
 
@@ -74,14 +47,16 @@ class ExamTaskCreator extends Component
                 'questions' => [],
             ]);
     }
-    public function Remove_Task($taskIndex) {
+
+    public function Remove_Task($taskIndex)
+    {
         unset($this->tasks[$taskIndex]);
     }
+
     public function Add_Question($index)
     {
         $answers = [];
-        if($this->tasks[$index]["type"] == "TrueFalse")
-        {
+        if ($this->tasks[$index]["type"] == "TrueFalse") {
             $answers = [
                 [
                     'text' => 'Igaz',
@@ -96,15 +71,17 @@ class ExamTaskCreator extends Component
             ];
         }
         array_unshift($this->tasks[$index]['questions'],
-                [
-                   'text' => '',
-                   'answers' => $answers,
-                   'right_answer_index' => '',
-                ]
-            );
+            [
+                'text' => '',
+                'answers' => $answers,
+                'right_answer_index' => '',
+            ]
+        );
 
     }
-    public function Remove_Question($taskIndex, $questionIndex) {
+
+    public function Remove_Question($taskIndex, $questionIndex)
+    {
         unset($this->tasks[$taskIndex]['questions'][$questionIndex]);
     }
 
@@ -112,67 +89,65 @@ class ExamTaskCreator extends Component
     {
         $solution = '';
         $score = 0;
-        if($this->tasks[$taskIndex]["type"] == "Sequence")
-        {
+        if ($this->tasks[$taskIndex]["type"] == "Sequence") {
             $solution = count($this->tasks[$taskIndex]['questions'][$questionIndex]['answers']) + 1;
             $score = 1;
         }
 
         array_push($this->tasks[$taskIndex]['questions'][$questionIndex]['answers'],
-         [
-            'id' => ($taskIndex+1)+($questionIndex+1)+count($this->tasks[$taskIndex]['questions'][$questionIndex]['answers']),
-            'text' => '',
-            'solution' => $solution,
-            'score' => $score
-         ]
+            [
+                'id' => ($taskIndex + 1) + ($questionIndex + 1) + count($this->tasks[$taskIndex]['questions'][$questionIndex]['answers']),
+                'text' => '',
+                'solution' => $solution,
+                'score' => $score
+            ]
         );
     }
-    public function Remove_Answer($taskIndex, $questionIndex, $answerIndex) {
+
+    public function Remove_Answer($taskIndex, $questionIndex, $answerIndex)
+    {
         unset($this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex]);
 
     }
+
     public function Save_Test()
     {
         $testModel = new test;
         $testModel->title = $this->testTitle;
         $testModel->maxAttempts = $this->testAttempts;
-        $testModel->duration = $this->durationHour*60 + $this->durationMinute;
+        $testModel->duration = $this->durationHour * 60 + $this->durationMinute;
         $testModel->creator_id = Auth::id();
         $testModel->save();
-        foreach($this->tasks as $taskIndex => $task) {
+        foreach ($this->tasks as $taskIndex => $task) {
             $taskModel = new task;
             $taskModel->test_id = $testModel->id;
             $taskModel->text = $task['text'];
             $taskModel->type = $task['type'];
             $taskModel->save();
 
-            foreach($task['questions'] as $questionIndex => $question) {
+            foreach ($task['questions'] as $questionIndex => $question) {
                 $questionModel = new question;
                 $questionModel->task_id = $taskModel['id'];
                 $questionModel->text = $question['text'];
                 $questionModel->save();
 
-                foreach($question['answers'] as $answerIndex => $answer) {
+                foreach ($question['answers'] as $answerIndex => $answer) {
                     $answerModel = new answer;
                     $answerModel->question_id = $questionModel['id'];
                     $answerModel->text = $answer['text'];
-                    switch($taskModel->type) {
+                    switch ($taskModel->type) {
                         case 'TrueFalse':
-                            if($answerIndex == $question['right_answer_index'])
-                            {
+                            if ($answerIndex == $question['right_answer_index']) {
                                 $answer_value = answer_value::where('text', 'checked')->first();
-                                if($answer_value === null)
-                                {
+                                if ($answer_value === null) {
                                     $answer_value = new answer_value();
                                     $answer_value->text = "checked";
                                     $answer_value->save();
                                 }
                                 $answer['score'] = 1;
-                            }
-                            else {
+                            } else {
                                 $answer_value = answer_value::where('text', 'unchecked')->first();
-                                if($answer_value === null)
-                                {
+                                if ($answer_value === null) {
                                     $answer_value = new answer_value();
                                     $answer_value->text = "unchecked";
                                     $answer_value->save();
@@ -181,21 +156,17 @@ class ExamTaskCreator extends Component
                             }
                             break;
                         case 'OneChoice':
-                            if($answerIndex == $question['right_answer_index'])
-                            {
+                            if ($answerIndex == $question['right_answer_index']) {
                                 $answer_value = answer_value::where('text', 'checked')->first();
-                                if($answer_value === null)
-                                {
+                                if ($answer_value === null) {
                                     $answer_value = new answer_value();
                                     $answer_value->text = "checked";
                                     $answer_value->save();
                                 }
                                 $answer['score'] = 1;
-                            }
-                            else {
+                            } else {
                                 $answer_value = answer_value::where('text', 'unchecked')->first();
-                                if($answer_value === null)
-                                {
+                                if ($answer_value === null) {
                                     $answer_value = new answer_value();
                                     $answer_value->text = "unchecked";
                                     $answer_value->save();
@@ -204,21 +175,17 @@ class ExamTaskCreator extends Component
                             }
                             break;
                         case 'MultipleChoice':
-                            if($answer['solution'] >= 0)
-                            {
+                            if ($answer['solution'] >= 0) {
                                 $answer_value = answer_value::where('text', 'checked')->first();
-                                if($answer_value === null)
-                                {
+                                if ($answer_value === null) {
                                     $answer_value = new answer_value();
                                     $answer_value->text = "checked";
                                     $answer_value->save();
                                 }
                                 $answer['score'] = 1;
-                            }
-                            else {
+                            } else {
                                 $answer_value = answer_value::where('text', 'unchecked')->first();
-                                if($answer_value === null)
-                                {
+                                if ($answer_value === null) {
                                     $answer_value = new answer_value();
                                     $answer_value->text = "unchecked";
                                     $answer_value->save();
@@ -227,11 +194,10 @@ class ExamTaskCreator extends Component
                             }
                             break;
                         case 'Sequence':
-                            $answer_value = answer_value::where('text', $answerIndex+1)->first();
-                            if($answer_value === null)
-                            {
+                            $answer_value = answer_value::where('text', $answerIndex + 1)->first();
+                            if ($answer_value === null) {
                                 $answer_value = new answer_value();
-                                $answer_value->text = $answerIndex+1;
+                                $answer_value->text = $answerIndex + 1;
                                 $answer_value->save();
                             }
                             break;
@@ -242,8 +208,7 @@ class ExamTaskCreator extends Component
                 }
             }
         }
-        $this->saveSelectedResults($testModel->id);
-        return  redirect()->route('test.index');
+        return redirect()->route('test.index');
     }
 
     public function render()
@@ -251,10 +216,11 @@ class ExamTaskCreator extends Component
         return view('livewire.exam-task-creator');
     }
 
-    public function updateTaskOrder($list) {
+    public function updateTaskOrder($list)
+    {
         $newAnswers = [];
-        foreach($list as $element) {
-            $indexek = explode("_",$element["value"]);
+        foreach ($list as $element) {
+            $indexek = explode("_", $element["value"]);
             array_push($newAnswers, $this->tasks[$indexek[0]]['questions'][$indexek[1]]['answers'][$indexek[2]]);
         }
         $this->tasks[$indexek[0]]['questions'][$indexek[1]]['answers'] = $newAnswers;

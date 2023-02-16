@@ -212,7 +212,6 @@ class TestController extends Controller
      */
     public function update(Request $request, test $test)
     {
-
         $attempts = testAttempt::where('test_id', $test->id);
         foreach ($attempts as $attempt) {
             $given_answers = given_answer::where('attempt_id', $attempt->id);
@@ -335,48 +334,15 @@ class TestController extends Controller
     {
         $test = test::with(
             [
+                'groups.users' => function ($query) use ($testId) {
+                    $query->where('groups_users.role', 'not like', 'admin');
+                },
                 'groups.users.attempts' => function ($query) use ($testId) {
                     $query->where('test_attempts.test_id', 'like', $testId);
                 },
             ]
         )
             ->where('id', $testId)->first();
-
-        if (testAttempt::where(['test_id' => $test->id])->count() == 0) {
-            return view('test.info.show', ['noAttempts' => 'Még nincsen a teszthez próbálkozás!', 'test' => $test]);
-        } else {
-            /*$testAttempts = DB::table('test_attempts')
-                ->join('users', 'users.id', '=', 'test_attempts.user_id')
-                ->select('test_attempts.*', 'users.*')
-                ->where('test_attempts.test_id', $testId)
-                ->orderBy('user_id')
-                ->get();
-            $userIds = testAttempt::where('test_id', $testId)->pluck('user_id')->toArray();
-            $users = User::whereIn('id', $userIds)->get();
-
-            $groupIds = TestsGroups::where('test_id', $testId)->pluck('group_id')->toArray();
-            $groups = group::whereIn('id', $groupIds)->get();
-
-            $groups_users = groups_users::whereIn('group_id', $groupIds)->whereIn('user_id', $userIds)->get();
-
-            foreach ($groups as $group) {
-                $group->users = DB::table('groups_users')
-                    ->join('users', 'users.id', '=', 'groups_users.user_id')
-                    ->join('groups', 'groups.id', '=', 'groups_users.group_id')
-                    ->select('users.*')
-                    ->where('groups_users.group_id', $group->id)
-                    ->orderBy('user_id')
-                    ->get();
-                foreach ($group->users as $user) {
-                    $user->attempts = DB::table('test_attempts')
-                        ->join('users', 'users.id', '=', 'test_attempts.user_id')
-                        ->select('test_attempts.*')
-                        ->where('test_attempts.user_id', $user->id)
-                        ->orderBy('user_id')
-                        ->get();
-                }
-            }*/
-            return view('test.info.show', ['test' => $test]);
-        }
+        return view('test.info.show', ['test' => $test]);
     }
 }
