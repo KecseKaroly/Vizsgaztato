@@ -35,9 +35,10 @@ class TestsGroupsController extends Controller
 
     public function update(Request $request)
     {
-        $test_group = TestsGroups::find($request->test_group_id);
+        $test_group = TestsGroups::where(['test_id' => $request->test_id, 'group_id' => $request->group_id])->first();
         $test_group->enabled_from = $request->enabled_from;
         $test_group->enabled_until = $request->enabled_until;
         $test_group->save();
+        return redirect()->route('checkTestInfo', $request->test_id);
     }
 }

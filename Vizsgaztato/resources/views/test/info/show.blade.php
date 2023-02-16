@@ -31,9 +31,22 @@
                                                 data-modal-toggle="testGroupDetails"
                                                 data-group_id="{{ $group->id }}"
                                                 data-test_id="{{ $test->id }}"
-                                                data-enabled_from="{{ $group->enabled_from }}"
-                                                data-enabled_until="{{ $group->enabled_until }}">
-                                            Kezelés
+                                                data-enabled_from="{{ $group->pivot->enabled_from }}"
+                                                data-enabled_until="{{ $group->pivot->enabled_until }}"
+                                                class="showGroupTestInfo
+                                                {{ $group->pivot->enabled_from < now() &&
+                                                   $group->pivot->enabled_until > now() ?
+                                                        "bg-green-500" :
+                                                        "bg-red-500"}}
+                                                   p-1 rounded text-lg">
+                                            <i class="fa-solid {{ $group->pivot->enabled_from < now() &&
+                                                   $group->pivot->enabled_until > now() ?
+                                                        "fa-eye" :
+                                                        "fa-eye-slash"}}"></i>
+                                            {{ $group->pivot->enabled_from < now() &&
+                                                   $group->pivot->enabled_until > now() ?
+                                                        "Aktív" :
+                                                        "Inaktív"}}
                                         </button>
                                     </div>
                                     <div class="pr-6">
@@ -107,31 +120,37 @@
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
         <div class="relative w-full h-full max-w-2xl md:h-auto">
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Érvényesség kezelése...
-                    </h3>
-                    <button data-modal-hide="testGroupDetails" type="button"
-                            class="text-gray-400 bg-transparent hover:bg-red-500 hover:text-white rounded-lg p-1.5">
-                        <i class="fa-solid fa-xmark fa-2xl"></i>
-                        <span class="sr-only">Bezárás</span>
-                    </button>
-                </div>
-                <div class="p-6 space-y-6 flex flex-col">
-                    <div>Engedélyezve:</div>
-                    <div class="flex justify-around">
-                        <div><input type="datetime-local" value="" id="enabled_from">-től</div>
-                        <div><input type="datetime-local" value="" id="enabled_until">-ig</div>
+                <form method="POST" action=" {{ route('updateTestGroup') }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Érvényesség kezelése...
+                        </h3>
+                        <button data-modal-hide="testGroupDetails" type="button"
+                                class="text-gray-400 bg-transparent hover:bg-red-500 hover:text-white rounded-lg p-1.5">
+                            <i class="fa-solid fa-xmark fa-2xl"></i>
+                            <span class="sr-only">Bezárás</span>
+                        </button>
                     </div>
-                </div>
-                <div class="flex items-center p-6 justify-evenly border-t-2">
-                    <button data-modal-hide="testGroupDetails" type="button"
-                            class="border rounded bg-green-500 hover:bg-green-700 text-white p-2">Mentés
-                    </button>
-                    <button data-modal-hide="testGroupDetails" type="button"
-                            class="border rounded bg-transparent hover:bg-stone-300 text-black p-2 ">Mégsem
-                    </button>
-                </div>
+                    <div class="p-6 space-y-6 flex flex-col">
+                        <div>Aktív:</div>
+                        <div class="flex justify-around">
+                            <input type="hidden" name="test_id" id="test_id">
+                            <input type="hidden" name="group_id" id="group_id">
+                            <div><input type="datetime-local" name="enabled_from" id="enabled_from">-től</div>
+                            <div><input type="datetime-local" name="enabled_until" id="enabled_until">-ig</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-6 justify-evenly border-t-2">
+                        <button type="submit"
+                                class="border rounded bg-green-500 hover:bg-green-700 text-white p-2">Mentés
+                        </button>
+                        <button data-modal-hide="testGroupDetails" type="button"
+                                class="border rounded bg-transparent hover:bg-stone-300 text-black p-2 ">Mégsem
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
