@@ -13,7 +13,17 @@ class group extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['invCode','name', 'creator_id'];
+    protected $fillable = ['invCode', 'name', 'creator_id'];
 
     public $timestamps = false;
+
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'groups_users',
+            'group_id',
+            'user_id')
+            ->withPivot(['role']);
+    }
 }
