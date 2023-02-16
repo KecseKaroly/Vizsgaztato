@@ -83,7 +83,7 @@ class GroupController extends Controller
      */
     public function show(group $group)
     {
-        $groups = group::find($group->id)->with('users')->get();
+        $groups = $group->load('users');
         $myRole = groups_users::where(['user_id' => Auth::id(), 'group_id' => $group->id])->first()->role;
         return view('groups.show', ['groups' => $groups, 'group' => $group, 'myRole' => $myRole]);
     }
