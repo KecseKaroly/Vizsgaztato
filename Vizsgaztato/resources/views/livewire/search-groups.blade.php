@@ -7,7 +7,7 @@
                         <div class="mb-2">
                             <div class="w-full ">
                                 <input type="text" wire:model.debounce.500ms="searchValue" id="emailInputField"
-                                       placeholder="mintamarton@email.com" autocomplete="off"
+                                       placeholder="Csoport neve..." autocomplete="off"
                                        class="font-semibold text-md focus:border-blue-800 focus:bg-blue-100 bg-blue-50 rounded-t-lg border-blue-300  lg:w-fit w-full"
                                        size="40"/>
                                 <div class="w-full relative">
@@ -19,7 +19,6 @@
                                              class="text-md absolute z-10 top-0 -left-0.5 -right-0.5 divide-y-2">
                                             @if(!empty($searchResults))
                                                 @foreach($searchResults as $index => $searchResult)
-
                                                     <button
                                                         class="text-left px-2 py-1 font-semibold text-md hover:bg-blue-400 border-x-2 border-blue-800 bg-blue-50 w-full"
                                                         wire:click="addToSelectedResults({{ $index }})">{{ $searchResult['name'] }}</button>
