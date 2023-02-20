@@ -16,40 +16,47 @@
                 <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-100 rounded-lg border  shadow-xl">
                     @foreach ($tests as $test )
                         <div
-                            class="bg-slate-600 w-10/12 mx-auto mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
-                            <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
+                            class="bg-slate-600 w-10/12 mx-auto mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center rounded mt-5">
+                            <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2 w-fit">
                                 <a href="{{ route('checkTestInfo', [$test->id]) }}">
                                     {{$test->title}}
                                 </a>
                             </div>
-                            <div class="md:mt-0 my-2 lg:text-right w-fit font-medium relative">
-                                @if($test->creator_id == Auth::id())
+                            @if($test->creator_id == Auth::id())
+                                <div class="w-3/12 flex justify-around">
                                     <a href="{{ route('test.edit', $test->id) }}">
                                         <button
-                                            class="bg-yellow-50 hover:bg-yellow-300 text-yellow-300 hover:text-yellow-50 border-4 border-yellow-300 hover:border-yellow-50 rounded-lg  font-semibold text-lg md:w-fit w-full py-1.5 px-2 mt-1.5 mb-2.5">
+                                            class="bg-yellow-50 hover:bg-yellow-300 text-yellow-300 hover:text-yellow-50 border-4 border-yellow-200 hover:border-yellow-50 rounded-lg  font-semibold text-lg md:w-fit w-full py-1.5 px-2 mt-1.5 mb-2.5">
                                             <i class="fa-regular fa-pen-to-square fa-xl"></i>
                                         </button>
                                     </a>
-                                @endif
-                            </div>
-                            <div>
-                                @if($test->creator_id == Auth::id())
-                                    <a href="{{ route('checkTestInfo', [$test->id]) }}">
+                                    <form action="{{ route('test.destroy', $test) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
                                         <button
-                                            class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
-                                            <i class="fa-solid fa-angles-right"></i>
+                                            type="submit"
+                                            class="bg-red-50 hover:bg-red-500 text-red-500 hover:text-red-50 border-4 border-red-400 hover:border-red-50 rounded-lg  font-semibold text-lg md:w-fit w-full py-1.5 px-2 mt-1.5 mb-2.5">
+                                            <i class="fa-solid fa-trash fa-xl"></i>
                                         </button>
-                                    </a>
-                                @else
-                                    <a href="{{ route('checkTestResults', [$test->id]) }}">
-                                        <button
-                                            class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
-                                            <i class="fa-solid fa-angles-right"></i>
-                                        </button>
-                                    </a>
-                                @endif
+                                    </form>
+                                </div>
+                                <a href="{{ route('checkTestInfo', [$test->id]) }}">
+                                    <button
+                                        class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </button>
+                                </a>
+                            @else
+                                <div></div>
+                                <a href="{{ route('checkTestResults', [$test->id]) }}">
+                                    <button
+                                        class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </button>
+                                </a>
+                            @endif
+
                             </div>
-                        </div>
 
                     @endforeach
                 </div>

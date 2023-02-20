@@ -5,6 +5,16 @@ $.ajaxSetup({
 });
 
 /* Group join requests: */
+$(".copyInvCode").click(function (e) {
+    const params = $(this).data();
+    const invCode = params["invcode"];
+    navigator.clipboard.writeText(invCode);
+    $("#invCodeCopiedMessage").show();
+    $("#copyMessage").html(`Vágólapra másolva`);
+    setTimeout(function () {
+        $("#invCodeCopiedMessage").fadeOut(400);
+    }, 3000);
+});
 $("#sendInvCode").click(function (e) {
     e.preventDefault();
     var invCode = $("input[name=invCode]").val();
@@ -13,17 +23,22 @@ $("#sendInvCode").click(function (e) {
         url: "/join_request/submit",
         data: {invCode: invCode},
         success: function (data) {
-            if(data.success !== undefined) {
-                $("#successfulJoinRequest").css("display", "flex");
-                $("#successMessage").text(data.success);
+            if(data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.success,
+                    text: data.message,
+                })
             }
-            if(data.failed !== undefined) {
-                $("#failedJoinRequest").css("display", "flex");
-                $("#failMessage").text(data.failed);
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hiba!',
+                    text: data.error,
+                })
             }
         },
         error: function (data) {
-            console.log(data);
             alert("Valami hiba történt...");
         }
     });
@@ -37,16 +52,21 @@ $(".declineJoinRequest").click(function (e) {
         url: "/join_request/decline",
         data: {join_request_id: reqId},
         success: function (data) {
-            if(data.success !== undefined) {
+            if(data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.success,
+                    text: data.message,
+                });
                 document.getElementById(`request-${reqId}`).remove();
-                $("#successfulJoinRequest").css("display", "flex");
-                $("#successMessage").text(data.success);
             }
-            if(data.failed !== undefined) {
-                $("#failedJoinRequest").css("display", "flex");
-                $("#failMessage").text(data.failed);
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hiba!',
+                    text: data.error,
+                })
             }
-
         }
     });
 });
@@ -61,16 +81,21 @@ $(".acceptJoinRequest").click(function (e) {
         url: "/join_request/accept",
         data: {join_request_id: reqId, requester_id: requester_id, group_id: group_id},
         success: function (data) {
-            if(data.success !== undefined) {
+            if(data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.success,
+                    text: data.message,
+                });
                 document.getElementById(`request-${reqId}`).remove();
-                $("#successfulJoinRequest").css("display", "flex");
-                $("#successMessage").text(data.success);
             }
-            if(data.failed !== undefined) {
-                $("#failedJoinRequest").css("display", "flex");
-                $("#failMessage").text(data.failed);
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hiba!',
+                    text: data.error,
+                })
             }
-
         }
     });
 });
@@ -86,14 +111,20 @@ $(".declineInvRequest").click(function (e) {
         url: "/inv_request/decline",
         data: {inv_request_id: reqId},
         success: function (data) {
-            if(data.success !== undefined) {
+            if(data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.success,
+                    text: data.message,
+                });
                 document.getElementById(`request-${reqId}`).remove();
-                $("#successfulInviteRequest").css("display", "flex");
-                $("#successMessage").text(data.success);
             }
-            if(data.failed !== undefined) {
-                $("#failedInviteRequest").css("display", "flex");
-                $("#failMessage").text(data.failed);
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hiba!',
+                    text: data.error,
+                })
             }
         }
     });
@@ -110,18 +141,27 @@ $(".acceptInvRequest").click(function (e) {
         url: "/inv_request/accept",
         data: {inv_request_id: reqId, sender_id: sender_id, group_id: group_id, invited_id: invited_id},
         success: function (data) {
-            if(data.success !== undefined) {
+            if(data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.success,
+                    text: data.message,
+                });
                 document.getElementById(`request-${reqId}`).remove();
-                $("#successfulInviteRequest").css("display", "flex");
-                $("#successMessage").text(data.success);
             }
-            if(data.failed !== undefined) {
-                $("#failedInviteRequest").css("display", "flex");
-                $("#failMessage").text(data.failed);
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hiba!',
+                    text: data.error,
+                })
             }
         }
     });
 });
+
+
+
 
 /* TestInfo-n a csoportok és felhasználók kinyitása/összecsukása */
 $(".group_id").click(function (e) {
@@ -140,32 +180,6 @@ $(".user_id").click(function (e) {
 
 
 
-$(".deleteTestGroups").click(function (e) {
-    e.preventDefault();
-    var test_group_id = $(this).data()["test_group_id"];
-    $.ajax({
-        type: 'DELETE',
-        url: "/test/groups/delete",
-        data: {test_group_id: test_group_id},
-        success: function (data) {
-            if(data.success !== undefined)
-                document.getElementById(`test_group${test_group_id}`).style.display = "none";
-        },
-        error: function (data) {
-            alert("Valami hiba történt...");
-        }
-    });
-});
-$(".copyInvCode").click(function (e) {
-    const params = $(this).data();
-    const invCode = params["invcode"];
-    navigator.clipboard.writeText(invCode);
-    $("#invCodeCopiedMessage").show();
-    $("#copyMessage").html(`Vágólapra másolva`);
-    setTimeout(function () {
-        $("#invCodeCopiedMessage").fadeOut(400);
-    }, 3000);
-})
 $(".removeUserFromGroup").click(function (e) {
     e.preventDefault();
     const params = $(this).data();
@@ -173,14 +187,24 @@ $(".removeUserFromGroup").click(function (e) {
     console.log(reqId);
     $.ajax({
         type: 'DELETE',
-        url: `/group/user/${reqId}`,
+        url: `/group/user/${reqId}/remove`,
         data: {groups_users_id: reqId},
         success: function (data) {
-            console.log(data.success);
-            if(data.success !== undefined)
+            if(data.success) {
                 document.getElementById(`group_user-${reqId}`).remove();
-            if(data.fail !== undefined)
-                alert(data.fail);
+                Swal.fire({
+                    icon: 'success',
+                    title: data.success,
+                    text: data.message,
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hiba!',
+                    text: data.error,
+                })
+            }
         }
     });
 
@@ -197,8 +221,16 @@ $(".deleteTestAttempt").click(function (e) {
             url: "/deleteTestAttempt",
             data: {testAttemptId: reqId},
             success: function (data) {
-                if(data.success !== undefined);
+                if(data.success !== undefined) {
                     document.getElementById(`testAttempt#${reqId}`).remove();
+                }
+                else if(data.error !== undefined ) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hiba!',
+                        text: data.error,
+                    })
+                }
             }
         });
     }

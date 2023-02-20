@@ -9,7 +9,7 @@ use App\Models\answer;
 use App\Models\answer_value;
 use App\Models\TestsGroups;
 use Livewire\Component;
-
+use Alert;
 use Barryvdh\Debugbar\Facade as Debugbar;
 
 class ExamTaskEdit extends Component
@@ -255,6 +255,7 @@ class ExamTaskEdit extends Component
 
         }
 
+        Alert::success('A teszt módosítása sikeresen megtörtént!');
         return redirect()->route('test.index');
     }
 

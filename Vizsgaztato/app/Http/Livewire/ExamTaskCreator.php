@@ -12,7 +12,7 @@ use App\Models\answer_value;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facade as Debugbar;
-
+use Alert;
 class ExamTaskCreator extends Component
 {
     public $tasks;
@@ -208,6 +208,7 @@ class ExamTaskCreator extends Component
                 }
             }
         }
+        Alert::success('A teszt sikeresen létrehozva!');
         return redirect()->route('test.index');
     }
 

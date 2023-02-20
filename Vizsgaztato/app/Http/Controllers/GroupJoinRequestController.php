@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Session;
+use View;
 use Response;
 use App\Models\group_join_request;
 use App\Models\group;
@@ -9,27 +11,35 @@ use App\Models\groups_users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class GroupJoinRequestController extends Controller
 {
     public function SubmitRequest(Request $request) {
         try{
             $group = group::where('invCode', $request->invCode)->firstOrFail();
-            if(group_join_request::where(['group_id' => $group->id, 'requester_id'=> Auth::id()])->exists())
-                return response()->json(['failed'=>'Már rögzítve lett a csoporthoz csatlakozási kérelem - elutasítva!']);
-            if(groups_users::where(['group_id' => $group->id, 'user_id'=> Auth::id()])->exists())
-                return response()->json(['failed'=>'Már tagja a csoportnak - elutasítva!']);
+            if(group_join_request::where(['group_id' => $group->id, 'requester_id'=> Auth::id()])->exists()) {
+                return response()->json(['error'=>'Már rögzített csatlakozási kérelmet ebbe a csoportba!']);
+            }
+            if(groups_users::where(['group_id' => $group->id, 'user_id'=> Auth::id()])->exists()) {
+                return response()->json(['error'=>'Már tagja ennek a csoportnak!']);
+            }
 
             $group_join_request = new group_join_request;
             $group_join_request->requester_id = Auth::id();
             $group_join_request->group_id = $group->id;
             $group_join_request->save();
-            return response()->json(['success'=>'A csatlakozási kérelem sikeresen rögzítve']);
+
+            return response()->json(['success'=>'Jelentkezési kérelem sikeresen rögzítve!',
+                                     'message'=>'A csoport tulajdonosának el kell fogadnia a kérelmet']);
+        }
+        catch(ModelNotFoundException $exception) {
+            return response()->json(['error'=>'A megadott kódhoz nem tartozik csoport!']);
         }
         catch(\Exception $exception){
-            return response()->json(['failed'=>'A megadott kóddal nincsen csoport rögzítve...']);
+            return response()->json(['error'=>'Valami hiba történt...']);
         }
-
     }
 
     public function index($group_id) {
@@ -58,7 +68,7 @@ class GroupJoinRequestController extends Controller
             return response()->json(['success'=>'Csatlakozási kérelem elfogadva']);
         }
         catch(\Exception $exception) {
-            return response()->json(['fail'=>'Valami hiba történt']);
+            return response()->json(['error'=>'Valami hiba történt...']);
         }
 
     }
@@ -70,7 +80,7 @@ class GroupJoinRequestController extends Controller
             return response()->json(['success'=>'Csatlakozási kérelem elutasítva']);
         }
         catch(\Exception $exception) {
-            return response()->json(['fail'=>'Valami hiba történt']);
+            return response()->json(['error'=>'Valami hiba történt...']);
         }
     }
 }

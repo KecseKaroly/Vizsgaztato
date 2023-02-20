@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Session;
+use View;
 use App\Models\group_inv;
 use App\Models\group;
 use App\Models\group_join_request;
@@ -50,12 +51,12 @@ public function AcceptRequest(Request $request) {
         $join_request = group_join_request::where(['requester_id'=>$request->invited_id, 'group_id'=>$request->group_id]);
         if($join_request->exists())
             $join_request->delete();
-        return response()->json(['success'=>'Meghívás elfogadva']);
+
+        return response()->json(['success'=>'Meghívás elfogadva!']);
     }
     catch(\Exception $exception)
     {
-        return response()->json(['fail'=>'Valami hiba történt...']);
-
+        return response()->json(['error'=>'Valami hiba történt...']);
     }
 }
 
@@ -66,7 +67,7 @@ public function RejectRequest(Request $request) {
         return response()->json(['success'=>'Meghívás elutasítva']);
     }
     catch(\Exception $exception) {
-        return response()->json(['fail'=>'Valami hiba történt']);
+        return response()->json(['error'=>'Valami hiba történt...']);
     }
 
 }

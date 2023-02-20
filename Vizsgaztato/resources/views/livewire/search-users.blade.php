@@ -59,3 +59,16 @@
         @endforeach
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        window.addEventListener('inviteRequestsSent', event => {
+            console.log("ASD");
+            Swal.fire({
+                icon: 'success',
+                title: 'Sikeres rögzítés',
+                text: 'A meghívókat kiküldtük a kijelölt felhasználóknak!',
+            });
+        });
+    </script>
+@endpush

@@ -20,6 +20,8 @@
             crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/9b89b1cf87.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @vite('resources/js/ajax.js')
     @livewireStyles
 </head>
@@ -96,6 +98,7 @@
         @yield('content')
     </main>
 </div>
+@include('sweetalert::alert')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>
 @livewireScripts
 <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>

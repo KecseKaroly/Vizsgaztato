@@ -74,3 +74,15 @@
 </div>
 
 
+@push('scripts')
+    <script>
+        window.addEventListener('groupsAdded', event => {
+            console.log("ASD");
+            Swal.fire({
+                icon: 'success',
+                title: 'Sikeres rögzítés',
+                text: 'A csoportokat hozzárendeltük a teszthez!',
+            });
+        });
+    </script>
+@endpush

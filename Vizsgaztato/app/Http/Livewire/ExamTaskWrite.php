@@ -74,7 +74,7 @@ class ExamTaskWrite extends Component
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
-        return redirect('/test/'.$this->test['id'].'/result/'.$attempt->id);
+        return redirect()->route('checkAttemptResult', [$this->test['id'], $attempt->id]);
     }
 
     public function timeRanOut() {

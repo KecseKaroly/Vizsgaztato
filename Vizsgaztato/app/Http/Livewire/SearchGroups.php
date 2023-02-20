@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\group;
 use App\Http\Controllers\TestsGroupsController;
 use Livewire\Component;
-
+use Alert;
 class SearchGroups extends Component
 {
     public $searchValue;
@@ -46,6 +46,7 @@ class SearchGroups extends Component
     public function saveSelectedResults()
     {
         $result = (new TestsGroupsController)->store($this->selectedResults, $this->deletedGroups, $this->test);
+        $this->dispatchBrowserEvent('groupsAdded');
     }
 
     public function render()

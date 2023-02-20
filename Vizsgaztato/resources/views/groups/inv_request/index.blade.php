@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Meghívók')
 @section('content')
+<div class="flash-message"></div>
 <div id="successfulInviteRequest" class="hidden mx-auto mt-2 text-center flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-green-800 lg:w-10/12 md:w-8/12 w-11/12">
     <span class="sr-only">Success</span>
     <div class="text-2xl flex divide-x-2">

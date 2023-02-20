@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\User;
 use App\Http\Controllers\GroupInvController;
 use Barryvdh\Debugbar\Facade as Debugbar;
-
+use Alert;
 
 class SearchUsers extends Component
 {
@@ -31,8 +31,11 @@ class SearchUsers extends Component
     }
 
     public function saveSelectedResults() {
-        $result = (new GroupInvController)->store($this->selectedResults, $this->groupId);
-        $this->selectedResults = [];
+        if($this->selectedResults != []) {
+            $result = (new GroupInvController)->store($this->selectedResults, $this->groupId);
+            $this->dispatchBrowserEvent('inviteRequestsSent');
+            $this->selectedResults = [];
+        }
     }
 
     public function render()

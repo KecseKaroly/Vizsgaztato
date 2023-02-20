@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
-
+use Alert;
 class TestController extends Controller
 {
     /**
@@ -67,7 +67,11 @@ class TestController extends Controller
     {
         $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count();
         if ($testAttempts >= $test->maxAttempts)
-            return view('test.write')->with('error', "Túllépte a megengedett próbálkozásokat!");
+        {
+            Alert::danger("Túllépte a megengedett próbálkozásokat!");
+            return view('test.write');
+        }
+
 
         $testLiveWire = [
             'id' => $test->id,
@@ -227,7 +231,6 @@ class TestController extends Controller
             $attempt->achievedScore = $achievedScore;
             $attempt->save();
         }
-
     }
 
     /**
@@ -238,19 +241,20 @@ class TestController extends Controller
      */
     public function destroy(test $test)
     {
-        //
+        $test->delete();
+        Alert::success('A vizsgasor sikeresen törölve!');
+        return back();
     }
 
     public function showResult($testId, $attemptId)
     {
-        $attempt = testAttempt::find($attemptId);
-        if ($attempt == null)
-            return redirect('/test/' . $testId . '/result/');
+        $attempt = testAttempt::findOrFail($attemptId);
         $test = test::find($testId);
         $testResult = [
             'id' => $test->id,
             'title' => $test->title,
-            'tasks' => []
+            'tasks' => [],
+            'creator_id' => $test->creator_id,
         ];
         $tasks = task::where('test_id', $test->id)->get();
         foreach ($tasks as $taskIndex => $task) {
@@ -312,22 +316,16 @@ class TestController extends Controller
                         ]
                     );
                 }
-
             }
         }
-
         return view('test.results.show')->with('test', $testResult);
     }
 
     public function testResults($testId)
     {
         $test = test::find($testId);
-        if (testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count() == 0) {
-            return view('test.results.index', ['noAttempts' => 'Még nincsen a teszthez próbálkozása!', 'test' => $test]);
-        } else {
-            $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
-            return view('test.results.index', ['testAttempts' => $testAttempts, 'test' => $test]);
-        }
+        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
+        return view('test.results.index', ['testAttempts' => $testAttempts, 'test' => $test]);
     }
 
     public function testInfo($testId)

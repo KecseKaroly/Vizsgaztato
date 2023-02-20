@@ -77,7 +77,7 @@
                                         @csrf
                                         @METHOD('DELETE')
                                         <button type="submit" class="px-5 py-3">
-                                            <i class="fa-solid fa-arrow-right-from-bracket fa-2xl"></i>AAA
+                                            <i class="fa-solid fa-arrow-right-from-bracket fa-2xl"></i>
                                         </button>
                                     </form>
                                     </a>

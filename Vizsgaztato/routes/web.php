@@ -33,7 +33,6 @@ Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middle
 Route::get('/test/{id}/info/', [TestController::class, 'testInfo'])->middleware('auth')->name('checkTestInfo');
 
 Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->middleware('auth')->name('updateTestGroup');
-//Route::delete('/test/groups/delete', [TestsGroupsController::class, 'delete'])->middleware('auth')->name('deleteTestGroups');
 
 Route::get('/groups/invites', [GroupInvController::class, 'index'])->middleware('auth')->name('inv_requests');
 Route::resource('groups', GroupController::class)->middleware('auth');
@@ -46,7 +45,7 @@ Route::get('/group/{id}/join_requests', [GroupJoinRequestController::class, 'ind
 Route::post('/inv_request/accept', [GroupInvController::class, 'AcceptRequest'])->middleware('auth')->name('declineGroupInvRequest');
 Route::delete('/inv_request/decline', [GroupInvController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupInvRequest');
 
-Route::delete('/group/user/{id}', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('deleteUserFromGroup');
+Route::delete('/group/user/{id}/remove', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('deleteUserFromGroup');
 Route::delete('/group/user/{id}', [GroupsUsersController::class, 'leave'])->middleware('auth')->name('leaveUserFromGroup');
 Route::delete('/deleteTestAttempt', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
 Auth::routes();

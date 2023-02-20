@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Vizsga feladatsor eredménye')
-
 @section('style')
 <style>
     .correct {
@@ -18,12 +17,16 @@
 @section('content')
 <div class="md:flex">
     <div class="md:w-1/12 md:mr-0 ml-8 mr-24">
-        <button class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
-            <a href="{{ route('checkTestResults', $test['id']) }}">Vissza</a>
-        </button>
+        @if(!($test['creator_id'] == auth()->id()))
+            <a href="{{ route('checkTestResults', $test['id']) }}">
+                <button class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        @endif
     </div>
-    <div class="mt-5 mb-24 select-none w-11/12 ">
-        <div class="max-w-full mx-auto rounded-xl overflow-hidden  md:w-9/12 w-11/12">
+    <div class="mt-5 mb-24 select-none lg:w-10/12 md:w-9/12 w-11/12 mx-auto">
+        <div class="max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
             <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor eredménye</p>
             <div class="md:flex ">
                 <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-700 rounded-lg border  shadow-xl">

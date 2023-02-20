@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class GroupController extends Controller
@@ -72,7 +73,8 @@ class GroupController extends Controller
         $groups_users->role = "admin";
         $groups_users->save();
 
-        return redirect()->route('groups.index')->with('message', 'Csoport sikeresen létrehozva');
+        Alert::success('Csoport sikeresen létrehozva!');
+        return redirect()->route('groups.index');
     }
 
     /**
@@ -110,7 +112,8 @@ class GroupController extends Controller
     {
         $group->name = $request->group_name;
         $group->save();
-        return redirect()->route('groups.show', $group)->with('message', 'Csoport sikeresen módosítva!');
+        Alert::success('Csoport sikeresen módosítva!');
+        return redirect()->route('groups.show', $group);
     }
 
     /**
@@ -122,6 +125,7 @@ class GroupController extends Controller
     public function destroy(group $group)
     {
         $group->delete();
-        return redirect()->route('groups.index')->with('message', 'Csoport sikeresen törölve');
+        Alert::success('Csoport sikeresen törölve!');
+        return redirect()->route('groups.index');
     }
 }

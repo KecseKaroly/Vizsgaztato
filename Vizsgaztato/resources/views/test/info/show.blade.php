@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Kitöltött feladatlapok')
 @section('content')
+
     <div class="mt-24 mb-24 select-none">
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hiddenlg:w-4/6 md:w-8/12 w-11/12">
             <div class="md:flex  md:justify-between ">
@@ -83,7 +84,7 @@
                                             <div id="testAttempt#{{ $testAttempt->id }}"
                                                  class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-base px-12 py-2 ml-32">
                                                 <div>
-                                                    <a href="{{ route('checkAttemptResult', [$test->id, $testAttempt->id]) }}">
+                                                    <a href="{{ route('checkAttemptResult', [$test->id, $testAttempt->id]) }}"  target="_blank">
                                                         <button
                                                             class="bg-lime-500 hover:bg-lime-300 p-1.5 border rounded-lg text-lime-900 ">
                                                             <i class="fa-solid fa-eye"></i> Megtekint
@@ -111,7 +112,7 @@
 
                                                 class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-xl px-12 py-3 ml-32">
                                                 <div>
-                                                    Nincsen kitöltött teszt...
+                                                    Még nincsen kitöltött tesztje...
                                                 </div>
                                             </div>
                                         @endforelse
