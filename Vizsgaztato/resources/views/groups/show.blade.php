@@ -10,7 +10,7 @@
             </div>
             <button type="button" class="ml-auto  bg-green-50 text-green-500 rounded-lg hover:bg-green-200 inline-flex px-2.5 py-1 hover:ring-green-900 hover:ring-2" data-dismiss-target="#successMessage" aria-label="Close">
                 <span class="sr-only">Bezár</span>
-                <span><i class="fa-solid fa-xmark"></i></span>
+                <span><i class="fa-solid fa-xmark fa-xl"></i></span>
             </button>
         </div>
     @endif

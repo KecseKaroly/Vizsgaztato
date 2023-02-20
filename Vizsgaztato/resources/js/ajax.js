@@ -12,9 +12,17 @@ $("#sendInvCode").click(function (e) {
         url: "/submit_join_request",
         data: {invCode: invCode},
         success: function (data) {
-            alert(data.msg);
+            if(data.success !== undefined) {
+                $("#successfulJoinRequest").css("display", "flex");
+                $("#successMessage").text(data.success);
+            }
+            if(data.failed !== undefined) {
+                $("#failedJoinRequest").css("display", "flex");
+                $("#failMessage").text(data.failed);
+            }
         },
         error: function (data) {
+            console.log(data);
             alert("Valami hiba történt...");
         }
     });

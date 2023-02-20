@@ -13,17 +13,22 @@ use Illuminate\Support\Facades\DB;
 class GroupJoinRequestController extends Controller
 {
     public function SubmitRequest(Request $request) {
-        $group = group::where('invCode', $request->invCode)->first();
-        if(!group_join_request::where(['group_id' => $group->id, 'requester_id'=> Auth::id()])->exists() &&
-           !groups_users::where(['group_id' => $group->id, 'user_id'=> Auth::id()])->exists())
-        {
+        try{
+            $group = group::where('invCode', $request->invCode)->firstOrFail();
+            if(group_join_request::where(['group_id' => $group->id, 'requester_id'=> Auth::id()])->exists())
+                return response()->json(['failed'=>'Már rögzítve lett a csoporthoz csatlakozási kérelem - elutasítva!']);
+            if(groups_users::where(['group_id' => $group->id, 'user_id'=> Auth::id()])->exists())
+                return response()->json(['failed'=>'Már tagja a csoportnak - elutasítva!']);
+
             $group_join_request = new group_join_request;
             $group_join_request->requester_id = Auth::id();
             $group_join_request->group_id = $group->id;
             $group_join_request->save();
-            return response()->json(['msg'=>'A csatlakozási kérelem sikeresen rögzítve']);
+            return response()->json(['success'=>'A csatlakozási kérelem sikeresen rögzítve']);
         }
-        else return response()->json(['msg'=>'Sikertelen kérelem...']);
+        catch(\Exception $exception){
+            return response()->json(['failed'=>'A megadott kóddal nincsen csoport rögzítve...']);
+        }
 
     }
 
