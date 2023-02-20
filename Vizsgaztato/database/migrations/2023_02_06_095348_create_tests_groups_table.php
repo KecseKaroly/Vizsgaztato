@@ -14,10 +14,20 @@ return new class extends Migration {
     {
         Schema::create('tests_groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('test_id')->constrained();
-            $table->foreignId('group_id')->constrained();
-            $table->dateTime('enabled_from')->nullable()->default(NULL);
-            $table->dateTime('enabled_until')->nullable()->default(NULL);
+            $table->foreignId('test_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('group_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->dateTime('enabled_from')
+                ->nullable()
+                ->default(NULL);
+            $table->dateTime('enabled_until')
+                ->nullable()
+                ->default(NULL);
             $table->timestamps();
 
             //$table->foreign('test_id')->references('id')->on('tests')->onUpdate('cascade')->onDelete('cascade');
