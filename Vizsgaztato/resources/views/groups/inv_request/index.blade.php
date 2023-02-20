@@ -1,6 +1,30 @@
 @extends('layouts.app')
 @section('title', 'Meghívók')
 @section('content')
+<div id="successfulInviteRequest" class="hidden mx-auto mt-2 text-center flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-green-800 lg:w-10/12 md:w-8/12 w-11/12">
+    <span class="sr-only">Success</span>
+    <div class="text-2xl flex divide-x-2">
+        <div class="pr-4"><i class="fa-solid fa-check"></i></div>
+        <div class="pl-4 text-xl font-medium" id="successMessage"></div>
+    </div>
+    <button type="button" class="ml-auto  bg-green-50 text-green-500 rounded-lg hover:bg-green-200 inline-flex px-2.5 py-1 hover:ring-green-900 hover:ring-2" data-dismiss-target="#successfulInviteRequest" aria-label="Close">
+        <span class="sr-only">Bezár</span>
+        <span><i class="fa-solid fa-xmark fa-xl"></i></span>
+    </button>
+</div>
+
+<div id="failedInviteRequest" class="hidden mx-auto mt-2 text-center flex p-4 mb-4 text-red-800 rounded-lg bg-red-50 border-red-800 lg:w-10/12 md:w-8/12 w-11/12">
+    <span class="sr-only">Success</span>
+    <div class="text-2xl flex divide-x-2">
+        <div class="pr-4"><i class="fa-solid fa-circle-exclamation"></i></div>
+        <div class="pl-4 text-xl font-medium" id="failMessage"></div>
+    </div>
+    <button type="button" class="ml-auto  bg-red-50 text-red-500 rounded-lg hover:bg-red-200 inline-flex px-2.5 py-1 hover:ring-red-900 hover:red-2" data-dismiss-target="#failedInviteRequest" aria-label="Close">
+        <span class="sr-only">Bezár</span>
+        <span><i class="fa-solid fa-xmark fa-xl"></i></span>
+    </button>
+</div>
+
 <div class="mt-24 mb-24">
     <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
         <div class="flex">

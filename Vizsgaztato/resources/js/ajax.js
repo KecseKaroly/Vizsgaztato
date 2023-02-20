@@ -37,8 +37,16 @@ $(".declineJoinRequest").click(function (e) {
         url: "/join_request/decline",
         data: {join_request_id: reqId},
         success: function (data) {
-            alert(data.success);
-            document.getElementById(`request-${reqId}`).remove();
+            if(data.success !== undefined) {
+                document.getElementById(`request-${reqId}`).remove();
+                $("#successfulJoinRequest").css("display", "flex");
+                $("#successMessage").text(data.success);
+            }
+            if(data.failed !== undefined) {
+                $("#failedJoinRequest").css("display", "flex");
+                $("#failMessage").text(data.failed);
+            }
+
         }
     });
 });
@@ -53,8 +61,16 @@ $(".acceptJoinRequest").click(function (e) {
         url: "/join_request/accept",
         data: {join_request_id: reqId, requester_id: requester_id, group_id: group_id},
         success: function (data) {
-            alert(data.success);
-            document.getElementById(`request-${reqId}`).remove();
+            if(data.success !== undefined) {
+                document.getElementById(`request-${reqId}`).remove();
+                $("#successfulJoinRequest").css("display", "flex");
+                $("#successMessage").text(data.success);
+            }
+            if(data.failed !== undefined) {
+                $("#failedJoinRequest").css("display", "flex");
+                $("#failMessage").text(data.failed);
+            }
+
         }
     });
 });
@@ -70,13 +86,18 @@ $(".declineInvRequest").click(function (e) {
         url: "/inv_request/decline",
         data: {inv_request_id: reqId},
         success: function (data) {
-            alert(data.success);
-            document.getElementById(`request-${reqId}`).remove();
+            if(data.success !== undefined) {
+                document.getElementById(`request-${reqId}`).remove();
+                $("#successfulInviteRequest").css("display", "flex");
+                $("#successMessage").text(data.success);
+            }
+            if(data.failed !== undefined) {
+                $("#failedInviteRequest").css("display", "flex");
+                $("#failMessage").text(data.failed);
+            }
         }
     });
-
 });
-
 $(".acceptInvRequest").click(function (e) {
     e.preventDefault();
     const params = $(this).data();
@@ -89,8 +110,15 @@ $(".acceptInvRequest").click(function (e) {
         url: "/inv_request/accept",
         data: {inv_request_id: reqId, sender_id: sender_id, group_id: group_id, invited_id: invited_id},
         success: function (data) {
-            alert(data.success);
-            document.getElementById(`request-${reqId}`).remove();
+            if(data.success !== undefined) {
+                document.getElementById(`request-${reqId}`).remove();
+                $("#successfulInviteRequest").css("display", "flex");
+                $("#successMessage").text(data.success);
+            }
+            if(data.failed !== undefined) {
+                $("#failedInviteRequest").css("display", "flex");
+                $("#failMessage").text(data.failed);
+            }
         }
     });
 });
@@ -145,11 +173,14 @@ $(".removeUserFromGroup").click(function (e) {
     console.log(reqId);
     $.ajax({
         type: 'DELETE',
-        url: "/removeUserFromGroup",
+        url: `/group/user/${reqId}`,
         data: {groups_users_id: reqId},
         success: function (data) {
+            console.log(data.success);
             if(data.success !== undefined)
                 document.getElementById(`group_user-${reqId}`).remove();
+            if(data.fail !== undefined)
+                alert(data.fail);
         }
     });
 

@@ -73,12 +73,11 @@
                                         </form>
                                     </div>
                                 @elseif ($user->id == Auth::id() && $group->creator_id != Auth::id())
-                                    <form method="POST" action="{{ route('leaveFromGroup') }}">
+                                    <form method="POST" action="{{ route('leaveUserFromGroup', $user->pivot->id) }}">
                                         @csrf
                                         @METHOD('DELETE')
-                                        <input type="hidden" name="guid" value="{{ $user->pivot->id }}"/>
                                         <button type="submit" class="px-5 py-3">
-                                            <i class="fa-solid fa-arrow-right-from-bracket fa-2xl"></i>
+                                            <i class="fa-solid fa-arrow-right-from-bracket fa-2xl"></i>AAA
                                         </button>
                                     </form>
                                     </a>

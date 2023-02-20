@@ -42,24 +42,35 @@ class GroupJoinRequestController extends Controller
     }
 
     public function AcceptRequest(Request $request) {
-        $groups_users_connetion = new groups_users;
-        $groups_users_connetion->user_id =  $request->requester_id;
-        $groups_users_connetion->group_id =  $request->group_id;
-        $groups_users_connetion->role = "member";
-        $groups_users_connetion->save();
+        try{
+            $groups_users_connetion = new groups_users;
+            $groups_users_connetion->user_id =  $request->requester_id;
+            $groups_users_connetion->group_id =  $request->group_id;
+            $groups_users_connetion->role = "member";
+            $groups_users_connetion->save();
 
-        $join_request = group_join_request::find($request->join_request_id);
-        $join_request->delete();
-
-        $join_request = group_inv::where(['invited_id'=>$request->requester_id, 'group_id'=>$request->group_id]);
-        if($join_request->exists())
+            $join_request = group_join_request::find($request->join_request_id);
             $join_request->delete();
-        return response()->json(['success'=>'Csatlakozási kérelem elfogadva']);
+
+            $join_request = group_inv::where(['invited_id'=>$request->requester_id, 'group_id'=>$request->group_id]);
+            if($join_request->exists())
+                $join_request->delete();
+            return response()->json(['success'=>'Csatlakozási kérelem elfogadva']);
+        }
+        catch(\Exception $exception) {
+            return response()->json(['fail'=>'Valami hiba történt']);
+        }
+
     }
 
     public function RejectRequest(Request $request) {
-        $join_request = group_join_request::find($request->join_request_id);
-        $join_request->delete();
-        return response()->json(['success'=>'Csatlakozási kérelem elutasítva']);
+        try{
+            $join_request = group_join_request::find($request->join_request_id);
+            $join_request->delete();
+            return response()->json(['success'=>'Csatlakozási kérelem elutasítva']);
+        }
+        catch(\Exception $exception) {
+            return response()->json(['fail'=>'Valami hiba történt']);
+        }
     }
 }

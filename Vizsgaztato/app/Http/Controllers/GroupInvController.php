@@ -37,24 +37,37 @@ class GroupInvController extends Controller
 }
 
 public function AcceptRequest(Request $request) {
-    $groups_users_connetion = new groups_users;
-    $groups_users_connetion->user_id =  $request->invited_id;
-    $groups_users_connetion->group_id =  $request->group_id;
-    $groups_users_connetion->role = "member";
-    $groups_users_connetion->save();
+    try{
+        $groups_users_connetion = new groups_users;
+        $groups_users_connetion->user_id =  $request->invited_id;
+        $groups_users_connetion->group_id =  $request->group_id;
+        $groups_users_connetion->role = "member";
+        $groups_users_connetion->save();
 
-    $inv_request = group_inv::find($request->inv_request_id);
-    $inv_request->delete();
+        $inv_request = group_inv::find($request->inv_request_id);
+        $inv_request->delete();
 
-    $join_request = group_join_request::where(['requester_id'=>$request->invited_id, 'group_id'=>$request->group_id]);
-    if($join_request->exists())
-        $join_request->delete();
-    return response()->json(['success'=>'Meghívás elfogadva']);
+        $join_request = group_join_request::where(['requester_id'=>$request->invited_id, 'group_id'=>$request->group_id]);
+        if($join_request->exists())
+            $join_request->delete();
+        return response()->json(['success'=>'Meghívás elfogadva']);
+    }
+    catch(\Exception $exception)
+    {
+        return response()->json(['fail'=>'Valami hiba történt...']);
+
+    }
 }
 
 public function RejectRequest(Request $request) {
-    $inv_request = group_inv::find($request->inv_request_id);
-    $inv_request->delete();
-    return response()->json(['success'=>'Meghívás elutasítva']);
+    try{
+        $inv_request = group_inv::find($request->inv_request_id);
+        $inv_request->delete();
+        return response()->json(['success'=>'Meghívás elutasítva']);
+    }
+    catch(\Exception $exception) {
+        return response()->json(['fail'=>'Valami hiba történt']);
+    }
+
 }
 }

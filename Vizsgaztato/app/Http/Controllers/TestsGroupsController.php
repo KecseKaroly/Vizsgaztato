@@ -11,17 +11,23 @@ class TestsGroupsController extends Controller
 {
     public function store($selectedResults, $deletedResults, test $test)
     {
-        foreach ($selectedResults as $selectedResult) {
-            if (!$test->groups->contains($selectedResult['id'])) {
-                $test->groups()->attach($selectedResult['id']);
+        try{
+            foreach ($selectedResults as $selectedResult) {
+                if (!$test->groups->contains($selectedResult['id'])) {
+                    $test->groups()->attach($selectedResult['id']);
+                }
             }
-        }
-        foreach ($deletedResults as $selectedResult) {
-            if ($test->groups->contains($selectedResult['id'])) {
-                $test->groups()->detach($selectedResult['id']);
+            foreach ($deletedResults as $selectedResult) {
+                if ($test->groups->contains($selectedResult['id'])) {
+                    $test->groups()->detach($selectedResult['id']);
+                }
             }
+            return redirect()->route('checkTestInfo', $test)->with('success', 'Teszt csoportjainak módosítása sikeresen megtörtént');
+
         }
-        return redirect()->route('checkTestInfo', $test);
+        catch (\Exception $ex) {
+            return redirect()->route('checkTestInfo', $test)->with('fail', 'Valami hiba történt...');
+        }
     }
 
     /*public function delete(Request $request)
