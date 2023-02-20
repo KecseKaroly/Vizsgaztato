@@ -6,7 +6,7 @@
         <span class="sr-only">Success</span>
         <div class="text-2xl flex divide-x-2">
             <div class="pr-4"><i class="fa-solid fa-check"></i></div>
-            <div class="pl-4 text-xl font-medium">aaaa{{session('message')}}</div>
+            <div class="pl-4 text-xl font-medium">{{session('message')}}</div>
         </div>
         <button type="button" class="ml-auto  bg-green-50 text-green-500 rounded-lg hover:bg-green-200 inline-flex px-2.5 py-1 hover:ring-green-900 hover:ring-2" data-dismiss-target="#successMessage" aria-label="Close">
             <span class="sr-only">Bezár</span>
@@ -19,7 +19,7 @@
     <span class="sr-only">Success</span>
     <div class="text-2xl flex divide-x-2">
         <div class="pr-4"><i class="fa-solid fa-check"></i></div>
-        <div class="pl-4 text-xl font-medium" id="successMessage">aaaaaaaa</div>
+        <div class="pl-4 text-xl font-medium" id="successMessage"></div>
     </div>
     <button type="button" class="ml-auto  bg-green-50 text-green-500 rounded-lg hover:bg-green-200 inline-flex px-2.5 py-1 hover:ring-green-900 hover:ring-2" data-dismiss-target="#successfulJoinRequest" aria-label="Close">
         <span class="sr-only">Bezár</span>
@@ -31,7 +31,7 @@
     <span class="sr-only">Success</span>
     <div class="text-2xl flex divide-x-2">
         <div class="pr-4"><i class="fa-solid fa-circle-exclamation"></i></div>
-        <div class="pl-4 text-xl font-medium" id="failMessage">aaaaa</div>
+        <div class="pl-4 text-xl font-medium" id="failMessage"></div>
     </div>
     <button type="button" class="ml-auto  bg-red-50 text-red-500 rounded-lg hover:bg-red-200 inline-flex px-2.5 py-1 hover:ring-red-900 hover:red-2" data-dismiss-target="#failedJoinRequest" aria-label="Close">
         <span class="sr-only">Bezár</span>
