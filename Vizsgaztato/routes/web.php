@@ -39,14 +39,14 @@ Route::get('/groups/invites', [GroupInvController::class, 'index'])->middleware(
 Route::resource('groups', GroupController::class)->middleware('auth');
 
 Route::post('/join_request/submit', [GroupJoinRequestController::class, 'SubmitRequest'])->middleware('auth')->name('JoinRequestSubmit');
-Route::post('/join_request/accept_', [GroupJoinRequestController::class, 'AcceptRequest'])->middleware('auth')->name('acceptGroupJoinRequest');
-Route::delete('/join_request/decline_', [GroupJoinRequestController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupJoinRequest');
+Route::post('/join_request/accept', [GroupJoinRequestController::class, 'AcceptRequest'])->middleware('auth')->name('acceptGroupJoinRequest');
+Route::delete('/join_request/decline', [GroupJoinRequestController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupJoinRequest');
 Route::get('/group/{id}/join_requests', [GroupJoinRequestController::class, 'index'])->middleware('auth')->name('join_requests');
 
 Route::post('/inv_request/accept', [GroupInvController::class, 'AcceptRequest'])->middleware('auth')->name('declineGroupInvRequest');
 Route::delete('/inv_request/decline', [GroupInvController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupInvRequest');
 
-Route::delete('/removeUserFromGroup', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('removeUserFromGroup');
-Route::delete('/leaveFromGroup', [GroupsUsersController::class, 'leave'])->middleware('auth')->name('leaveFromGroup');
+Route::delete('/group/user/{id}', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('deleteUserFromGroup');
+Route::delete('/group/user/{id}', [GroupsUsersController::class, 'leave'])->middleware('auth')->name('leaveUserFromGroup');
 Route::delete('/deleteTestAttempt', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
 Auth::routes();
