@@ -18,7 +18,7 @@ class SearchGroups extends Component
 
     public function updatedSearchValue()
     {
-        $this->searchResults = group::where('name', 'LIKE', '%' . $this->searchValue . '%')->get()->toArray();
+        $this->searchResults = group::where('name', 'LIKE', '%' . $this->searchValue . '%')->where('creator_id', auth()->id())->get()->toArray();
     }
 
     public function addToSelectedResults($index)
