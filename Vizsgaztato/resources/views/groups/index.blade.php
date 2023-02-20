@@ -56,7 +56,7 @@
                         <div class="md:flex">
                             <div class="form-group">
                                 <label for="invCode" class="text-lg font-semibold">Kód:</label>
-                                <input type="text" id="invCode" name="invCode" class="border border-indigo-800 focus:border-indigo-800 text-indigo-900 focus:bg-indigo-400 bg-indigo-200 rounded font-medium italic text-md " placeholder="meghívó kód" required>
+                                <input type="text" id="invCode" name="invCode" class="border border-indigo-800 focus:border-indigo-800 text-indigo-900 focus:bg-indigo-300 bg-indigo-200 rounded font-medium italic text-md " placeholder="Meghívó kód" autocomplete="off" required>
                             </div>
                             <div class="form-group md:ml-6">
                                 <button id="sendInvCode" class="hover:bg-indigo-800 bg-indigo-600 border-2 border-gray-100  text-white font-bold p-2 rounded-lg"><i class="fa-regular fa-paper-plane"></i> Jelentkezés</button>
