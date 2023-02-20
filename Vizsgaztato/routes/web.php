@@ -38,13 +38,13 @@ Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->midd
 Route::get('/groups/invites', [GroupInvController::class, 'index'])->middleware('auth')->name('inv_requests');
 Route::resource('groups', GroupController::class)->middleware('auth');
 
-Route::post('/submit_join_request', [GroupJoinRequestController::class, 'SubmitRequest'])->middleware('auth')->name('JoinRequestSubmit');
+Route::post('/join_request/submit', [GroupJoinRequestController::class, 'SubmitRequest'])->middleware('auth')->name('JoinRequestSubmit');
+Route::post('/join_request/accept_', [GroupJoinRequestController::class, 'AcceptRequest'])->middleware('auth')->name('acceptGroupJoinRequest');
+Route::delete('/join_request/decline_', [GroupJoinRequestController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupJoinRequest');
 Route::get('/group/{id}/join_requests', [GroupJoinRequestController::class, 'index'])->middleware('auth')->name('join_requests');
-Route::post('/accept_join_request', [GroupJoinRequestController::class, 'AcceptRequest'])->middleware('auth')->name('acceptGroupJoinRequest');
-Route::delete('/decline_join_request', [GroupJoinRequestController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupJoinRequest');
 
-Route::post('/accept_inv_request', [GroupInvController::class, 'AcceptRequest'])->middleware('auth')->name('declineGroupInvRequest');
-Route::delete('/decline_inv_request', [GroupInvController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupInvRequest');
+Route::post('/inv_request/accept', [GroupInvController::class, 'AcceptRequest'])->middleware('auth')->name('declineGroupInvRequest');
+Route::delete('/inv_request/decline', [GroupInvController::class, 'RejectRequest'])->middleware('auth')->name('declineGroupInvRequest');
 
 Route::delete('/removeUserFromGroup', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('removeUserFromGroup');
 Route::delete('/leaveFromGroup', [GroupsUsersController::class, 'leave'])->middleware('auth')->name('leaveFromGroup');

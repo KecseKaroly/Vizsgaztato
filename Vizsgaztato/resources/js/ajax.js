@@ -4,12 +4,13 @@ $.ajaxSetup({
     }
 });
 
+/* Group join requests: */
 $("#sendInvCode").click(function (e) {
     e.preventDefault();
     var invCode = $("input[name=invCode]").val();
     $.ajax({
         type: 'POST',
-        url: "/submit_join_request",
+        url: "/join_request/submit",
         data: {invCode: invCode},
         success: function (data) {
             if(data.success !== undefined) {
@@ -27,23 +28,20 @@ $("#sendInvCode").click(function (e) {
         }
     });
 });
-
 $(".declineJoinRequest").click(function (e) {
     e.preventDefault();
     const params = $(this).data();
     const reqId = params["id"];
     $.ajax({
         type: 'DELETE',
-        url: "/decline_join_request",
+        url: "/join_request/decline",
         data: {join_request_id: reqId},
         success: function (data) {
             alert(data.success);
             document.getElementById(`request-${reqId}`).remove();
         }
     });
-
 });
-
 $(".acceptJoinRequest").click(function (e) {
     e.preventDefault();
     const params = $(this).data();
@@ -52,7 +50,7 @@ $(".acceptJoinRequest").click(function (e) {
     const group_id = params["group_id"];
     $.ajax({
         type: 'POST',
-        url: "/accept_join_request",
+        url: "/join_request/accept",
         data: {join_request_id: reqId, requester_id: requester_id, group_id: group_id},
         success: function (data) {
             alert(data.success);
@@ -61,13 +59,15 @@ $(".acceptJoinRequest").click(function (e) {
     });
 });
 
+
+/* Group invite requests*/
 $(".declineInvRequest").click(function (e) {
     e.preventDefault();
     const params = $(this).data();
     const reqId = params["id"];
     $.ajax({
         type: 'DELETE',
-        url: "/decline_inv_request",
+        url: "/inv_request/decline",
         data: {inv_request_id: reqId},
         success: function (data) {
             alert(data.success);
@@ -86,7 +86,7 @@ $(".acceptInvRequest").click(function (e) {
     const group_id = params["group_id"];
     $.ajax({
         type: 'POST',
-        url: "/accept_inv_request",
+        url: "/inv_request/accept",
         data: {inv_request_id: reqId, sender_id: sender_id, group_id: group_id, invited_id: invited_id},
         success: function (data) {
             alert(data.success);
@@ -95,21 +95,22 @@ $(".acceptInvRequest").click(function (e) {
     });
 });
 
-$(".user_id").click(function (e) {
-    const params = $(this).data();
-    const user_id = params["user_id"];
-    const group_id = params["group_id"];
-    $(`#attempts_of_user${user_id}_${group_id}`).toggle('fast');
-    $(`#arrow_of_user${user_id}_${group_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up', 1000);
-
-});
-
+/* TestInfo-n a csoportok és felhasználók kinyitása/összecsukása */
 $(".group_id").click(function (e) {
     const params = $(this).data();
     const group_id = params["group_id"];
     $(`#attempts_of_group${group_id}`).toggle('fast');
     $(`#arrow_of_group${group_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up');
 });
+$(".user_id").click(function (e) {
+    const params = $(this).data();
+    const user_id = params["user_id"];
+    const group_id = params["group_id"];
+    $(`#attempts_of_user${user_id}_${group_id}`).toggle('fast');
+    $(`#arrow_of_user${user_id}_${group_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up', 1000);
+});
+
+
 
 $(".deleteTestGroups").click(function (e) {
     e.preventDefault();
@@ -119,7 +120,8 @@ $(".deleteTestGroups").click(function (e) {
         url: "/test/groups/delete",
         data: {test_group_id: test_group_id},
         success: function (data) {
-            document.getElementById(`test_group${test_group_id}`).style.display = "none";
+            if(data.success !== undefined)
+                document.getElementById(`test_group${test_group_id}`).style.display = "none";
         },
         error: function (data) {
             alert("Valami hiba történt...");
@@ -146,8 +148,8 @@ $(".removeUserFromGroup").click(function (e) {
         url: "/removeUserFromGroup",
         data: {groups_users_id: reqId},
         success: function (data) {
-            alert(data.success);
-            document.getElementById(`group_user-${reqId}`).remove();
+            if(data.success !== undefined)
+                document.getElementById(`group_user-${reqId}`).remove();
         }
     });
 
@@ -164,8 +166,8 @@ $(".deleteTestAttempt").click(function (e) {
             url: "/deleteTestAttempt",
             data: {testAttemptId: reqId},
             success: function (data) {
-                alert(data.success);
-                document.getElementById(`testAttempt#${reqId}`).remove();
+                if(data.success !== undefined);
+                    document.getElementById(`testAttempt#${reqId}`).remove();
             }
         });
     }
