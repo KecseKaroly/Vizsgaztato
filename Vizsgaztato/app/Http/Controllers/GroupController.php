@@ -72,7 +72,7 @@ class GroupController extends Controller
         $groups_users->role = "admin";
         $groups_users->save();
 
-        return redirect()->route('groups.index');
+        return redirect()->route('groups.index')->with('message', 'Csoport sikeresen létrehozva');
     }
 
     /**
@@ -110,7 +110,7 @@ class GroupController extends Controller
     {
         $group->name = $request->group_name;
         $group->save();
-        return back()->with('message', 'Record Successfully Updated!');
+        return redirect()->route('groups.show', $group)->with('message', 'Csoport sikeresen módosítva!');
     }
 
     /**
@@ -122,6 +122,6 @@ class GroupController extends Controller
     public function destroy(group $group)
     {
         $group->delete();
-        return redirect()->route('groups.index');
+        return redirect()->route('groups.index')->with('message', 'Csoport sikeresen törölve');
     }
 }

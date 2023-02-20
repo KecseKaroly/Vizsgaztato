@@ -1,6 +1,19 @@
 @extends('layouts.app')
 @section('title',  $group->name )
 @section('content')
+    @if(session('message'))
+        <div id="successMessage" class="mx-auto mt-2 text-center flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 border-green-800 lg:w-10/12 md:w-8/12 w-11/12">
+            <span class="sr-only">Success</span>
+            <div class="text-2xl flex divide-x-2">
+                <div class="pr-4"><i class="fa-solid fa-check"></i></div>
+                <div class="pl-4 text-xl font-medium">{{session('message')}}</div>
+            </div>
+            <button type="button" class="ml-auto  bg-green-50 text-green-500 rounded-lg hover:bg-green-200 inline-flex px-2.5 py-1 hover:ring-green-900 hover:ring-2" data-dismiss-target="#successMessage" aria-label="Close">
+                <span class="sr-only">Bezár</span>
+                <span><i class="fa-solid fa-xmark"></i></span>
+            </button>
+        </div>
+    @endif
     <div class="mt-16  mx-auto">
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-10/12 md:w-8/12 w-11/12">
             <div class="lg:flex lg:justify-between mb-12">
