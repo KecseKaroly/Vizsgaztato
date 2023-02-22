@@ -1,19 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\test;
+use App\Models\question;
+use App\Models\option;
+use App\Models\answer;
+use App\Models\given_answer;
 
+use App\Models\User;
 use App\Models\group;
 use App\Models\groups_users;
-use App\Models\answer;
-use App\Models\answer_value;
-use App\Models\given_answer;
-use App\Models\question;
-use App\Models\task;
-use App\Models\test;
-use App\Models\User;
-use App\Models\testAttempt;
 use App\Models\TestsGroups;
-use Barryvdh\Debugbar\Facade as Debugbar;
+use App\Models\testAttempt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,12 +26,13 @@ class TestController extends Controller
      */
     public function index()
     {
-        $myGroups = groups_users::where('user_id', Auth::id())->pluck('group_id')->toArray();
-        $myGroupsTests = TestsGroups::whereIn('group_id', $myGroups)->distinct()->pluck('test_id')->toArray();
+        $user = auth()->user()->load('groups');
+        $myGroupIds = $user->groups->modelKeys();
+        $myGroupsTestIds = TestsGroups::whereIn('group_id', $myGroupIds)->distinct()->pluck('test_id')->toArray();
 
-        $tests = test::whereIn('id', $myGroupsTests)->orWhereIn('creator_id', [Auth::id()])->get();
-
-        return view('test.index')->with('tests', $tests);
+        $tests =test::whereIn('id', $myGroupsTestIds)->whereNotIn('creator_id', [Auth::id()])->get();
+        $myTests = test::whereIn('creator_id', [Auth::id()])->get();
+        return view('test.index', ['tests'=>$tests, 'myTests' => $myTests]);
     }
 
     /**
@@ -104,7 +103,7 @@ class TestController extends Controller
                 $answers = answer::where('question_id', $question->id)->get();
                 foreach ($answers as $answer) {
                     $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $answer->score;
-                    $answer_value = answer_value::find($answer->solution_id);
+                    $answer_value = answer::find($answer->solution_id);
                     array_push(
                         $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
                         [
@@ -162,7 +161,7 @@ class TestController extends Controller
                     ]);
                 $answers = answer::where('question_id', $question->id)->get();
                 foreach ($answers as $answer) {
-                    $answer_value = answer_value::find($answer->solution_id);
+                    $answer_value = answer::find($answer->solution_id);
                     if ($task['type'] != "OneChoice" && $task['type'] != "TrueFalse" && $task['type'] != "Sequence") {
                         array_push(
                             $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['answers'],
@@ -183,7 +182,7 @@ class TestController extends Controller
                             ]
                         );
                         if ($task['type'] == "OneChoice" || $task['type'] == "TrueFalse") {
-                            $solution = answer_value::find($answer->solution_id);
+                            $solution = answer::find($answer->solution_id);
                             if ($solution->text == "checked")
                                 $testLiveWire['tasks'][$taskIndex]['questions'][$questionIndex]['right_answer_index'] = $answer->id;
                         }
@@ -280,9 +279,9 @@ class TestController extends Controller
                 );
                 $given_answers = given_answer::where(['question_id' => $question->id, 'attempt_id' => $attemptId])->get();
                 foreach ($given_answers as $given_answer) {
-                    $given_answer_value = answer_value::find($given_answer->given_id);
+                    $given_answer_value = answer::find($given_answer->given_id);
                     $exp_answer = answer::find($given_answer->answer_id);
-                    $exp_answer_value = answer_value::find($exp_answer->solution_id);
+                    $exp_answer_value = answer::find($exp_answer->solution_id);
                     $testResult['tasks'][$taskIndex]['questions'][$questionIndex]['maxScore'] += $exp_answer->score;
 
                     if ($task->type == 'Sequence') {
@@ -336,7 +335,8 @@ class TestController extends Controller
                     $query->where('groups_users.role', 'not like', 'admin');
                 },
                 'groups.users.attempts' => function ($query) use ($testId) {
-                    $query->where('test_attempts.test_id', 'like', $testId);
+                    $query->where('test_attempts.test_id', 'like', $testId)
+                        ;
                 },
             ]
         )
