@@ -27,15 +27,16 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('layouts.app');
 });
-Route::resource('test', TestController::class)->middleware('auth');
-Route::get('/test/{test_id}/result/{attempt_id}', [TestController::class, 'showResult'])->middleware('auth')->name('checkAttemptResult');
+Route::get('/attempt/{attempt_id}/result', [TestController::class, 'showResult'])->middleware('auth')->name('checkAttemptResult');
+Route::delete('/attempt/delete', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
+
 Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
 Route::get('/test/{id}/info/', [TestController::class, 'testInfo'])->middleware('auth')->name('checkTestInfo');
 
 Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->middleware('auth')->name('updateTestGroup');
+Route::resource('test', TestController::class)->middleware('auth');
 
 Route::get('/groups/invites', [GroupInvController::class, 'index'])->middleware('auth')->name('inv_requests');
-Route::resource('groups', GroupController::class)->middleware('auth');
 
 Route::post('/join_request/submit', [GroupJoinRequestController::class, 'SubmitRequest'])->middleware('auth')->name('JoinRequestSubmit');
 Route::post('/join_request/accept', [GroupJoinRequestController::class, 'AcceptRequest'])->middleware('auth')->name('acceptGroupJoinRequest');
@@ -47,5 +48,6 @@ Route::delete('/inv_request/decline', [GroupInvController::class, 'RejectRequest
 
 Route::delete('/group/user/{id}/remove', [GroupsUsersController::class, 'destroy'])->middleware('auth')->name('deleteUserFromGroup');
 Route::delete('/group/user/{id}', [GroupsUsersController::class, 'leave'])->middleware('auth')->name('leaveUserFromGroup');
-Route::delete('/deleteTestAttempt', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
+Route::resource('groups', GroupController::class)->middleware('auth');
+
 Auth::routes();

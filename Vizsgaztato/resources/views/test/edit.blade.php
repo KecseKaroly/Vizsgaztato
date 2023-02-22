@@ -2,6 +2,6 @@
 @section('title', 'Feladatlap szerkesztése')
 @section('content')
     <div>
-        @livewire('exam-task-edit', ['testLiveWire' => $testLiveWire, 'groups'=>$groups])
+        @livewire('exam-task-edit', ['testLiveWire' => $testLiveWire])
     </div>
 @endsection

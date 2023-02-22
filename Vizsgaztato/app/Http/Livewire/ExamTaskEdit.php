@@ -2,72 +2,46 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\TestsGroupsController;
 use App\Models\test;
-use App\Models\task;
 use App\Models\question;
+use App\Models\option;
 use App\Models\answer;
-use App\Models\answer_value;
-use App\Models\TestsGroups;
+use App\Models\given_answer;
+use App\Models\group;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 use Alert;
-use Barryvdh\Debugbar\Facade as Debugbar;
 
 class ExamTaskEdit extends Component
 {
-    public $deletedTasks = [];
     public $deletedQuestions = [];
-    public $deletedAnswers = [];
+    public $deletedOptions = [];
 
-    public $durationHour;
+    public $questions;
+    public $testTitle;
+    public $testAttempts;
     public $durationMinute;
-    public $tasks = [];
-    public $testTitle = '';
-    public $testAttempts = 1;
-    public $testId = 1;
+    public $testResultsVisible;
+    public $testId;
 
 
-    public function mount($testLiveWire, $groups)
+    public function mount($testLiveWire)
     {
-        $this->durationHour = floor($testLiveWire['duration'] / 60);
-        $this->durationMinute = $testLiveWire['duration'] - $this->durationHour * 60;
         $this->testId = $testLiveWire['id'];
+        $this->questions = $testLiveWire['questions'];
         $this->testTitle = $testLiveWire['title'];
         $this->testAttempts = $testLiveWire['maxAttempts'];
-        $this->tasks = $testLiveWire['tasks'];
-
+        $this->durationMinute = $testLiveWire['duration'];
     }
 
-    protected $listeners = ['taskTypeChanged'];
+    protected $listeners = ['questionTypeChanged'];
 
-    public function taskTypeChanged($taskIndex)
+    public function questionTypeChanged($questionIndex)
     {
-        if ($this->tasks[$taskIndex]['type'] == 'TrueFalse' || $this->tasks[$taskIndex]['type'] == 'Sequence')
-            $this->tasks[$taskIndex]['questions'] = [];
-    }
-
-    public function Add_Task()
-    {
-        array_unshift($this->tasks,
-            [
-                'text' => '',
-                'type' => '',
-                'questions' => [],
-            ]);
-    }
-
-    public function Remove_Task($taskIndex)
-    {
-        if (array_key_exists('id', $this->tasks[$taskIndex])) {
-            array_push($this->deletedTasks, $this->tasks[$taskIndex]);
-        }
-        unset($this->tasks[$taskIndex]);
-    }
-
-    public function Add_Question($index)
-    {
-        $answers = [];
-        if ($this->tasks[$index]["type"] == "TrueFalse") {
-            $answers = [
+        if ($this->questions[$questionIndex]['type'] == 'TrueFalse')
+        {
+            $this->questions[$questionIndex]['options'] = [
                 [
                     'text' => 'Igaz',
                     'solution' => '',
@@ -80,179 +54,111 @@ class ExamTaskEdit extends Component
                 ]
             ];
         }
-        if ($this->tasks[$index]["type"] == "OneChoice" || $this->tasks[$index]["type"] == "TrueFalse") {
-            array_unshift($this->tasks[$index]['questions'],
-                [
-                    'text' => '',
-                    'answers' => $answers,
-                    'right_answer_index' => '',
-                ]
-            );
-        } else {
-            array_unshift($this->tasks[$index]['questions'],
-                [
-                    'text' => '',
-                    'answers' => $answers,
-                ]
-            );
+        else if($this->questions[$questionIndex]['type'] == 'Sequence')
+        {
+            $this->questions[$questionIndex]['options'] = [];
         }
-
     }
-
-    public function Remove_Question($taskIndex, $questionIndex)
+    public function Add_Question($index)
     {
-        if (array_key_exists('id', $this->tasks[$taskIndex]['questions'][$questionIndex])) {
-            array_push($this->deletedQuestions, $this->tasks[$taskIndex]['questions'][$questionIndex]);
-        }
-        unset($this->tasks[$taskIndex]['questions'][$questionIndex]);
+        array_unshift($this->questions,
+            [
+                'text' => '',
+                'type' => '',
+                'options' => [],
+                'right_answer_index' => '',
+            ]);
     }
 
-    public function Add_Answer($taskIndex, $questionIndex)
+    public function Remove_Question($questionIndex)
+    {
+        if (array_key_exists('id', $this->questions[$questionIndex])) {
+            array_push($this->deletedQuestions, $this->questions[$questionIndex]);
+        }
+        unset($this->questions[$questionIndex]);
+    }
+
+    public function Add_Option($questionIndex)
     {
         $solution = '';
         $score = 0;
-        if ($this->tasks[$taskIndex]["type"] == "Sequence") {
-            $solution = count($this->tasks[$taskIndex]['questions'][$questionIndex]['answers']) + 1;
+        if ($this->questions[$questionIndex]["type"] == "Sequence") {
+            $solution = count($this->questions[$questionIndex]['options']) + 1;
             $score = 1;
         }
-
-        array_push($this->tasks[$taskIndex]['questions'][$questionIndex]['answers'],
-            [
-                'id' => ($taskIndex + 1) + ($questionIndex + 1) + count($this->tasks[$taskIndex]['questions'][$questionIndex]['answers']),
-                'text' => '',
-                'solution' => $solution,
-                'score' => $score
-            ]
-        );
+        array_unshift($this->questions[$questionIndex]['options'], [
+            'id' => ($questionIndex + 1) + count($this->questions[$questionIndex]['options']),
+            'text' => '',
+            'solution' => $solution,
+            'score' => $score
+        ]);
     }
 
-    public function Remove_Answer($taskIndex, $questionIndex, $answerIndex)
+    public function Remove_Option($questionIndex, $optionIndex)
     {
-        if (array_key_exists('id', $this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex])) {
-            array_push($this->deletedAnswers, $this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex]);
+        if (array_key_exists('id', $this->questions[$questionIndex]['options'][$optionIndex])) {
+            array_push($this->deletedOptions, $this->questions[$questionIndex]['options'][$optionIndex]);
         }
-        unset($this->tasks[$taskIndex]['questions'][$questionIndex]['answers'][$answerIndex]);
+        unset($this->questions[$questionIndex]['options'][$optionIndex]);
     }
 
     public function Save_Test()
     {
-        $testModel = test::find($this->testId);
-        $testModel->title = $this->testTitle;
-        $testModel->maxAttempts = $this->testAttempts;
-        $testModel->duration = $this->durationHour * 60 + $this->durationMinute;
-        $testModel->save();
+        $test = test::find($this->testId);
+        $test->title = $this->testTitle;
+        $test->maxAttempts = $this->testAttempts;
+        $test->duration = $this->durationMinute;
+        $test->creator_id = auth()->id();
+        $test->save();
+        foreach ($this->questions as $questionIndex => $question) {
+            $questionModel = question::find($question['id']);
+            $questionModel->text = $question['text'];
+            $questionModel->type = $question['type'];
+            $questionModel->test_id = $test->id;
+            $questionModel->save();
 
-        foreach ($this->tasks as $taskIndex => $task) {
-            if (array_key_exists('id', $task)) {
-                $taskModel = task::find($task['id']);
-            } else $taskModel = new task;
-            $taskModel->test_id = $testModel->id;
-            $taskModel->text = $task['text'];
-            $taskModel->type = $task['type'];
-            $taskModel->save();
+            foreach ($question['options'] as $optionIndex => $option) {
+                $optionModel = option::find($option['id']);
+                $optionModel->question_id = $questionModel['id'];
+                $optionModel->text = $option['text'];
+                $answer = null;
 
-            foreach ($task['questions'] as $questionIndex => $question) {
-                if (array_key_exists('id', $question)) {
-                    $questionModel = question::find($question['id']);
-                } else $questionModel = new question;
-                $questionModel->task_id = $taskModel['id'];
-                $questionModel->text = $question['text'];
-                $questionModel->save();
-
-                foreach ($question['answers'] as $answerIndex => $answer) {
-                    $answerModel = answer::find($answer['id']);
-                    if ($answerModel == null) {
-                        $answerModel = new answer;
-                    }
-                    $answerModel->question_id = $questionModel['id'];
-                    $answerModel->text = $answer['text'];
-
-                    switch ($taskModel->type) {
-                        case 'TrueFalse':
-                            if ($answer['id'] == $question['right_answer_index']) {
-                                $answer_value = answer_value::where('text', 'checked')->first();
-                                if ($answer_value === null) {
-                                    $answer_value = new answer_value();
-                                    $answer_value->text = "checked";
-                                    $answer_value->save();
-                                }
-                                $answer['score'] = 1;
-                            } else {
-                                $answer_value = answer_value::where('text', 'unchecked')->first();
-                                if ($answer_value === null) {
-                                    $answer_value = new answer_value();
-                                    $answer_value->text = "unchecked";
-                                    $answer_value->save();
-                                }
-                                $answer['score'] = 0;
-                            }
-                            break;
-                        case 'OneChoice':
-                            if ($answer['id'] == $question['right_answer_index']) {
-                                $answer_value = answer_value::where('text', 'checked')->first();
-                                if ($answer_value === null) {
-                                    $answer_value = new answer_value();
-                                    $answer_value->text = "checked";
-                                    $answer_value->save();
-                                }
-                                $answer['score'] = 1;
-                            } else {
-                                $answer_value = answer_value::where('text', 'unchecked')->first();
-                                if ($answer_value === null) {
-                                    $answer_value = new answer_value();
-                                    $answer_value->text = "unchecked";
-                                    $answer_value->save();
-                                }
-                                $answer['score'] = 0;
-                            }
-                            break;
-                        case 'MultipleChoice':
-                            if ($answer['solution'] != '' && $answer['solution'] >= 0) {
-                                $answer_value = answer_value::where('text', 'checked')->first();
-                                if ($answer_value === null) {
-                                    $answer_value = new answer_value();
-                                    $answer_value->text = "checked";
-                                    $answer_value->save();
-                                }
-                                $answer['score'] = 1;
-                            } else {
-                                $answer_value = answer_value::where('text', 'unchecked')->first();
-                                if ($answer_value === null) {
-                                    $answer_value = new answer_value();
-                                    $answer_value->text = "unchecked";
-                                    $answer_value->save();
-                                }
-                                $answer['score'] = 0;
-                            }
-                            break;
-                        case 'Sequence':
-                            $answer_value = answer_value::where('text', $answerIndex + 1)->first();
-                            if ($answer_value === null) {
-                                $answer_value = new answer_value();
-                                $answer_value->text = $answerIndex + 1;
-                                $answer_value->save();
-                            }
-                            break;
-                    }
-                    $answerModel->solution_id = $answer_value->id;
-                    $answerModel->score = $answer['score'];
-                    $answerModel->save();
+                switch ($questionModel->type) {
+                    case 'TrueFalse':
+                    case 'OneChoice':
+                        if ($optionIndex == $question['right_option_index']) {
+                            $answer = answer::firstOrCreate(['solution'=>'checked']);
+                            $option['score'] = 1;
+                        } else {
+                            $answer = answer::firstOrCreate(['solution'=>'unchecked']);
+                            $option['score'] = 0;
+                        }
+                        break;
+                    case 'MultipleChoice':
+                        if ($option['solution'] >= 0) {
+                            $answer = answer::firstOrCreate(['solution'=>'checked']);
+                            $option['score'] = 1;
+                        } else {
+                            $answer = answer::firstOrCreate(['solution'=>'unchecked']);
+                            $option['score'] = 0;
+                        }
+                        break;
+                    case 'Sequence':
+                        $answer = answer::firstOrCreate(['solution'=>$optionIndex + 1]);
+                        break;
                 }
+                $optionModel->expected_answer_id = $answer->id;
+                $optionModel->score = $option['score'];
+                $optionModel->save();
             }
-        }
-        foreach ($this->deletedTasks as $task) {
-            $task = task::find($task['id']);
-            $task->delete();
         }
         foreach ($this->deletedQuestions as $question) {
             $question = question::find($question['id']);
             $question->delete();
-
         }
-        foreach ($this->deletedAnswers as $answer) {
-            $answer = answer::find($answer['id']);
-            $answer->delete();
-
+        foreach ($this->deletedOptions as $option) {
+            $option = option::find($answer['id']);
+            $option->delete();
         }
 
         Alert::success('A teszt módosítása sikeresen megtörtént!');
@@ -264,13 +170,13 @@ class ExamTaskEdit extends Component
         return view('livewire.exam-task-edit');
     }
 
-    public function updateAnswerOrder($list)
+    public function updateOptionOrder($list)
     {
-        $newAnswers = [];
+        $newOptions = [];
         foreach ($list as $element) {
             $indexek = explode("_", $element["value"]);
-            array_push($newAnswers, $this->tasks[$indexek[0]]['questions'][$indexek[1]]['answers'][$indexek[2]]);
+            array_push($newOptions, $this->questions[$indexek[0]]['options'][$indexek[1]]);
         }
-        $this->tasks[$indexek[0]]['questions'][$indexek[1]]['answers'] = $newAnswers;
+        $this->questions[$indexek[0]]['options'] = $newOptions;
     }
 }

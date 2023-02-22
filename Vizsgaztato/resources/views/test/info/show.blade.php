@@ -33,6 +33,7 @@
                                                 data-modal-toggle="testGroupDetails"
                                                 data-group_id="{{ $group->id }}"
                                                 data-test_id="{{ $test->id }}"
+
                                                 data-enabled_from="{{ $group->pivot->enabled_from }}"
                                                 data-enabled_until="{{ $group->pivot->enabled_until }}"
                                                 class="showGroupTestInfo
@@ -84,7 +85,7 @@
                                             <div id="testAttempt#{{ $testAttempt->id }}"
                                                  class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-base px-12 py-2 ml-32">
                                                 <div>
-                                                    <a href="{{ route('checkAttemptResult', [$test->id, $testAttempt->id]) }}"  target="_blank">
+                                                    <a href="{{ route('checkAttemptResult', $testAttempt->id) }}"  target="_blank">
                                                         <button
                                                             class="bg-lime-500 hover:bg-lime-300 p-1.5 border rounded-lg text-lime-900 ">
                                                             <i class="fa-solid fa-eye"></i> Megtekint

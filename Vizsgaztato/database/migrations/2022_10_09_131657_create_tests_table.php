@@ -17,11 +17,8 @@ return new class extends Migration {
             $table->string('title');
             $table->integer('maxAttempts');
             $table->integer('duration');
-            $table->foreignId('creator_id');
+            $table->foreignId('creator_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
-
-            $table->foreign('creator_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-
         });
     }
 

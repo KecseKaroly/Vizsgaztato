@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class group extends Model
 {
@@ -17,7 +18,7 @@ class group extends Model
 
     public $timestamps = false;
 
-    public function users()
+    public function users() : BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
@@ -25,5 +26,14 @@ class group extends Model
             'group_id',
             'user_id')
             ->withPivot(['id', 'role']);
+    }
+    public function tests() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            test::class,
+            'tests_groups',
+            'group_id',
+            'test_id')
+            ->withPivot('enabled_from', 'enabled_until');
     }
 }

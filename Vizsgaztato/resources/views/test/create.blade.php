@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Vizsgasor készítése')
+@section('title', 'Feladatlap készítése')
 @section('content')
     <div>
         @livewire('exam-task-creator')

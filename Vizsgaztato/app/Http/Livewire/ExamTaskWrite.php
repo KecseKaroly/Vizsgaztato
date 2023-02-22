@@ -1,33 +1,29 @@
 <?php
 
 namespace App\Http\Livewire;
-use Illuminate\Support\Facades\Auth;
-use App\Models\answer;
-use App\Models\answer_value;
-use App\Models\given_answer;
-use App\Models\testAttempt;
-use Barryvdh\Debugbar\Facade as Debugbar;
-use Livewire\Component;
 
+use App\Models\test;
+use App\Models\question;
+use App\Models\option;
+use App\Models\answer;
+use App\Models\given_answer;
+use App\Models\group;
+use App\Models\testAttempt;
+use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 class ExamTaskWrite extends Component
 {
-    public function render()
-    {
-        return view('livewire.exam-task-write');
-    }
+
     public $test;
-    public function mount($testLiveWire)
-    {
-       $this->test = $testLiveWire;
-    }
+
     protected $listeners = ['timeRanOut'];
-    public function updateTaskOrder($list) {
+    public function updateOptionOrder($list) {
         $newAnswers = [];
         foreach($list as $element) {
             $indexek = explode("_",$element["value"]);
-            array_push($newAnswers, $this->test['tasks'][$indexek[0]]['questions'][$indexek[1]]['answers'][$indexek[2]]);
+            array_push($newAnswers, $this->test['questions'][$indexek[0]]['options'][$indexek[1]]);
         }
-        $this->test['tasks'][$indexek[0]]['questions'][$indexek[1]]['answers'] = $newAnswers;
+        $this->test['questions'][$indexek[0]]['options'] = $newAnswers;
     }
 
     public function endTest() {
@@ -39,45 +35,51 @@ class ExamTaskWrite extends Component
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
-        foreach($this->test['tasks'] as $taskIndex => $task) {
-            foreach($task['questions'] as $questionIndex => $question) {
-                foreach($question['answers'] as $answerIndex => $answer) {
-                    $maxScore += $answer['score'];
-                    switch($task['type']) {
+            foreach($this->test['questions'] as $questionIndex => $question) {
+                foreach($question['options'] as $optionIndex => $option) {
+                    $maxScore += $option['score'];
+                    switch($question['type']) {
                         case "TrueFalse":
-                            $tempAns = $answerIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
+                            $tempAns = $optionIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
                             break;
                         case "OneChoice":
-                            $tempAns = $answerIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
+                            $tempAns = $optionIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
                             break;
                         case "MultipleChoice":
-                            $tempAns = $answer['actual_ans'] == '' ? "unchecked" : "checked";
+                            $tempAns = $option['actual_ans'] == '' ? "unchecked" : "checked";
                             break;
                         case "Sequence":
-                            $tempAns = $answerIndex+1;
+                            $tempAns = $optionIndex+1;
                             break;
                     }
-                    if($tempAns == $answer['expected_ans'])
+                    if($tempAns == $option['expected_ans'])
                     {
-                        $achievedScore += $answer['score'];
+                        $achievedScore += $option['score'];
                     }
-                    $answer_value = answer_value::where('text', $tempAns)->first();
+                    $answer = answer::where('solution', $tempAns)->first();
                     $givenAnswer = new given_answer();
                     $givenAnswer->attempt_id = $attempt->id;
-                    $givenAnswer->answer_id = $answer['id'];
-                    $givenAnswer->question_id = $question['id'];
-                    $givenAnswer->given_id = $answer_value->id;
+                    $givenAnswer->option_id = $option['id'];
+                    $givenAnswer->answer_id = $answer->id;
                     $givenAnswer->save();
                 }
             }
-        }
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
-        return redirect()->route('checkAttemptResult', [$this->test['id'], $attempt->id]);
+        return redirect()->route('checkAttemptResult', $attempt->id);
     }
 
     public function timeRanOut() {
         $this->endTest();
+    }
+
+    public function render()
+    {
+        return view('livewire.exam-task-write');
+    }
+    public function mount($testLiveWire)
+    {
+        $this->test = $testLiveWire;
     }
 }

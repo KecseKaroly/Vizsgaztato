@@ -11,8 +11,8 @@ class answer extends Model
     protected $table = 'answers';
 
     protected $primaryKey = 'id';
-    
-    protected $fillable = ['question_id', 'text', 'solution_id', 'score'];
+
+    protected $fillable = ['solution'];
 
     public $timestamps = false;
 }

@@ -218,7 +218,7 @@ $(".deleteTestAttempt").click(function (e) {
         console.log(reqId);
         $.ajax({
             type: 'DELETE',
-            url: "/deleteTestAttempt",
+            url: "/attempt/delete",
             data: {testAttemptId: reqId},
             success: function (data) {
                 if(data.success !== undefined) {

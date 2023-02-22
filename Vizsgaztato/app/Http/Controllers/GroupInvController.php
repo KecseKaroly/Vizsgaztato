@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use Session;
-use View;
 use App\Models\group_inv;
 use App\Models\group;
 use App\Models\group_join_request;

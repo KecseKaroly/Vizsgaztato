@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class test extends Model
 {
@@ -17,19 +20,27 @@ class test extends Model
 
     public $timestamps = true;
 
-    public function tasks()
+    public function questions() : HasMany
     {
-        return $this->hasMany(task::class);
+        return $this->hasMany(question::class);
     }
 
-    public function groups()
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(user::class, 'creator_id', 'id');
+    }
+
+    public function attempts() : HasMany
+    {
+        return $this->hasMany(attempt::class);
+    }
+    public function groups() : BelongsToMany
     {
         return $this->belongsToMany(
             group::class,
             'tests_groups',
             'test_id',
-            'group_id'
-        )
-            ->withPivot(['enabled_from', 'enabled_until']);
+            'group_id')
+            ->withPivot('enabled_from', 'enabled_until');
     }
 }

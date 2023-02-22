@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\TestsGroups;
 use App\Models\test;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class TestsGroupsController extends Controller
