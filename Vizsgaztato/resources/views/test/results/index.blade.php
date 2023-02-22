@@ -11,7 +11,6 @@
         <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
             <div class="text-center font-black text-3xl">[{{ $test->title }}]Vizsga feladatsor eredményei</div>
             <div class="text-yellow-600 text-center font-black m-6  mb-12  font-bold text-xl">Hártalévő próbálkozások száma: {{ ($test->maxAttempts - count($testAttempts)) }}</div>
-
             <div class="md:flex ">
                 <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-100 rounded-lg border  shadow-xl">
                     @forelse ($testAttempts as $testAttemptIndex => $testAttempt )
@@ -24,19 +23,15 @@
                     @empty
                         <div class="text-red-500 text-center m-6">Még nincsen rögzítve kitöltött tesztje!</div>
                     @endforelse
-                    @if(!empty($noAttempts) || count($testAttempts) < $test->maxAttempts)
                         <div class="text-center mt-12 mb-6">
                             <a href="{{ route('test.show', $test->id) }}">
-                                <button class="w-6/12 focus:outline-none text-white bg-sky-400 hover:bg-sky-600 font-bold rounded-xl text-md py-3.5">
+                                <button @class(["w-6/12 focus:outline-none text-white bg-sky-400 hover:bg-sky-600 font-bold rounded-xl text-md py-3.5",
+                                                "opacity-50 cursor-not-allowed" => empty($noAttempts) && count($testAttempts) == $test->maxAttempts])
+                                        @disabled(empty($noAttempts) && count($testAttempts) == $test->maxAttempts)>
                                     Feladatsor kitöltése
                                 </button>
                             </a>
                         </div>
-                    @else
-                        <div class="text-red-500 text-center m-6">
-                            Elhasználta az összes próbálkozási lehetőséget!
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
