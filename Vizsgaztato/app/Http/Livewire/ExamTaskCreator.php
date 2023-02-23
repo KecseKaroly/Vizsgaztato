@@ -18,7 +18,7 @@ class ExamTaskCreator extends Component
     public $testTitle;
     public $testAttempts;
     public $durationMinute;
-    public $testResultsVisible;
+    public $resultsViewable;
 
 
     public function mount()
@@ -27,7 +27,7 @@ class ExamTaskCreator extends Component
         $this->testTitle = '';
         $this->testAttempts = 1;
         $this->durationMinute = 10;
-        $this->testResultsVisible = true;
+        $this->resultsViewable = true;
     }
 
     protected $listeners = ['questionTypeChanged'];
@@ -59,7 +59,7 @@ class ExamTaskCreator extends Component
         array_unshift($this->questions,
             [
                 'text' => '',
-                'type' => 'Sequence',
+                'type' => '',
                 'options' => [],
                 'right_answer_index' => '',
             ]);
@@ -97,6 +97,7 @@ class ExamTaskCreator extends Component
         $test->title = $this->testTitle;
         $test->maxAttempts = $this->testAttempts;
         $test->duration = $this->durationMinute;
+        $test->resultsViewable = $this->resultsViewable;
         $test->creator_id = auth()->id();
         $test->save();
         foreach ($this->questions as $questionIndex => $question) {

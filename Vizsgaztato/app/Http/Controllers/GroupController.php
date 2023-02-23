@@ -84,6 +84,7 @@ class GroupController extends Controller
      */
     public function show(group $group)
     {
+        $this->authorize('view', $group);
         $groups = $group->load('users');
         $myRole = groups_users::where(['user_id' => Auth::id(), 'group_id' => $group->id])->first()->role;
         return view('groups.show', ['groups' => $groups, 'group' => $group, 'myRole' => $myRole]);
@@ -97,6 +98,7 @@ class GroupController extends Controller
      */
     public function edit(group $group)
     {
+        $this->authorize('update', $group);
         return view('groups.edit')->with('group', $group);
     }
 
@@ -109,6 +111,7 @@ class GroupController extends Controller
      */
     public function update(Request $request, group $group)
     {
+        $this->authorize('update', $group);
         $group->name = $request->group_name;
         $group->save();
         Alert::success('Csoport sikeresen módosítva!');
@@ -123,6 +126,7 @@ class GroupController extends Controller
      */
     public function destroy(group $group)
     {
+        $this->authorize('delete', $group);
         $group->delete();
         Alert::success('Csoport sikeresen törölve!');
         return redirect()->route('groups.index');

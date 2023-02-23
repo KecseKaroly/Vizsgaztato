@@ -22,7 +22,7 @@ class ExamTaskEdit extends Component
     public $testTitle;
     public $testAttempts;
     public $durationMinute;
-    public $testResultsVisible;
+    public $resultsViewable;
     public $testId;
 
 
@@ -33,6 +33,7 @@ class ExamTaskEdit extends Component
         $this->testTitle = $testLiveWire['title'];
         $this->testAttempts = $testLiveWire['maxAttempts'];
         $this->durationMinute = $testLiveWire['duration'];
+        $this->resultsViewable = $testLiveWire['resultsViewable'];
     }
 
     protected $listeners = ['questionTypeChanged'];
@@ -59,7 +60,7 @@ class ExamTaskEdit extends Component
             $this->questions[$questionIndex]['options'] = [];
         }
     }
-    public function Add_Question($index)
+    public function Add_Question()
     {
         array_unshift($this->questions,
             [
@@ -87,7 +88,6 @@ class ExamTaskEdit extends Component
             $score = 1;
         }
         array_unshift($this->questions[$questionIndex]['options'], [
-            'id' => ($questionIndex + 1) + count($this->questions[$questionIndex]['options']),
             'text' => '',
             'solution' => $solution,
             'score' => $score
@@ -108,21 +108,19 @@ class ExamTaskEdit extends Component
         $test->title = $this->testTitle;
         $test->maxAttempts = $this->testAttempts;
         $test->duration = $this->durationMinute;
-        $test->creator_id = auth()->id();
+        $test->resultsViewable = (bool)($this->resultsViewable);
         $test->save();
         foreach ($this->questions as $questionIndex => $question) {
-            $questionModel = question::find($question['id']);
-            $questionModel->text = $question['text'];
-            $questionModel->type = $question['type'];
+            if(array_key_exists('id', $question)) {
+                $questionModel = question::find($question['id']);
+            }
+            else $questionModel = new question;
+            $questionModel->type =$question['type'];
+            $questionModel->text =$question['text'];
             $questionModel->test_id = $test->id;
             $questionModel->save();
-
             foreach ($question['options'] as $optionIndex => $option) {
-                $optionModel = option::find($option['id']);
-                $optionModel->question_id = $questionModel['id'];
-                $optionModel->text = $option['text'];
                 $answer = null;
-
                 switch ($questionModel->type) {
                     case 'TrueFalse':
                     case 'OneChoice':
@@ -147,18 +145,21 @@ class ExamTaskEdit extends Component
                         $answer = answer::firstOrCreate(['solution'=>$optionIndex + 1]);
                         break;
                 }
+                if(array_key_exists('id',$option))
+                    $optionModel = option::find($option['id']);
+                else $optionModel = new option;
+                $optionModel->question_id = $questionModel->id;
+                $optionModel->text = $option['text'];
                 $optionModel->expected_answer_id = $answer->id;
                 $optionModel->score = $option['score'];
                 $optionModel->save();
             }
         }
         foreach ($this->deletedQuestions as $question) {
-            $question = question::find($question['id']);
-            $question->delete();
+            $question = question::find($question['id'])->delete();
         }
         foreach ($this->deletedOptions as $option) {
-            $option = option::find($answer['id']);
-            $option->delete();
+            $option = option::find($answer['id'])->delete();
         }
 
         Alert::success('A teszt módosítása sikeresen megtörtént!');

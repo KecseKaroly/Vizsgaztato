@@ -28,13 +28,11 @@ class TestController extends Controller
      */
     public function index()
     {
-        $user = auth()->user()->load('groups');
-        $myGroupIds = $user->groups->modelKeys();
-        $myGroupsTestIds = TestsGroups::whereIn('group_id', $myGroupIds)->distinct()->pluck('test_id')->toArray();
-
-        $tests = test::whereIn('id', $myGroupsTestIds)->whereNotIn('creator_id', [Auth::id()])->get();
+        $user = auth()->user()->load(['groups.tests' => function ($query) {
+            $query->where('tests_groups.enabled_from', '<', now())->where('tests_groups.enabled_until', '>', now());
+        }]);
         $myTests = test::whereIn('creator_id', [Auth::id()])->get();
-        return view('test.index', ['tests' => $tests, 'myTests' => $myTests]);
+        return view('test.index', ['user' => $user, 'myTests' => $myTests]);
     }
 
     /**
@@ -64,15 +62,19 @@ class TestController extends Controller
      * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
-    public function show(test $test)
+    public function show($testId, $groupId)
     {
+        $test = test::find($testId);
+        $group = group::find($groupId);
+        $this->authorize('view', [$test, $group]);
         $test = $test->load('questions.options.expected_answer');
-        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->count();
+        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id, 'group_id' => $groupId])->count();
         if ($testAttempts >= $test->maxAttempts) {
             Alert::danger("Túllépte a megengedett próbálkozásokat!");
             return view('test.write');
         }
         $testLiveWire = [
+            'group_id' => $groupId,
             'id' => $test->id,
             'title' => $test->title,
             'duration' => $test->duration,
@@ -114,20 +116,26 @@ class TestController extends Controller
      */
     public function edit(test $test)
     {
-        $test = $test->load('questions.options.expected_answer');
+        $this->authorize('update', $test);
+        $test = $test->load([
+            'questions.options' => function ($query) {
+                $query->orderBy('options.expected_answer_id', 'ASC');
+            },
+            'questions.options.expected_answer']);
         $testLiveWire = [
             'id' => $test->id,
             'title' => $test->title,
             'maxAttempts' => $test->maxAttempts,
             'duration' => $test->duration,
-            'tasks' => []
+            'resultsViewable' => $test->resultsViewable,
+            'questions' => []
         ];
         foreach ($test->questions as $questionIndex => $question) {
             $testLiveWire['questions'][] = [
                 'id' => $question->id,
                 'type' => $question->type,
                 'text' => $question->text,
-                'answers' => [],
+                'options' => [],
                 'right_answer_index' => '',
             ];
             foreach ($question->options as $optionIndex => $option) {
@@ -164,6 +172,7 @@ class TestController extends Controller
      */
     public function update(Request $request, test $test)
     {
+        $this->authorize('update', $test);
         $attempts = testAttempt::where('test_id', $test->id);
         foreach ($attempts as $attempt) {
             $given_answers = given_answer::where('attempt_id', $attempt->id);
@@ -189,6 +198,7 @@ class TestController extends Controller
      */
     public function destroy(test $test)
     {
+        $this->authorize('delete', $test);
         $test->delete();
         Alert::success('A vizsgasor sikeresen törölve!');
         return back();
@@ -196,6 +206,8 @@ class TestController extends Controller
 
     public function showResult($attemptId)
     {
+        $test = testAttempt::find($attemptId)->load('test')->test;
+        $this->authorize('checkResult', $test);
         $attempt = testAttempt::findOrFail($attemptId)
             ->load([
                 'test.questions.options.expected_answer',
@@ -206,15 +218,20 @@ class TestController extends Controller
         return view('test.results.show')->with('attempt', $attempt);
     }
 
-    public function testResults($testId)
+    public function testResults($testId, $groupId)
     {
-        $test = test::find($testId);
-        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id])->get();
-        return view('test.results.index', ['testAttempts' => $testAttempts, 'test' => $test]);
+        $test = test::find($testId)->load(['groups' => function ($query) use ($groupId) {
+            $query->where('groups.id', $groupId)
+                ->where('tests_groups.enabled_from', '<', now())
+                ->where('tests_groups.enabled_until', '>', now());
+        }]);
+        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id, 'group_id' => $groupId])->get();
+        return view('test.results.index', ['testAttempts' => $testAttempts, 'test' => $test, 'group' => $groupId]);
     }
 
     public function testInfo($testId)
     {
+        $this->authorize('checkInfo', test::find($testId));
         $test = test::with(
             [
                 'groups.users' => function ($query) use ($testId) {

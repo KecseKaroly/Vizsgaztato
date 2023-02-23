@@ -34,6 +34,7 @@ class ExamTaskWrite extends Component
         $attempt->test_id = $this->test['id'];
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
+        $attempt->group_id = $this->test['group_id'];
         $attempt->save();
             foreach($this->test['questions'] as $questionIndex => $question) {
                 foreach($question['options'] as $optionIndex => $option) {

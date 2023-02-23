@@ -180,61 +180,6 @@ $(".user_id").click(function (e) {
 
 
 
-$(".removeUserFromGroup").click(function (e) {
-    e.preventDefault();
-    const params = $(this).data();
-    const reqId = params["id"];
-    console.log(reqId);
-    $.ajax({
-        type: 'DELETE',
-        url: `/group/user/${reqId}/remove`,
-        data: {groups_users_id: reqId},
-        success: function (data) {
-            if(data.success) {
-                document.getElementById(`group_user-${reqId}`).remove();
-                Swal.fire({
-                    icon: 'success',
-                    title: data.success,
-                    text: data.message,
-                });
-            }
-            else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Hiba!',
-                    text: data.error,
-                })
-            }
-        }
-    });
-
-});
-
-$(".deleteTestAttempt").click(function (e) {
-    if (confirm("Biztosan törölni szeretné?")) {
-        e.preventDefault();
-        const params = $(this).data();
-        const reqId = params["id"];
-        console.log(reqId);
-        $.ajax({
-            type: 'DELETE',
-            url: "/attempt/delete",
-            data: {testAttemptId: reqId},
-            success: function (data) {
-                if(data.success !== undefined) {
-                    document.getElementById(`testAttempt#${reqId}`).remove();
-                }
-                else if(data.error !== undefined ) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Hiba!',
-                        text: data.error,
-                    })
-                }
-            }
-        });
-    }
-});
 
 $(".showGroupTestInfo").click(function (e) {
     const params = $(this).data();

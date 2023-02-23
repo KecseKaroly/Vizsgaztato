@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\group;
 use App\Models\groups_users;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class GroupPolicy
 {
@@ -31,8 +32,10 @@ class GroupPolicy
      */
     public function view(User $user, group $group)
     {
-        $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();;
-        return $groupOfUser != null;
+        $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();
+        return !$groupOfUser->isEmpty()
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet! Nem tagja ennek a csoportnak!');;
     }
 
     /**
@@ -43,7 +46,7 @@ class GroupPolicy
      */
     public function create(User $user)
     {
-        return $user->id == "teacher" || $user->id == "admin";
+        return true;
     }
 
     /**
@@ -55,8 +58,9 @@ class GroupPolicy
      */
     public function update(User $user, group $group)
     {
-        $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();;
-        return $groupOfUser->role == "admin";
+        return $user->id === $group->creator_id
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet! Nem Önhöz tartozik ez a csoport!');
     }
 
     /**
@@ -68,8 +72,9 @@ class GroupPolicy
      */
     public function delete(User $user, group $group)
     {
-        $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();;
-        return $groupOfUser->role == "admin";
+        return $user->id === $group->creator_id
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet! Nem Önhöz tartozik ez a csoport!');
     }
 
     /**
@@ -81,8 +86,9 @@ class GroupPolicy
      */
     public function restore(User $user, group $group)
     {
-        $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();;
-        return $groupOfUser->role == "admin";
+        return $user->id === $group->creator_id
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet! Nem Önhöz tartozik ez a csoport!');
     }
 
     /**
@@ -94,7 +100,8 @@ class GroupPolicy
      */
     public function forceDelete(User $user, group $group)
     {
-        $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();;
-        return $groupOfUser->role == "admin";
+        return $user->id === $group->creator_id
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet! Nem Önhöz tartozik ez a csoport!');
     }
 }

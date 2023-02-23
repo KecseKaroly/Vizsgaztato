@@ -24,7 +24,7 @@
                         <div class="text-red-500 text-center m-6">Még nincsen rögzítve kitöltött tesztje!</div>
                     @endforelse
                         <div class="text-center mt-12 mb-6">
-                            <a href="{{ route('test.show', $test->id) }}">
+                            <a href="{{ route('test.show', [$test, $group]) }}">
                                 <button @class(["w-6/12 focus:outline-none text-white bg-sky-400 hover:bg-sky-600 font-bold rounded-xl text-md py-3.5",
                                                 "opacity-50 cursor-not-allowed" => empty($noAttempts) && count($testAttempts) == $test->maxAttempts])
                                         @disabled(empty($noAttempts) && count($testAttempts) == $test->maxAttempts)>

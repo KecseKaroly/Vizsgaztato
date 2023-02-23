@@ -30,11 +30,11 @@ Route::get('/home', function () {
 Route::get('/attempt/{attempt_id}/result', [TestController::class, 'showResult'])->middleware('auth')->name('checkAttemptResult');
 Route::delete('/attempt/delete', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
 
-Route::get('/test/{id}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
+Route::get('/test/{tid}/group/{gid}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
 Route::get('/test/{id}/info/', [TestController::class, 'testInfo'])->middleware('auth')->name('checkTestInfo');
-
+Route::get('/test/{id}/group/{gid}/show', [TestController::class, 'show'])->middleware('auth')->name('test.show');
 Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->middleware('auth')->name('updateTestGroup');
-Route::resource('test', TestController::class)->middleware('auth');
+Route::resource('test', TestController::class)->middleware('auth')->only(['index', 'create', 'edit', 'update', 'destroy']);
 
 Route::get('/groups/invites', [GroupInvController::class, 'index'])->middleware('auth')->name('inv_requests');
 

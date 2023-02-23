@@ -25,7 +25,7 @@
                         @method('DELETE')
                         @csrf
                         <button type="submit"
-                                class="bg-red-50 hover:bg-red-600 text-red-600 hover:text-red-50 border-4 border-red-600 hover:border-red-50 rounded-lg font-semibold text-lg flex items-center  w-full py-1.5 px-2">
+                                class="deleteGroupBtn bg-red-50 hover:bg-red-600 text-red-600 hover:text-red-50 border-4 border-red-600 hover:border-red-50 rounded-lg font-semibold text-lg flex items-center  w-full py-1.5 px-2">
                             <i class="fa-solid fa-trash-can fa-xl"></i> Csoport Eltávolítása
                         </button>
                     </form>
@@ -77,7 +77,7 @@
                                         @csrf
                                         @METHOD('DELETE')
                                         <button type="submit" class="px-5 py-3">
-                                            <i class="fa-solid fa-arrow-right-from-bracket fa-2xl"></i>
+                                            <i class="leaveFromGroup fa-solid fa-arrow-right-from-bracket fa-2xl"></i>
                                         </button>
                                     </form>
                                     </a>
