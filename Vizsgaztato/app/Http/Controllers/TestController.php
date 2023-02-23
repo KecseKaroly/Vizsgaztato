@@ -94,7 +94,7 @@ class TestController extends Controller
                 $testLiveWire['questions'][$questionIndex]['options'][] = [
                     'id' => $option->id,
                     'text' => $option->text,
-                    'expected_ans' => $answer->text,
+                    'expected_ans' => $answer->solution,
                     'actual_ans' => '',
                     'score' => $option->score
                 ];
@@ -102,6 +102,7 @@ class TestController extends Controller
             shuffle($testLiveWire['questions'][$questionIndex]['options']);
         }
         shuffle($testLiveWire['questions']);
+
         return view('test.write')->with('testLiveWire', $testLiveWire);
     }
 

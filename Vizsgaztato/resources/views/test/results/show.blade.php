@@ -43,30 +43,30 @@
                                     @foreach($question->options as $optionIndex => $option)
                                         @switch($question['type'])
                                              @case('TrueFalse')
-                                                 <div @class([
-                                                                "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300",
-                                                             "correct" => $option->given_answers[0]->answer == $option->expected_answer,
-                                                             "incorrect" => $option->given_answers[0]->answer != $option->expected_answer,
+                                                 <div @class(["border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300",
+                                                              "correct" => $option->given_answers[0]->answer == $option->expected_answer && $option->expected_answer->solution == "checked",
+                                                             "incorrect" => $option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "unchecked",
+                                                             "missed" => $option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "checked",
                                                                 ]) id="answer_div_{{$option->id}}">
                                                     <input  value="{{$optionIndex}}" id="answer_{{$option->id}}" type="radio"  name="answer_{{$question->id}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" @checked($option->given_answers[0]->answer->solution == "checked") disabled>
                                                     <label for="answer_{{$option->id}}" class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900" >{{$option['text']}}</label>
                                                 </div>
                                                 @break
                                             @case('OneChoice')
-                                                <div @class([
-                                                                "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300",
-                                                             "correct" => $option->given_answers[0]->answer == $option->expected_answer,
-                                                             "incorrect" => $option->given_answers[0]->answer != $option->expected_answer,
+                                                <div @class(["border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300",
+                                                             "correct" => $option->given_answers[0]->answer == $option->expected_answer && $option->expected_answer->solution == "checked",
+                                                             "incorrect" => $option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "unchecked",
+                                                             "missed" => $option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "checked",
                                                                 ]) id="answer_div_{{$option->id}}">
                                                     <input  id="answer_{{$option->id}}" type="radio"   name="answer_{{$question->id}}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300" @checked($option->given_answers[0]->answer->solution == "checked") disabled>
                                                     <label for="answer_{{$option->id}}" class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900">{{$option->text}}</label>
                                                 </div>
                                                 @break
                                             @case('MultipleChoice')
-                                                <div @class([
-                                                             "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded bg-slate-100 hover:bg-slate-300",
-                                                             "correct" => $option->given_answers[0]->answer == $option->expected_answer,
-                                                             "incorrect" => $option->given_answers[0]->answer != $option->expected_answer,
+                                                <div @class(["border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded bg-slate-100 hover:bg-slate-300",
+                                                             "correct" => $option->given_answers[0]->answer == $option->expected_answer && $option->expected_answer->solution == "checked",
+                                                             "incorrect" => $option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "unchecked",
+                                                             "missed" => $option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "checked",
                                                              ]) id="answer_div_{{$option->id}}">
                                                     <input  id="answer_{{$option->id}}" type="checkbox"  name="answer_{{$option->id}}" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" @checked($option->given_answers[0]->answer->solution == "checked") disabled>
                                                     <label for="answer_{{$option->id}}" class="break-words font-sans  pl-2 w-full text-md italic font-normal text-gray-900">{{$option->text}}</label>

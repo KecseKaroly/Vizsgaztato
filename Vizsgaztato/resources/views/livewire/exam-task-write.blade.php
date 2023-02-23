@@ -48,7 +48,7 @@
                                                                                 id="option_{{$option['id']}}"
                                                                                 type="radio"
                                                                                 onchange='handleChange(this);'
-                                                                                name="option_{{$question['id']}}"
+                                                                                name="option_{{$option['id']}}"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ">
                                                                             <label for="option_{{$option['id']}}"
                                                                                    class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900">{{$option['text']}}</label>
@@ -61,13 +61,14 @@
                                                                             <input
                                                                                 wire:model="test.questions.{{$questionIndex}}.actual_ans"
                                                                                 value="{{$optionIndex}}"
-                                                                                id="option_{{$option['id']}}"
+                                                                                id="option_{{$question['id']}}_{{$option['id']}}"
                                                                                 type="radio"
                                                                                 onchange='handleChange(this);'
-                                                                                name="option_{{$question['id']}}"
+                                                                                name="option_{{$option['id']}}"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
-                                                                            <label for="option_{{$option['id']}}"
-                                                                                   class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900">{{$option['text']}}</label>
+                                                                            <label for="option_{{$question['id']}}_{{$option['id']}}"
+                                                                                   class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900">
+                                                                                {{$option['text']}}</label>
                                                                         </div>
                                                                         @break
                                                                     @case('MultipleChoice')
@@ -79,7 +80,7 @@
                                                                                 id="option_{{$option['id']}}"
                                                                                 type="checkbox"
                                                                                 onchange='handleChange(this);'
-                                                                                name="option_{{$question['id']}}"
+                                                                                name="option_{{$option['id']}}"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                                             <label for="option_{{$option['id']}}"
                                                                                    class="break-words font-sans  pl-2 w-full text-md italic font-normal text-gray-900">{{$option['text']}}</label>
