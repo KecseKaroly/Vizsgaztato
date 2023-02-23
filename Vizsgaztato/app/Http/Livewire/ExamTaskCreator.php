@@ -19,7 +19,6 @@ class ExamTaskCreator extends Component
     public $testAttempts;
     public $durationMinute;
     public $testResultsVisible;
-    public $testId;
 
 
     public function mount()
@@ -60,7 +59,7 @@ class ExamTaskCreator extends Component
         array_unshift($this->questions,
             [
                 'text' => '',
-                'type' => '',
+                'type' => 'Sequence',
                 'options' => [],
                 'right_answer_index' => '',
             ]);
@@ -143,7 +142,7 @@ class ExamTaskCreator extends Component
             }
         }
 
-        Alert::success('A teszt módosítása sikeresen megtörtént!');
+        Alert::success('A teszt mentése sikeresen megtörtént!');
         return redirect()->route('test.index');
     }
 

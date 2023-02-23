@@ -26,7 +26,5 @@
     <div>
         @livewire('exam-task-write', ['testLiveWire' => $testLiveWire])
     </div>
-    @livewireScripts
-    <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></scrip>
 @endif
 @endsection
