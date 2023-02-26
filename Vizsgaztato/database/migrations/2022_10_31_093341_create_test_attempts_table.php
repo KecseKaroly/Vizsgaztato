@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('test_id');
             $table->integer('maxScore');
             $table->integer('achievedScore');
-            $table->boolean('resultsViewable');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

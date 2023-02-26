@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('title');
             $table->integer('maxAttempts');
             $table->integer('duration');
+            $table->boolean('resultsViewable');
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

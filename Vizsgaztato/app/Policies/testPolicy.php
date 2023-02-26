@@ -138,7 +138,7 @@ class testPolicy
      */
     public function checkResult(User $user, test $test)
     {
-        return $test->viewable
+        return $test->resultsViewable
             ? Response::allow()
             : Response::deny('Nem engedélyezett művelet! A feladatok megoldásai nem publikusak!');
     }
