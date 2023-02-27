@@ -17,7 +17,7 @@ class GroupInvController extends Controller
                 !(group_inv::where(['group_id'=>$groupId, 'invited_id'=>$selectedResult['id']]))->exists())
             {
                 $group_inv = new group_inv;
-                $group_inv->sender_id = Auth::id();
+                $group_inv->sender_id = auth()->id();
                 $group_inv->group_id = $groupId;
                 $group_inv->invited_id = $selectedResult['id'];
                 $group_inv->save();
@@ -30,7 +30,7 @@ class GroupInvController extends Controller
         ->join('users', 'users.id', '=', 'group_invs.sender_id')
         ->join('groups', 'groups.id', '=', 'group_invs.group_id')
         ->select('users.name as USERNAME', 'groups.name', 'group_invs.*')
-        ->where('group_invs.invited_id', Auth::id())
+        ->where('group_invs.invited_id', auth()->id())
         ->get();
     return view('groups.inv_request.index')->with('inv_requests', $inv_requests);
 }
@@ -40,7 +40,6 @@ public function AcceptRequest(Request $request) {
         $groups_users_connetion = new groups_users;
         $groups_users_connetion->user_id =  $request->invited_id;
         $groups_users_connetion->group_id =  $request->group_id;
-        $groups_users_connetion->role = "member";
         $groups_users_connetion->save();
 
         $inv_request = group_inv::find($request->inv_request_id);

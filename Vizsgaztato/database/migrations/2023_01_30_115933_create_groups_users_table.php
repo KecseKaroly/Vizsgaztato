@@ -22,7 +22,7 @@ return new class extends Migration {
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->string('role');
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
 
             //$table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

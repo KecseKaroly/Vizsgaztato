@@ -18,7 +18,7 @@
 <div class="md:flex">
     <div class="md:w-1/12 md:mr-0 ml-8 mr-24">
         @if(!($attempt->test['creator_id'] == auth()->id()))
-            <a href="{{ route('checkTestResults', [$attempt->test['id'], $attempt->group_id]) }}">
+            <a href="{{ route('testAttempts.index', [$attempt->test['id'], $attempt->group_id]) }}">
                 <button class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                     Vissza
                 </button>

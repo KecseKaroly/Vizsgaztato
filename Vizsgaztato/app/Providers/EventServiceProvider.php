@@ -6,6 +6,12 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Events\TestEnded;
+use App\Events\TestUpdated;
+use App\Events\GroupCreated;
+use App\Listeners\CalculateResults;
+use App\Listeners\AddFirstUserToGroup;
+use App\Listeners\ReCalculateResults;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +24,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        TestEnded::class => [
+            CalculateResults::class,
+        ],
+        TestUpdated::class => [
+            ReCalculateResults::class,
+        ],
+        GroupCreated::class => [
+            AddFirstUserToGroup::class,
+        ]
     ];
 
     /**

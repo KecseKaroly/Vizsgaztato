@@ -27,10 +27,10 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('layouts.app');
 });
-Route::get('/attempt/{attempt_id}/result', [TestController::class, 'showResult'])->middleware('auth')->name('checkAttemptResult');
-Route::delete('/attempt/delete', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('deleteTestAttempt');
-
-Route::get('/test/{tid}/group/{gid}/result/', [TestController::class, 'testResults'])->middleware('auth')->name('checkTestResults');
+Route::get('/attempt/{attempt_id}/result', [TestController::class, 'show'])->middleware('auth')->name('testAttempts.show');
+Route::delete('/attempt/delete', [TestAttemptController::class, 'destroy'])->middleware('auth')->name('testAttempts.delete');
+Route::get('result/{tid}/{gid}/', [TestAttemptController::class, 'index'])->middleware('auth')->name('testAttempts.index');
+Route::get('result/{tid}/', [TestAttemptController::class, 'indexAllGroups'])->middleware('auth')->name('testAttempts.index.all');
 Route::get('/test/{id}/info/', [TestController::class, 'testInfo'])->middleware('auth')->name('checkTestInfo');
 Route::get('/test/{id}/group/{gid}/show', [TestController::class, 'show'])->middleware('auth')->name('test.show');
 Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->middleware('auth')->name('updateTestGroup');

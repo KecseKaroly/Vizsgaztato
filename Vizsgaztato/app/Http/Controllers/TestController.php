@@ -28,11 +28,12 @@ class TestController extends Controller
      */
     public function index()
     {
-        $user = auth()->user()->load(['groups.tests' => function ($query) {
-            $query->where('tests_groups.enabled_from', '<', now())->where('tests_groups.enabled_until', '>', now());
-        }]);
-        $myTests = test::whereIn('creator_id', [Auth::id()])->get();
-        return view('test.index', ['user' => $user, 'myTests' => $myTests]);
+        if(auth()->user()->is_student){
+            $groups = auth()->user()->load(['groups.tests'])->groups;
+            return view('test.index', ['groups' => $groups]);
+        }
+        $tests = test::whereIn('creator_id', [auth()->id()])->get();
+        return view('test.index', ['tests' => $tests]);
     }
 
     /**
@@ -68,7 +69,7 @@ class TestController extends Controller
         $group = group::find($groupId);
         $this->authorize('view', [$test, $group]);
         $test = $test->load('questions.options.expected_answer');
-        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id, 'group_id' => $groupId])->count();
+        $testAttempts = testAttempt::where(['user_id' => auth()->id(), 'test_id' => $test->id, 'group_id' => $groupId])->count();
         if ($testAttempts >= $test->maxAttempts) {
             Alert::danger("Túllépte a megengedett próbálkozásokat!");
             return view('test.write');
@@ -203,39 +204,13 @@ class TestController extends Controller
         Alert::success('A vizsgasor sikeresen törölve!');
         return back();
     }
-
-    public function showResult($attemptId)
-    {
-        $test = testAttempt::find($attemptId)->load('test')->test;
-        $this->authorize('checkResult', $test);
-        $attempt = testAttempt::findOrFail($attemptId)
-            ->load([
-                'test.questions.options.expected_answer',
-                'test.questions.options.given_answers' => function ($query) use ($attemptId) {
-                    $query->where('given_answers.attempt_id', '=', $attemptId);
-                },
-                'test.questions.options.given_answers.answer']);
-        return view('test.results.show')->with('attempt', $attempt);
-    }
-
-    public function testResults($testId, $groupId)
-    {
-        $test = test::find($testId)->load(['groups' => function ($query) use ($groupId) {
-            $query->where('groups.id', $groupId)
-                ->where('tests_groups.enabled_from', '<', now())
-                ->where('tests_groups.enabled_until', '>', now());
-        }]);
-        $testAttempts = testAttempt::where(['user_id' => Auth::id(), 'test_id' => $test->id, 'group_id' => $groupId])->get();
-        return view('test.results.index', ['testAttempts' => $testAttempts, 'test' => $test, 'group' => $groupId]);
-    }
-
     public function testInfo($testId)
     {
         $this->authorize('checkInfo', test::find($testId));
         $test = test::with(
             [
                 'groups.users' => function ($query) use ($testId) {
-                    $query->where('groups_users.role', 'not like', 'admin');
+                    $query->where('groups_users.is_admin', 'like', '1');
                 },
                 'groups.users.attempts' => function ($query) use ($testId) {
                     $query->where('test_attempts.test_id', 'like', $testId);
@@ -243,6 +218,6 @@ class TestController extends Controller
             ]
         )
             ->where('id', $testId)->first();
-        return view('test.info.show', ['test' => $test]);
+        return view('testAttempts.show', ['test' => $test]);
     }
 }

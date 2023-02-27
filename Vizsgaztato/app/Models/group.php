@@ -25,7 +25,7 @@ class group extends Model
             'groups_users',
             'group_id',
             'user_id')
-            ->withPivot(['id', 'role']);
+            ->withPivot(['id', 'is_admin']);
     }
     public function tests() : BelongsToMany
     {

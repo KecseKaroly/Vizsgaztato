@@ -56,7 +56,7 @@ class testPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return !$user->is_student;
     }
 
     /**
@@ -138,7 +138,7 @@ class testPolicy
      */
     public function checkResult(User $user, test $test)
     {
-        return $test->resultsViewable
+        return $test->creator_id == $user->id || $test->resultsViewable
             ? Response::allow()
             : Response::deny('Nem engedélyezett művelet! A feladatok megoldásai nem publikusak!');
     }

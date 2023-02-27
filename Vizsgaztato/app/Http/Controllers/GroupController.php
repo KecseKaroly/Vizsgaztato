@@ -24,13 +24,13 @@ class GroupController extends Controller
     {
         $groups = DB::table('groups')->select('*')
             ->whereIn('id', function ($query) {
-                $query->select('group_id')->from('groups_users')->where('user_id', Auth::id());
+                $query->select('group_id')->from('groups_users')->where('user_id', auth()->id());
             })
             ->get();
         foreach ($groups as $group) {
             $group->join_requests = group_join_request::where('group_id', $group->id)->groupBy('group_id')->count();
         }
-        $inv_requests = group_inv::where('invited_id', Auth::id())->count();
+        $inv_requests = group_inv::where('invited_id', auth()->id())->count();
         return view('groups.index', ['groups' => $groups, 'inv_requests' => $inv_requests]);
     }
 
@@ -63,13 +63,13 @@ class GroupController extends Controller
         $group = new group;
         $group->name = $request->group_name;
         $group->invCode = $request->group_invCode;
-        $group->creator_id = Auth::id();
+        $group->creator_id = auth()->id();
         $group->save();
 
         $groups_users = new groups_users;
-        $groups_users->user_id = Auth::id();
+        $groups_users->user_id = auth()->id();
         $groups_users->group_id = $group->id;
-        $groups_users->role = "admin";
+        $groups_users->is_admin = true;
         $groups_users->save();
 
         Alert::success('Csoport sikeresen létrehozva!');
@@ -86,8 +86,8 @@ class GroupController extends Controller
     {
         $this->authorize('view', $group);
         $groups = $group->load('users');
-        $myRole = groups_users::where(['user_id' => Auth::id(), 'group_id' => $group->id])->first()->role;
-        return view('groups.show', ['groups' => $groups, 'group' => $group, 'myRole' => $myRole]);
+        $is_admin = groups_users::where(['user_id' => auth()->id(), 'group_id' => $group->id])->first()->is_admin;
+        return view('groups.show', ['groups' => $groups, 'group' => $group, 'isAdmin' => $is_admin]);
     }
 
     /**
@@ -126,9 +126,9 @@ class GroupController extends Controller
      */
     public function destroy(group $group)
     {
-        $this->authorize('delete', $group);
-        $group->delete();
-        Alert::success('Csoport sikeresen törölve!');
-        return redirect()->route('groups.index');
+            $this->authorize('delete', $group);
+            $group->delete();
+            Alert::success('Csoport sikeresen törölve!');
+            return redirect()->route('groups.index');
     }
 }

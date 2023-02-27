@@ -19,7 +19,7 @@
             <div class="lg:flex lg:justify-between mb-12">
                 <div class="font-black text-3xl">Csoport: {{ $group->name }}</div>
             </div>
-            @if($myRole == "admin")
+            @if($isAdmin)
                 <div class="w-fit">
                     <form method="POST" action="{{route('groups.destroy', $group->id) }}">
                         @method('DELETE')
@@ -38,7 +38,7 @@
                 </div>
             @endif
             <div class="bg-slate-50 w-full rounded-xl  mx-auto">
-                @if($myRole === 'admin')
+                @if($isAdmin)
                     <div class="w-10/12 mx-auto my-5">
                         @livewire('search-users', ['groupId'=>$group->id])
                     </div>
@@ -50,7 +50,7 @@
                         <div class="w-10/12 mx-auto text-gray-100  py-5 flex" id="group_user-{{ $user->pivot->id }}">
                             <div class="bg-slate-600 w-full px-3 flex justify-between content-start text-center">
                                 <div class="divide-x-2 flex text-xl py-3">
-                                    @if($user->pivot->role == "admin")
+                                    @if($user->pivot->is_admin)
                                         <div class="ml-2 pr-5"><i class="fa-solid fa-user-graduate fa-lg"></i></div>
                                     @else
                                         <div class="ml-2 pr-5"><i class="fa-solid fa-user fa-lg"></i></div>
@@ -58,7 +58,7 @@
                                     <div class="pl-5">{{ $user->name }}</div>
                                 </div>
 
-                                @if( $myRole == "admin" && $user->pivot->role != "admin")
+                                @if( $isAdmin && !$user->pivot->is_admin)
                                     <div class="py-2  px-5">
                                         <form method="POST">
                                             @method('DELETE')
@@ -72,7 +72,7 @@
                                             </button>
                                         </form>
                                     </div>
-                                @elseif ($user->id == Auth::id() && $group->creator_id != Auth::id())
+                                @elseif ($user->id == auth()->id() && $group->creator_id != auth()->id())
                                     <form method="POST" action="{{ route('leaveUserFromGroup', $user->pivot->id) }}">
                                         @csrf
                                         @METHOD('DELETE')

@@ -85,7 +85,7 @@
                                             <div id="testAttempt#{{ $testAttempt->id }}"
                                                  class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-base px-12 py-2 ml-32">
                                                 <div>
-                                                    <a href="{{ route('checkAttemptResult', $testAttempt->id) }}"  target="_blank">
+                                                    <a href="{{ route('testAttempts.show', $testAttempt->id) }}"  target="_blank">
                                                         <button
                                                             class="bg-lime-500 hover:bg-lime-300 p-1.5 border rounded-lg text-lime-900 ">
                                                             <i class="fa-solid fa-eye"></i> Megtekint

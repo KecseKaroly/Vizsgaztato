@@ -16,15 +16,15 @@ class GroupJoinRequestController extends Controller
     public function SubmitRequest(Request $request) {
         try{
             $group = group::where('invCode', $request->invCode)->firstOrFail();
-            if(group_join_request::where(['group_id' => $group->id, 'requester_id'=> Auth::id()])->exists()) {
+            if(group_join_request::where(['group_id' => $group->id, 'requester_id'=> auth()->id()])->exists()) {
                 return response()->json(['error'=>'Már rögzített csatlakozási kérelmet ebbe a csoportba!']);
             }
-            if(groups_users::where(['group_id' => $group->id, 'user_id'=> Auth::id()])->exists()) {
+            if(groups_users::where(['group_id' => $group->id, 'user_id'=> auth()->id()])->exists()) {
                 return response()->json(['error'=>'Már tagja ennek a csoportnak!']);
             }
 
             $group_join_request = new group_join_request;
-            $group_join_request->requester_id = Auth::id();
+            $group_join_request->requester_id = auth()->id();
             $group_join_request->group_id = $group->id;
             $group_join_request->save();
 
@@ -53,7 +53,6 @@ class GroupJoinRequestController extends Controller
             $groups_users_connetion = new groups_users;
             $groups_users_connetion->user_id =  $request->requester_id;
             $groups_users_connetion->group_id =  $request->group_id;
-            $groups_users_connetion->role = "member";
             $groups_users_connetion->save();
 
             $join_request = group_join_request::find($request->join_request_id);

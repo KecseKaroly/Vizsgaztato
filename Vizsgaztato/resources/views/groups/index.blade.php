@@ -21,13 +21,16 @@
             <div class="lg:flex lg:justify-between mb-12 ">
                 <div class="font-black text-3xl">Csoportok</div>
                 <div class="w-fit">
+                    @can('create', App\Models\group::class)
                     <button type="button" class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
                         <a href="{{ route('groups.create') }}"><i class="fa-solid fa-circle-plus"></i> Csoport létrehozása</a>
                     </button>
+                    @endcan
                 </div>
             </div>
 
-            <div class="bg-slate-50 w-full rounded-xl">
+            <div class="bg-slate-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double">
+                @cannot('create', App\Models\group::class)
                 <div class="my-6 w-10/12 mx-auto flex justify-between flex-wrap">
                     <form>
                         <div class="md:flex">
@@ -50,9 +53,10 @@
                         </button>
                     </a>
                 </div>
+                @endcannot
                 <div class="w-full">
-                @foreach($groups as $group)
-                    <div class="bg-slate-600 w-10/12 mx-auto mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
+                @forelse($groups as $group)
+                    <div class="bg-slate-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
                         <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
                             <a href="{{ route('groups.show', $group->id) }}">
                             {{ $group->name }}
@@ -63,7 +67,7 @@
                             <button class="copyInvCode bg-slate-400 hover:bg-slate-500 px-2 border-none rounded-md" data-invCode="{{ $group->invCode }}"><i class="fa-regular fa-clone fa-lg"></i></button>
                         </div>
                         <div class="md:mt-0 my-2 lg:text-right w-fit font-medium relative">
-                            @if($group->creator_id == Auth::id())
+                            @if($group->creator_id == auth()->id())
                                 <a href="{{ route('join_requests', $group->id) }}">
                                     <button type="button" class="relative inline-flex items-center p-2 text-md font-semibold text-center text-white border rounded-lg hover:bg-slate-500 bg-slate-400">
                                         Kérelmek
@@ -83,7 +87,15 @@
                             </a>
                         </div>
                     </div>
-                @endforeach
+                    @empty
+                        <div class="text-center text-lg font-semibold italic py-4">
+                            @if(auth()->user()->is_student)
+                                Üresség... Még nem csatlakoztam egy csoportba sem
+                            @else
+                                Még nem hoztam létre csoportot.
+                            @endif
+                        </div>
+                @endforelse
                 </div>
 
             </div>

@@ -12,7 +12,7 @@ class groups_users extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['user_id', 'group_id', 'role'];
+    protected $fillable = ['user_id', 'group_id', 'is_admin'];
 
     public $timestamps = true;
 }

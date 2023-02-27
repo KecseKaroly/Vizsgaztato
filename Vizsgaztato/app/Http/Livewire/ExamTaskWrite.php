@@ -30,7 +30,7 @@ class ExamTaskWrite extends Component
         $maxScore = 0;
         $achievedScore = 0;
         $attempt = new testAttempt();
-        $attempt->user_id = Auth::id();
+        $attempt->user_id = auth()->id();
         $attempt->test_id = $this->test['id'];
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
@@ -68,7 +68,7 @@ class ExamTaskWrite extends Component
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
-        return redirect()->route('checkAttemptResult', $attempt->id);
+        return redirect()->route('testAttempts.show', $attempt->id);
     }
 
     public function timeRanOut() {

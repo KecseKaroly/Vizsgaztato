@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_student',
     ];
 
     /**
@@ -55,6 +56,6 @@ class User extends Authenticatable
             'groups_users',
             'user_id',
             'group_id')
-            ->withPivot(['role']);
+            ->withPivot(['is_admin']);
     }
 }
