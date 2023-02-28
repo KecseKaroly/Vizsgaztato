@@ -35,7 +35,7 @@ class GroupPolicy
         $groupOfUser = groups_users::where(['user_id' => $user->id, 'group_id' => $group->id])->get();
         return !$groupOfUser->isEmpty()
             ? Response::allow()
-            : Response::deny('Nem engedélyezett művelet! Nem tagja ennek a csoportnak!');;
+            : Response::deny('Nem engedélyezett művelet! Nem tagja ennek a csoportnak!');
     }
 
     /**
@@ -46,7 +46,9 @@ class GroupPolicy
      */
     public function create(User $user)
     {
-        return !$user->is_student;
+        return !$user->is_student
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet diákoknak!');
     }
 
     /**

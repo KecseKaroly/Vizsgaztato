@@ -56,7 +56,9 @@ class testPolicy
      */
     public function create(User $user)
     {
-        return !$user->is_student;
+        return !$user->is_student
+            ? Response::allow()
+            : Response::deny('Nem engedélyezett művelet diákoknak!');;
     }
 
     /**
