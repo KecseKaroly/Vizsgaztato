@@ -6,12 +6,13 @@ use App\Models\group;
 use App\Models\group_join_request;
 use App\Models\group_inv;
 use App\Models\groups_users;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use App\Events\GroupCreated;
 
 class GroupController extends Controller
 {
@@ -41,11 +42,18 @@ class GroupController extends Controller
      */
     public function create()
     {
-        $invCode = Str::random(15);
-        while (group::where('invCode', $invCode)->exists()) {
+        try{
+            $this->authorize('create', group::class);
             $invCode = Str::random(15);
+            while (group::where('invCode', $invCode)->exists()) {
+                $invCode = Str::random(15);
+            }
+            return view('groups.create')->with('invCode', $invCode);
         }
-        return view('groups.create')->with('invCode', $invCode);
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('groups.index');
+        }
     }
 
     /**
@@ -56,24 +64,28 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        if (group::where('invCode', $request->group_invCode)->exists()) {
+        try{
+            if (group::where('invCode', $request->group_invCode)->exists()) {
+                Alert::warning('Hiba történt', 'Ezzel a kóddal már létezik csoport!');
+                return redirect()->route('groups.index');
+            }
+            $group = new group([
+                'name'=>$request->group_name,
+                'invCode'=>$request->group_invCode,
+                'creator_id'=>auth()->id(),
+            ]);
+            $group->save();
+
+            // Hozzáadom az új csoporthoz adminként
+            event(new GroupCreated($group));
+
+            Alert::success('Csoport sikeresen létrehozva!');
             return redirect()->route('groups.index');
         }
-
-        $group = new group;
-        $group->name = $request->group_name;
-        $group->invCode = $request->group_invCode;
-        $group->creator_id = auth()->id();
-        $group->save();
-
-        $groups_users = new groups_users;
-        $groups_users->user_id = auth()->id();
-        $groups_users->group_id = $group->id;
-        $groups_users->is_admin = true;
-        $groups_users->save();
-
-        Alert::success('Csoport sikeresen létrehozva!');
-        return redirect()->route('groups.index');
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('groups.index');
+        }
     }
 
     /**
@@ -84,10 +96,17 @@ class GroupController extends Controller
      */
     public function show(group $group)
     {
-        $this->authorize('view', $group);
-        $groups = $group->load('users');
-        $is_admin = groups_users::where(['user_id' => auth()->id(), 'group_id' => $group->id])->first()->is_admin;
-        return view('groups.show', ['groups' => $groups, 'group' => $group, 'isAdmin' => $is_admin]);
+        try{
+            $this->authorize('view', $group);
+            $groups = $group->load('users');
+            $is_admin = groups_users::where(['user_id' => auth()->id(), 'group_id' => $group->id])->first()->is_admin;
+            return view('groups.show', ['groups' => $groups, 'group' => $group, 'isAdmin' => $is_admin]);
+
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('groups.index');
+        }
     }
 
     /**
@@ -98,8 +117,14 @@ class GroupController extends Controller
      */
     public function edit(group $group)
     {
-        $this->authorize('update', $group);
-        return view('groups.edit')->with('group', $group);
+        try{
+            $this->authorize('update', $group);
+            return view('groups.edit')->with('group', $group);
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('groups.index');
+        }
     }
 
     /**
@@ -111,11 +136,18 @@ class GroupController extends Controller
      */
     public function update(Request $request, group $group)
     {
-        $this->authorize('update', $group);
-        $group->name = $request->group_name;
-        $group->save();
-        Alert::success('Csoport sikeresen módosítva!');
-        return redirect()->route('groups.show', $group);
+        try{
+            $this->authorize('update', $group);
+            $group->name = $request->group_name;
+            $group->save();
+            Alert::success('Csoport sikeresen módosítva!');
+            return redirect()->route('groups.show', $group);
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('groups.index');
+        }
+
     }
 
     /**
@@ -126,9 +158,15 @@ class GroupController extends Controller
      */
     public function destroy(group $group)
     {
+        try{
             $this->authorize('delete', $group);
             $group->delete();
             Alert::success('Csoport sikeresen törölve!');
             return redirect()->route('groups.index');
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('groups.index');
+        }
     }
 }
