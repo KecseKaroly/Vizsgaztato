@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('given_answers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedTinyInteger('result')->nullable();  // 1 - corret | 2 - incorrect | 3 - missed
             $table->foreignId('attempt_id')->constrained('test_attempts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('option_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('answer_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
