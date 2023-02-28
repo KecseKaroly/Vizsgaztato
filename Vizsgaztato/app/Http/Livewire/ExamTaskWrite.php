@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Events\TestEnded;
 use App\Models\test;
 use App\Models\question;
 use App\Models\option;
@@ -41,8 +42,6 @@ class ExamTaskWrite extends Component
                     $maxScore += $option['score'];
                     switch($question['type']) {
                         case "TrueFalse":
-                            $tempAns = $optionIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
-                            break;
                         case "OneChoice":
                             $tempAns = $optionIndex == $question['actual_ans'] ? 'checked' : 'unchecked';
                             break;
@@ -68,7 +67,8 @@ class ExamTaskWrite extends Component
         $attempt->maxScore = $maxScore;
         $attempt->achievedScore = $achievedScore;
         $attempt->save();
-        return redirect()->route('testAttempts.show', $attempt->id);
+        event(new TestEnded($attempt));
+        return redirect()->route('testAttempts.index', [$attempt->test_id, $attempt->group_id]);
     }
 
     public function timeRanOut() {
