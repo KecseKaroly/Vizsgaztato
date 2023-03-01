@@ -31,7 +31,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-5">
         <div class="container">
             <div class="flex justify-between">
-                <div class="flex text-2xl font-bold italic">Online vizsgáztató rendszer</div>
+                <a href="{{route('home')}}" class="flex text-2xl font-bold italic">Online vizsgáztató rendszer</a>
                 @guest
                     <div class="flex">
                         <div class="flex">
