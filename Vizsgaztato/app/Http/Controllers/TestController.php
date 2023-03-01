@@ -19,9 +19,14 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 use Alert;
+use App\Services\TestService;
 
 class TestController extends Controller
 {
+    public function __construct(private TestService $testService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -78,45 +83,8 @@ class TestController extends Controller
             $test = test::find($testId);
             $group = group::find($groupId);
             $this->authorize('view', [$test, $group]);
-
             $test = $test->load('questions.options.expected_answer');
-            $testAttempts = testAttempt::where(['user_id' => auth()->id(), 'test_id' => $test->id, 'group_id' => $groupId])->count();
-            if ($testAttempts >= $test->maxAttempts) {
-                Alert::danger("Túllépte a megengedett próbálkozásokat!");
-                return view('test.write');
-            }
-            $testLiveWire = [
-                'group_id' => $groupId,
-                'id' => $test->id,
-                'title' => $test->title,
-                'duration' => $test->duration,
-                'resultsViewable'=>$test->resultsViewable,
-                'questions' => []
-            ];
-            foreach ($test->questions as $questionIndex => $question) {
-                $testLiveWire['questions'][] = [
-                    'id' => $question->id,
-                    'text' => $question->text,
-                    'maxScore' => 0,
-                    'type' => $question->type,
-                    'options' => [],
-                    'achievedScore' => 0,
-                    'actual_ans' => ''
-                ];
-                foreach ($question->options as $option) {
-                    $testLiveWire['questions'][$questionIndex]['maxScore'] += $option->score;
-                    $answer = $option->expected_answer;
-                    $testLiveWire['questions'][$questionIndex]['options'][] = [
-                        'id' => $option->id,
-                        'text' => $option->text,
-                        'expected_ans' => $answer->solution,
-                        'actual_ans' => '',
-                        'score' => $option->score
-                    ];
-                }
-                shuffle($testLiveWire['questions'][$questionIndex]['options']);
-            }
-            shuffle($testLiveWire['questions']);
+            $testLiveWire = $this->testService->getTestToWrite($test, $groupId);
             return view('test.write')->with('testLiveWire', $testLiveWire);
         }
         catch (AuthorizationException $exception) {
@@ -140,44 +108,7 @@ class TestController extends Controller
                     $query->orderBy('options.expected_answer_id', 'ASC');
                 },
                 'questions.options.expected_answer']);
-            $testLiveWire = [
-                'id' => $test->id,
-                'title' => $test->title,
-                'maxAttempts' => $test->maxAttempts,
-                'duration' => $test->duration,
-                'resultsViewable' => $test->resultsViewable,
-                'questions' => []
-            ];
-            foreach ($test->questions as $questionIndex => $question) {
-                $testLiveWire['questions'][] = [
-                    'id' => $question->id,
-                    'type' => $question->type,
-                    'text' => $question->text,
-                    'options' => [],
-                    'right_answer_index' => '',
-                ];
-                foreach ($question->options as $optionIndex => $option) {
-                    $answer = $option->expected_answer;
-                    if ($question['type'] == "MultipleChoice") {
-                        $testLiveWire['questions'][$questionIndex]['options'][] = [
-                            'id' => $option->id,
-                            'text' => $option->text,
-                            'score' => $option->score,
-                            'solution' => $answer->solution == "checked" ? $answer->id : '',
-                        ];
-                    } else {
-                        $testLiveWire['questions'][$questionIndex]['options'][] = [
-                            'id' => $option->id,
-                            'text' => $option->text,
-                            'score' => $option->score
-                        ];
-                        if ($question['type'] == "OneChoice" || $question['type'] == "TrueFalse") {
-                            if ($answer->solution == "checked")
-                                $testLiveWire['questions'][$questionIndex]['right_option_index'] = $optionIndex;
-                        }
-                    }
-                }
-            }
+            $testLiveWire = $this->testService->getTestToEdit($test);
             return view('test.edit', ['testLiveWire' => $testLiveWire]);
         }
         catch (AuthorizationException $exception) {
