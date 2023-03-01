@@ -41,13 +41,13 @@
                                                                     @case('TrueFalse')
                                                                         <div
                                                                             class="border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300"
-                                                                            id="option_div_{{$option['id']}}">
+                                                                            id="option_div_{{$option['id']}}"
+                                                                            onclick="saveData()">
                                                                             <input
                                                                                 wire:model="test.questions.{{$questionIndex}}.actual_ans"
                                                                                 value="{{$optionIndex}}"
                                                                                 id="option_{{$option['id']}}"
                                                                                 type="radio"
-                                                                                onchange='handleChange(this);'
                                                                                 name="option_{{$option['id']}}"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ">
                                                                             <label for="option_{{$option['id']}}"
@@ -57,13 +57,13 @@
                                                                     @case('OneChoice')
                                                                         <div
                                                                             class="border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300"
-                                                                            id="option_{{$option['id']}}">
+                                                                            id="option_{{$option['id']}}"
+                                                                            onclick="saveData()">
                                                                             <input
                                                                                 wire:model="test.questions.{{$questionIndex}}.actual_ans"
                                                                                 value="{{$optionIndex}}"
                                                                                 id="option_{{$question['id']}}_{{$option['id']}}"
                                                                                 type="radio"
-                                                                                onchange='handleChange(this);'
                                                                                 name="option_{{$option['id']}}"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
                                                                             <label for="option_{{$question['id']}}_{{$option['id']}}"
@@ -74,12 +74,12 @@
                                                                     @case('MultipleChoice')
                                                                         <div
                                                                             class="border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300"
-                                                                            id="option_div_{{$option['id']}}">
+                                                                            id="option_div_{{$option['id']}}"
+                                                                            onclick="saveData()">
                                                                             <input
                                                                                 wire:model="test.questions.{{$questionIndex}}.options.{{$optionIndex}}.actual_ans"
                                                                                 id="option_{{$option['id']}}"
                                                                                 type="checkbox"
-                                                                                onchange='handleChange(this);'
                                                                                 name="option_{{$option['id']}}"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                                             <label for="option_{{$option['id']}}"
@@ -130,12 +130,10 @@
                             if (secondsLeft <= 0) {
                                 clearInterval(countdown);
                                 remainingSeconds.textContent = `0`;
-                            @this.emit('timeRanOut');
-                                console.log("emitelniKéneMertVége");
+                                @this.emit('timeRanOut');
                                 return;
                             }
                             displayTimeLeft(secondsLeft);
-                            console.log(secondsLeft);
                         }, 1000);
                     }
 
@@ -146,5 +144,9 @@
                     }
                 }
                 countDownClock(@json($test['duration']));
+
+                function saveData() {
+                    Livewire.emit('saveData');
+                }
             </script>
 @endpush

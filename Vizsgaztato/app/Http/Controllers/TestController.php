@@ -7,7 +7,7 @@ use App\Models\question;
 use App\Models\option;
 use App\Models\answer;
 use App\Models\given_answer;
-
+use Session;
 use App\Models\User;
 use App\Models\group;
 use App\Models\groups_users;
@@ -84,7 +84,26 @@ class TestController extends Controller
             $group = group::find($groupId);
             $this->authorize('view', [$test, $group]);
             $test = $test->load('questions.options.expected_answer');
-            $testLiveWire = $this->testService->getTestToWrite($test, $groupId);
+            $attempt = testAttempt::where([
+                'group_id'=>$groupId,
+                'test_id'=>$testId,
+                'user_id'=>auth()->id(),
+                'submitted'=>'0'])->first();
+            if(!$attempt)
+            {
+                $testLiveWire = $this->testService->getTestToWrite($test, $groupId);
+            }
+            else
+            {
+                if(Session::has('attempt_'. $attempt->id)) {
+                    $testLiveWire = Session::get('attempt_' . $attempt->id);
+                }
+                else {
+                    $attempt->delete();
+                    $testLiveWire = $this->testService->getTestToWrite($test, $groupId);
+                }
+                //dd([$testLiveWire, Session::all()]);
+            }
             return view('test.write')->with('testLiveWire', $testLiveWire);
         }
         catch (AuthorizationException $exception) {

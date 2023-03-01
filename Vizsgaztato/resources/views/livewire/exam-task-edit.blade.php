@@ -105,7 +105,8 @@
                             </div>
                         </div>
                     </div>
-                    <div @class(['flex flex-col md:flex-row md:items-center md:justify-center' => $question['type']=='TrueFalse']) {{ ($question['type'] == 'Sequence' ? 'wire:sortable=updateOptionOrder' : '')}}>
+                    <div @class(['flex flex-col md:flex-row md:items-center md:justify-center' => $question['type']=='TrueFalse',
+                                   'bg-red-200' => $question['type']=='Sequence']) {{ ($question['type'] == 'Sequence' ? 'wire:sortable=updateOptionOrder' : '')}}>
                         @forelse($question['options'] as $optionIndex => $option)
                             @switch($question["type"])
                                 @case("TrueFalse")
@@ -164,7 +165,7 @@
                                     </div>
                                     @break
                                 @case("Sequence")
-                                    <div div
+                                    <div
                                          class="sm:flex-row flex-col lg:ml-16 lg:px-8 lg:my-2 lg:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
                                          wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}"
                                          wire:key="{{$questionIndex}}_{{ $optionIndex }}"
@@ -176,6 +177,7 @@
                                                    placeholder="Válasz szövege"
                                                    class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                         </div>
+
                                         <div class="flex flex-row">
                                             <button
                                                 wire:click="Remove_Option({{$questionIndex}}, {{$optionIndex}})"

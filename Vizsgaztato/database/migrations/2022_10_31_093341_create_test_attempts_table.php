@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('test_attempts', function (Blueprint $table) {
             $table->id();
+            $table->boolean('submitted')->default(false);
+            $table->unsignedInteger('maxScore')->default(0);
+            $table->unsignedInteger('achievedScore')->default(0);
             $table->foreignId('user_id');
             $table->foreignId('group_id');
             $table->foreignId('test_id');
-            $table->unsignedInteger('maxScore')->default(0);
-            $table->unsignedInteger('achievedScore')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

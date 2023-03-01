@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\test;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,14 +15,15 @@ class TestUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public test $test;
     /**
      * Create a new event instance.
-     *
+     * @param test $test
      * @return void
      */
-    public function __construct()
+    public function __construct(test $test)
     {
-        //
+        $this->test = $test;
     }
 
     /**

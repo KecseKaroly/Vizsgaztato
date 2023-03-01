@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
             CalculateResults::class,
         ],
         TestUpdated::class => [
-            ReCalculateResults::class,
+            CalculateResults::class,
         ],
         GroupCreated::class => [
             AddFirstUserToGroup::class,

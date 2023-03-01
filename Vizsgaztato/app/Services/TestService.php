@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\testAttempt;
 use App\Models\test;
 use App\Models\question;
 use App\Models\option;
 use App\Models\answer;
-
+use Session;
 class TestService
 {
 
@@ -149,12 +150,19 @@ class TestService
 
     public function getTestToWrite($test, $groupId)
     {
+        $attempt = new testAttempt([
+            'user_id'=>auth()->id(),
+            'test_id'=>$test->id,
+            'group_id'=>$groupId,
+        ]);
+        $attempt->save();
         $testLiveWire = [
-            'group_id' => $groupId,
             'id' => $test->id,
+            'attempt_id'=>$attempt->id,
             'title' => $test->title,
             'duration' => $test->duration,
             'resultsViewable' => $test->resultsViewable,
+            'group_id' => $groupId,
             'questions' => []
         ];
         foreach ($test->questions as $questionIndex => $question) {
@@ -181,6 +189,7 @@ class TestService
             shuffle($testLiveWire['questions'][$questionIndex]['options']);
         }
         shuffle($testLiveWire['questions']);
+        Session::put('attempt_'. $attempt->id, $testLiveWire);
         return $testLiveWire;
     }
 }

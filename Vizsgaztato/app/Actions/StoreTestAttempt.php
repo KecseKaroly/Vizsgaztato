@@ -5,15 +5,13 @@ namespace App\Actions;
 use App\Models\testAttempt;
 use App\Models\answer;
 use App\Models\given_answer;
-
+use Session;
 class StoreTestAttempt
 {
     public function store($test): testAttempt
     {
-        $attempt = new testAttempt();
-        $attempt->user_id = auth()->id();
-        $attempt->test_id = $test['id'];
-        $attempt->group_id = $test['group_id'];
+        $attempt = testAttempt::find($test['attempt_id']);
+        $attempt->submitted = true;
         $attempt->save();
         foreach ($test['questions'] as $questionIndex => $question) {
             foreach ($question['options'] as $optionIndex => $option) {
@@ -37,6 +35,8 @@ class StoreTestAttempt
                 $givenAnswer->save();
             }
         }
+        Session::forget('attempt_'.$attempt->id);
+
         return $attempt;
     }
 }

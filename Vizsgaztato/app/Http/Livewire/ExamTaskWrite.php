@@ -12,6 +12,7 @@ use App\Models\given_answer;
 use App\Models\group;
 use App\Models\testAttempt;
 use Illuminate\Session\Store;
+use Session;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 class ExamTaskWrite extends Component
@@ -19,7 +20,7 @@ class ExamTaskWrite extends Component
 
     public $test;
 
-    protected $listeners = ['timeRanOut'];
+    protected $listeners = ['timeRanOut', 'saveData'=>'SaveDataToSession'];
     public function updateOptionOrder($list) {
         $newAnswers = [];
         foreach($list as $element) {
@@ -27,6 +28,7 @@ class ExamTaskWrite extends Component
             array_push($newAnswers, $this->test['questions'][$indexek[0]]['options'][$indexek[1]]);
         }
         $this->test['questions'][$indexek[0]]['options'] = $newAnswers;
+        $this->SaveDataToSession();
     }
 
     public function endTest() {
@@ -46,5 +48,9 @@ class ExamTaskWrite extends Component
     public function mount($testLiveWire)
     {
         $this->test = $testLiveWire;
+    }
+
+    public function SaveDataToSession() {
+        Session::put('attempt_'.$this->test['attempt_id'], $this->test);
     }
 }
