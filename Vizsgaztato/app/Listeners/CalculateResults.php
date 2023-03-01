@@ -21,46 +21,45 @@ class CalculateResults
     /**
      * Handle the event.
      *
-     * @param  \App\Events\TestEnded  $event
+     * @param \App\Events\TestEnded $event
      * @return void
      */
     public function handle(TestEnded $event)
     {
-        $attempt = $event->attempt->load('given_answers.answer', 'given_answers.option.expected_answer', 'given_answers.option.question');
-        $maxPoint = 0;
-        $achieved = 0;
-        foreach($attempt->given_answers as $given_answer) {
+        $attempt = $event->attempt->load(['test.questions.options.expected_answer',
+            'test.questions.options.given_answers' => function ($query) use ($event) {
+                $query->where('attempt_id', $event->attempt->id);
+            }]);
+        foreach ($attempt->test->questions as $question) {
+            foreach ($question->options as $option) {
+                if ($question->type != 'Sequence') {
+                    if ($option->given_answers[0]->answer == $option->expected_answer && $option->expected_answer->solution == "checked") {
+                        $option->given_answers[0]->result = 1;  //correct
+                        $option->given_answers[0]->save();
+                        $attempt->achievedScore++;
+                        $attempt->maxScore++;
+                    } else if ($option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "unchecked") {
+                        $option->given_answers[0]->result = 2;  //incorrect
+                        $option->given_answers[0]->save();
+                    } else if ($option->given_answers[0]->answer != $option->expected_answer && $option->expected_answer->solution == "checked") {
+                        $option->given_answers[0]->result = 3;  //missed
+                        $option->given_answers[0]->save();
+                        $attempt->maxScore++;
+                    }
+                } else {
+                    if ($option->given_answers[0]->answer == $option->expected_answer) {
+                        $option->given_answers[0]->result = 1;  //correct
+                        $option->given_answers[0]->save();
+                        $attempt->achievedScore++;
+                    } else {
+                        $option->given_answers[0]->result = 2;  //incorrect
+                        $option->given_answers[0]->save();
 
-            if($given_answer->option->question->type != 'Sequence')
-            {
-                if($given_answer->answer == $given_answer->option->expected_answer && $given_answer->option->expected_answer->solution == "checked")
-                {
-                    $given_answer->result = 1;  //correct
-                    $given_answer->save();
-                }
-                else if($given_answer->answer != $given_answer->option->expected_answer && $given_answer->option->expected_answer->solution == "unchecked")
-                {
-                    $given_answer->result = 2;  //incorrect
-                    $given_answer->save();
-                }
-                else if($given_answer->answer != $given_answer->option->expected_answer && $given_answer->option->expected_answer->solution == "checked")
-                {
-                    $given_answer->result = 3;  //missed
-                    $given_answer->save();
-                }
-            }
-            else {
-                if($given_answer->answer == $given_answer->option->expected_answer)
-                {
-                    $given_answer->result = 1;  //correct
-                    $given_answer->save();
-                }
-                else
-                {
-                    $given_answer->result = 2;  //incorrect
-                    $given_answer->save();
+                    }
+                    $attempt->maxScore++;
                 }
             }
         }
+        $attempt->save();
     }
 }

@@ -12,7 +12,7 @@ class TestAttemptController extends Controller
 {
     public function index($testId, $groupId) {
         try{
-            $this->authorize('view', [test::find($testId), group::find($groupId)]);
+            $this->authorize('viewResults', test::class);
             $test = test::find($testId)->load(['groups' => function ($query) use ($groupId) {
                 $query->where('groups.id', $groupId)
                     ->where('tests_groups.enabled_from', '<', now())
@@ -44,7 +44,6 @@ class TestAttemptController extends Controller
             Alert::warning($exception->getMessage());
             return redirect()->route('testAttempts.index', [$attempt->test_id, $attempt->group_id]);
         }
-
     }
     /**
      * Remove the specified resource from storage.

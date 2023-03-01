@@ -9,7 +9,7 @@
         border: 0.25em red solid;
     }
     .missed {
-        border: 0.25em #FFFF66 solid;
+        border: 0.25em lightgreen dashed;
     }
 </style>
 @endsection
@@ -34,10 +34,8 @@
                             <hr class="mx-auto w-full h-1 bg-gray-900 rounded border-0 my-3">
                             @foreach($attempt->test->questions as $questionIndex => $question)
                                 <div class="lg:px-12 md:px-8 px-4  py-6">
-                                    <div class="flex sm:flex-row flex-col justify-between">
-                                        <p class="text-lg font-bold">{{$question->text}}</p>
-                                        <p class="font-medium">a/b pont</p>
-                                    </div>
+
+                                    <p class="text-lg font-bold">{{$question->text}}</p>
                                     <div class="flex flex-col">
 
                                     @foreach($question->options as $optionIndex => $option)

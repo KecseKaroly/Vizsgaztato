@@ -28,18 +28,13 @@ class ExamTaskWrite extends Component
     }
 
     public function endTest() {
-        $maxScore = 0;
-        $achievedScore = 0;
         $attempt = new testAttempt();
         $attempt->user_id = auth()->id();
         $attempt->test_id = $this->test['id'];
-        $attempt->maxScore = $maxScore;
-        $attempt->achievedScore = $achievedScore;
         $attempt->group_id = $this->test['group_id'];
         $attempt->save();
             foreach($this->test['questions'] as $questionIndex => $question) {
                 foreach($question['options'] as $optionIndex => $option) {
-                    $maxScore += $option['score'];
                     switch($question['type']) {
                         case "TrueFalse":
                         case "OneChoice":
@@ -52,10 +47,6 @@ class ExamTaskWrite extends Component
                             $tempAns = $optionIndex+1;
                             break;
                     }
-                    if($tempAns == $option['expected_ans'])
-                    {
-                        $achievedScore += $option['score'];
-                    }
                     $answer = answer::where('solution', $tempAns)->first();
                     $givenAnswer = new given_answer();
                     $givenAnswer->attempt_id = $attempt->id;
@@ -64,9 +55,6 @@ class ExamTaskWrite extends Component
                     $givenAnswer->save();
                 }
             }
-        $attempt->maxScore = $maxScore;
-        $attempt->achievedScore = $achievedScore;
-        $attempt->save();
         event(new TestEnded($attempt));
         return redirect()->route('testAttempts.index', [$attempt->test_id, $attempt->group_id]);
     }

@@ -49,6 +49,18 @@ class testPolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\test $test
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function viewResults(User $user)
+    {
+        return Response::allow();
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param \App\Models\User $user
