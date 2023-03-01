@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Actions\DeleteOptions;
+use App\Actions\DeleteQuestions;
+use App\Events\TestUpdated;
 use App\Http\Controllers\TestsGroupsController;
 use App\Models\test;
 use App\Models\question;
@@ -9,6 +12,7 @@ use App\Models\option;
 use App\Models\answer;
 use App\Models\given_answer;
 use App\Models\group;
+use App\Services\TestService;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Alert;
@@ -110,58 +114,11 @@ class ExamTaskEdit extends Component
         $test->duration = $this->durationMinute;
         $test->resultsViewable = (bool)($this->resultsViewable);
         $test->save();
-        foreach ($this->questions as $questionIndex => $question) {
-            if(array_key_exists('id', $question)) {
-                $questionModel = question::find($question['id']);
-            }
-            else $questionModel = new question;
-            $questionModel->type =$question['type'];
-            $questionModel->text =$question['text'];
-            $questionModel->test_id = $test->id;
-            $questionModel->save();
-            foreach ($question['options'] as $optionIndex => $option) {
-                $answer = null;
-                switch ($questionModel->type) {
-                    case 'TrueFalse':
-                    case 'OneChoice':
-                        if ($optionIndex == $question['right_option_index']) {
-                            $answer = answer::firstOrCreate(['solution'=>'checked']);
-                            $option['score'] = 1;
-                        } else {
-                            $answer = answer::firstOrCreate(['solution'=>'unchecked']);
-                            $option['score'] = 0;
-                        }
-                        break;
-                    case 'MultipleChoice':
-                        if ($option['solution'] >= 0) {
-                            $answer = answer::firstOrCreate(['solution'=>'checked']);
-                            $option['score'] = 1;
-                        } else {
-                            $answer = answer::firstOrCreate(['solution'=>'unchecked']);
-                            $option['score'] = 0;
-                        }
-                        break;
-                    case 'Sequence':
-                        $answer = answer::firstOrCreate(['solution'=>$optionIndex + 1]);
-                        break;
-                }
-                if(array_key_exists('id',$option))
-                    $optionModel = option::find($option['id']);
-                else $optionModel = new option;
-                $optionModel->question_id = $questionModel->id;
-                $optionModel->text = $option['text'];
-                $optionModel->expected_answer_id = $answer->id;
-                $optionModel->score = $option['score'];
-                $optionModel->save();
-            }
-        }
-        foreach ($this->deletedQuestions as $question) {
-            $question = question::find($question['id'])->delete();
-        }
-        foreach ($this->deletedOptions as $option) {
-            $option = option::find($answer['id'])->delete();
-        }
 
+        (new TestService())->update($test, $this->questions);
+        (new DeleteQuestions())->delete($this->deletedQuestions);
+        (new DeleteOptions())->delete($this->deletedOptions);
+        //event(new TestUpdated($test));
         Alert::success('A teszt módosítása sikeresen megtörtént!');
         return redirect()->route('test.index');
     }
@@ -173,6 +130,7 @@ class ExamTaskEdit extends Component
 
     public function updateOptionOrder($list)
     {
+        dd($list);
         $newOptions = [];
         foreach ($list as $element) {
             $indexek = explode("_", $element["value"]);

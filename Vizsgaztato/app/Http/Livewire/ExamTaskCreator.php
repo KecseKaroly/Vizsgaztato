@@ -8,6 +8,7 @@ use App\Models\option;
 use App\Models\answer;
 use App\Models\given_answer;
 use App\Models\group;
+use App\Services\TestService;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Alert;
@@ -79,7 +80,6 @@ class ExamTaskCreator extends Component
             $score = 1;
         }
         array_unshift($this->questions[$questionIndex]['options'], [
-            'id' => ($questionIndex + 1) + count($this->questions[$questionIndex]['options']),
             'text' => '',
             'solution' => $solution,
             'score' => $score
@@ -100,48 +100,7 @@ class ExamTaskCreator extends Component
         $test->resultsViewable = $this->resultsViewable;
         $test->creator_id = auth()->id();
         $test->save();
-        foreach ($this->questions as $questionIndex => $question) {
-            $questionModel = new question;
-            $questionModel->text = $question['text'];
-            $questionModel->type = $question['type'];
-            $questionModel->test_id = $test->id;
-            $questionModel->save();
-
-            foreach ($question['options'] as $optionIndex => $option) {
-                $optionModel = new option;
-                $optionModel->question_id = $questionModel['id'];
-                $optionModel->text = $option['text'];
-                $answer = null;
-
-                switch ($questionModel->type) {
-                    case 'TrueFalse':
-                    case 'OneChoice':
-                        if ($optionIndex == $question['right_option_index']) {
-                            $answer = answer::firstOrCreate(['solution'=>'checked']);
-                            $option['score'] = 1;
-                        } else {
-                            $answer = answer::firstOrCreate(['solution'=>'unchecked']);
-                            $option['score'] = 0;
-                        }
-                        break;
-                    case 'MultipleChoice':
-                        if ($option['solution'] >= 0) {
-                            $answer = answer::firstOrCreate(['solution'=>'checked']);
-                            $option['score'] = 1;
-                        } else {
-                            $answer = answer::firstOrCreate(['solution'=>'unchecked']);
-                            $option['score'] = 0;
-                        }
-                        break;
-                    case 'Sequence':
-                        $answer = answer::firstOrCreate(['solution'=>$optionIndex + 1]);
-                        break;
-                }
-                $optionModel->expected_answer_id = $answer->id;
-                $optionModel->score = $option['score'];
-                $optionModel->save();
-            }
-        }
+        (new TestService())->store($test, $this->questions);
 
         Alert::success('A teszt mentése sikeresen megtörtént!');
         return redirect()->route('test.index');
