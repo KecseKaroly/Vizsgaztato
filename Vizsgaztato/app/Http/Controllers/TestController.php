@@ -181,7 +181,7 @@ class TestController extends Controller
             return view('test.edit', ['testLiveWire' => $testLiveWire]);
         }
         catch (AuthorizationException $exception) {
-            Aler::warning($exception->getMessage());
+            Alert::warning($exception->getMessage());
             return redirect()->route('test.index');
         }
 
@@ -216,7 +216,7 @@ class TestController extends Controller
             }
         }
         catch (AuthorizationException $exception) {
-            Aler::warning($exception->getMessage());
+            Alert::warning($exception->getMessage());
             return redirect()->route('test.index');
         }
     }
@@ -236,7 +236,7 @@ class TestController extends Controller
             return back();
         }
         catch (AuthorizationException $exception) {
-            Aler::warning($exception->getMessage());
+            Alert::warning($exception->getMessage());
             return redirect()->route('test.index');
         }
 
@@ -244,7 +244,7 @@ class TestController extends Controller
     public function testInfo($testId)
     {
         try{
-            $this->authorize('checkInfo', test::find($testId));
+            $this->authorize('checkInfo', test::findOrFail($testId));
             $test = test::with(
                 [
                     'groups.users' => function ($query) use ($testId) {
@@ -259,7 +259,7 @@ class TestController extends Controller
             return view('testAttempts.show', ['test' => $test]);
         }
         catch (AuthorizationException $exception) {
-            Aler::warning($exception->getMessage());
+            Alert::warning($exception->getMessage());
             return redirect()->route('test.index');
         }
     }
