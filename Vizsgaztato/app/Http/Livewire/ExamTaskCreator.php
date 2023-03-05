@@ -21,6 +21,44 @@ class ExamTaskCreator extends Component
     public $durationMinute;
     public $resultsViewable;
 
+    protected $rules = [
+        'testTitle' => 'required|string|min:5|max:40',
+        'testAttempts'=>'required|integer|min:1|max:5',
+        'durationMinute'=>'required|integer|min:5|max:120',
+        'questions'=>'required',
+        'questions.*.options'=>'required',
+        'questions.*.text' => 'required|min:5|max:70',
+        'questions.*.type'=>'required',
+        'questions.*.right_option_index' => 'required_if:questions.*.type,TrueFalse|required_if:questions.*.type,OneChoice',
+        'questions.*.options.*.text' => 'exclude_if:questions.*.type,TrueFalse|required|min:5|max:70',
+    ];
+
+    protected $messages = [
+        'testTitle.required' => 'A teszt címének megadása kötelező!',
+        'testTitle.min'=>'A teszt címének hossza legalább 5 karakter kell, hogy legyen!',
+        'testTitle.max'=>'A teszt címének hossza legfeljebb 40 karakter lehet!',
+
+        'testAttempts.required' => 'A  próbálkozások számanak megadása kötelező!',
+        'testAttempts.min'=>'A lehetséges kitöltések száma nem lehet 1-nél kisebb!',
+        'testAttempts.max'=>'A lehetséges kitöltések száma nem lehet 5-nél nagyobb!',
+        'testAttempts.integer'=>'A lehetséges kitöltések számának formátuma nem megfelelő! Elvárt érték: szám',
+
+        'durationMinute.required' => 'A rendelkezésre álló idő megadása kötelező!',
+        'durationMinute.min'=>'A rendelkezésre álló idő nem lehet 5 percnél kevesebb!',
+        'durationMinute.max'=>'A rendelkezésre álló idő nem lehet 120 percnél hosszabb!',
+        'durationMinute.integer'=>'A rendelkezésre álló idő formátuma nem megfelelő! Elvárt érték: szám',
+
+        'questions.*.text.required' => 'A kérdés szövegének megadása kötelező!',
+        'questions.*.text.min'=>'A kérdés szövegének hossza legalább 5 karakter kell, hogy legyen!',
+        'questions.*.text.max'=>'A kérdés szövegének hossza legfeljebb 70 karakter lehet!',
+        'questions.*.type'=>'A kérdés típusának megadása kötelező!',
+        'questions.*.right_option_index.required_if' => 'A kérdéshez még nem tartozik megoldás!',
+        'questions.*.options' => 'Még nincs felvéve válaszlehetőség a kérdéshez!',
+
+        'questions.*.options.*.text.required' => 'A válaszlehetőség szövege nem lehet üres!',
+        'questions.*.options.*.text.min' => 'A válaszlehetőség szövege legalább 5 karakter hosszúnak kell lennie!',
+        'questions.*.options.*.text.max' => 'A válaszlehetőség szövege legfeljebb 70 karakter hosszú lehet!',
+    ];
 
     public function mount()
     {
@@ -62,7 +100,7 @@ class ExamTaskCreator extends Component
                 'text' => '',
                 'type' => '',
                 'options' => [],
-                'right_answer_index' => '',
+                'right_option_index' => '',
             ]);
     }
 
@@ -80,6 +118,7 @@ class ExamTaskCreator extends Component
             $score = 1;
         }
         array_unshift($this->questions[$questionIndex]['options'], [
+            'id'=>$questionIndex.count($this->questions[$questionIndex]['options'])+1,
             'text' => '',
             'solution' => $solution,
             'score' => $score
@@ -91,8 +130,13 @@ class ExamTaskCreator extends Component
         unset($this->questions[$questionIndex]['options'][$optionIndex]);
     }
 
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function Save_Test()
     {
+        $this->validate();
         $test = new test;
         $test->title = $this->testTitle;
         $test->maxAttempts = $this->testAttempts;

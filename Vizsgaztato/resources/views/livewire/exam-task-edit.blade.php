@@ -23,7 +23,8 @@
         <div class="flex flex-col w-full relative rounded-xl bg-slate-50 border border-black py-5 px-8 mb-5">
             <div class="flex flex-row flex-wrap justify-start ml-6">
                 <div class="pl-3 font-semibold text-lg">
-                    <p><label for="titleOfTestAttempt">Feladatlap címe: </label></p>
+                    <p><label for="titleOfTestAttempt">Feladatlap címe: @error('testTitle') <span
+                                class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
                 </div>
                 <div class="w-full">
                     <input type="text" id="titleOfTestAttempt" wire:model="testTitle"
@@ -32,7 +33,8 @@
             </div>
             <div class="flex flex-row flex-wrap justify-start mt-3 ml-6">
                 <div class="pl-3 font-semibold text-lg">
-                    <p><label for="numOfTestAttempt">Lehetséges kitöltések száma: </label></p>
+                    <p><label for="numOfTestAttempt">Lehetséges kitöltések száma: @error('testAttempts') <span
+                                class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
                 </div>
                 <div class="w-full">
                     <input type="text" wire:model="testAttempts" id="numOfTestAttempt"
@@ -41,11 +43,12 @@
             </div>
             <div class="flex flex-row flex-wrap justify-start mt-3 ml-6">
                 <div class="pl-3 font-semibold text-lg">
-                    <p><label for="durationMinute">Teszt kitöltési ideje </label></p>
+                    <p><label for="durationMinute">Teszt kitöltési ideje @error('durationMinute') <span
+                                class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
                 </div>
                 <div class="w-full flex">
                     <div>
-                        <input type="number" wire:model.defer="durationMinute" id="durationMinute"
+                        <input type="number" wire:model="durationMinute" id="durationMinute"
                                class="bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]"/>
                         <label for="durationMinute" class="font-semibold text-lg">perc</label>
                     </div>
@@ -62,7 +65,8 @@
                                wire:model="resultsViewable">
                         <div
                             class="w-11 h-6 bg-gray-600 rounded-full peer-focus:ring-4 peer-focus:ring-blue opacity-80 peer-checked:bg-blue-600 peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{$resultsViewable ? 'Igen' : 'Nem'}}</span>
+                        <span
+                            class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{$resultsViewable ? 'Igen' : 'Nem'}}</span>
                     </label>
                 </div>
             </div>
@@ -74,6 +78,8 @@
                     <div class="lg:px-12 md:px-8 px-4 py-6">
                         <div class="flex sm:flex-row flex-col">
                             <div class="w-full h-full">
+                                @error('questions.'.$questionIndex.'.type') <span
+                                    class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                                 <select name="question-types{{$questionIndex}}"
                                         wire:model="questions.{{$questionIndex}}.type"
                                         wire:change="$emit('questionTypeChanged', {{$questionIndex}})"
@@ -86,6 +92,12 @@
                                     </option>
                                     <option value="Sequence" class="font-bold">Sorrend</option>
                                 </select>
+                                @error('questions.'.$questionIndex.'.text') <span
+                                    class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+                                @error('questions.'.$questionIndex.'.right_option_index') <span
+                                    class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+                                @error('questions.'.$questionIndex.'.options') <span
+                                    class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                                 <input type="text"
                                        wire:model="questions.{{$questionIndex}}.text"
                                        placeholder="{{$questionIndex+1}}. Kérdés szövege"
@@ -105,9 +117,12 @@
                             </div>
                         </div>
                     </div>
-                    <div @class(['flex flex-col md:flex-row md:items-center md:justify-center' => $question['type']=='TrueFalse',
-                                   'bg-red-200' => $question['type']=='Sequence']) {{ ($question['type'] == 'Sequence' ? 'wire:sortable=updateOptionOrder' : '')}}>
+                    <div @class(['flex flex-col md:flex-row md:items-center md:justify-center' => $question['type']=='TrueFalse'])
+                         wire:sortable='updateOptionOrder'>
                         @forelse($question['options'] as $optionIndex => $option)
+                            @error('questions.'.$questionIndex.'.options.'.$optionIndex.'.text') <span
+                                class="lg:mx-16 mx-2 text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+
                             @switch($question["type"])
                                 @case("TrueFalse")
                                     <div
@@ -166,10 +181,10 @@
                                     @break
                                 @case("Sequence")
                                     <div
-                                         class="sm:flex-row flex-col lg:ml-16 lg:px-8 lg:my-2 lg:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
-                                         wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}"
-                                         wire:key="{{$questionIndex}}_{{ $optionIndex }}"
-                                         wire:sortable.handle>
+                                        class="sm:flex-row flex-col lg:ml-16 lg:px-8 lg:my-2 lg:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
+                                        wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}"
+                                        wire:key="option-{{$questionIndex}}_{{ $optionIndex }}"
+                                        wire:sortable.handle>
                                         <div class="w-full">
                                             <input type="text"
                                                    value="#{{$optionIndex}}Option"
