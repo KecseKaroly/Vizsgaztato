@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
 use App\Models\group;
 use App\Models\group_join_request;
 use App\Models\group_inv;
@@ -62,20 +64,14 @@ class GroupController extends Controller
      * @param \App\Http\Requests\StoregroupRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGroupRequest $request)
     {
         try{
-            if (group::where('invCode', $request->group_invCode)->exists()) {
-                Alert::warning('Hiba történt', 'Ezzel a kóddal már létezik csoport!');
-                return redirect()->route('groups.index');
-            }
-            $group = new group([
-                'name'=>$request->group_name,
-                'invCode'=>$request->group_invCode,
-                'creator_id'=>auth()->id(),
-            ]);
-            $group->save();
+            $this->authorize('create', group::class);
+            $validated = $request->safe()->merge(['creator_id' => auth()->id()])->all();
 
+            $group = group::create($validated);
+            
             // Hozzáadom az új csoporthoz adminként
             event(new GroupCreated($group));
 
@@ -134,7 +130,7 @@ class GroupController extends Controller
      * @param \App\Models\group $group
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, group $group)
+    public function update(UpdateGroupRequest $request, group $group)
     {
         try{
             $this->authorize('update', $group);

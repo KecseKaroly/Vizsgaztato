@@ -29,11 +29,6 @@ class TestsGroupsController extends Controller
         }
     }
 
-    /*public function delete(Request $request)
-    {
-        TestsGroups::destroy($request->test_group_id);
-    }*/
-
     public function update(Request $request)
     {
         $test_group = TestsGroups::where(['test_id' => $request->test_id, 'group_id' => $request->group_id])->first();

@@ -7,6 +7,16 @@
                 <div class="text-center mb-12 font-black text-3xl w-10/12">Csoport szerkesztése</div>
             </div>
             <div class="bg-slate-50 w-11/12 rounded-xl">
+                @if($errors->any())
+                    <div class="text-red-600 text-center divide-y-2">
+                        <h1 class="text-xl font-black">Hiba</h1>
+                        <ol>
+                            @foreach($errors->all() as $error)
+                                <li class="ml-3 italic">{{$error}}</li>
+                            @endforeach
+                        </ol>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('groups.update', $group) }}">
                     @csrf
                     @method('PUT')

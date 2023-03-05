@@ -7,32 +7,42 @@
                 <div class="text-center mb-12 font-black text-3xl w-10/12">Csoport létrehozása</div>
             </div>
             <div class="bg-slate-50 w-11/12 rounded-xl">
+                @if($errors->any())
+                    <div class="text-red-600 text-center divide-y-2">
+                        <h1 class="text-xl font-black">Hiba</h1>
+                        <ol>
+                            @foreach($errors->all() as $error)
+                                <li class="ml-3 italic">{{$error}}</li>
+                            @endforeach
+                        </ol>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('groups.store') }}">
                     @csrf
                     <div class="md:flex md:items-center mb-6 mt-10">
                         <div class="md:w-2/5">
                             <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-8 md:mx-0 mx-3"
-                                   for="group_name">
+                                   for="name">
                                 Csoport neve
                             </label>
                         </div>
                         <div class="md:w-3/5">
                             <input
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="group_name" type="text" name="group_name" required autofocus>
+                                id="name" type="text" name="name" required autofocus>
                         </div>
                     </div>
                     <div class="md:flex md:items-center mb-6">
                         <div class="md:w-2/5">
                             <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-8 md:mx-0 mx-3"
-                                   for="group_invCode">
+                                   for="invCode">
                                 Meghívó kód
                             </label>
                         </div>
                         <div class="md:w-3/5">
                             <input
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="group_invCode" type="text" name="group_invCode" value="{{ $invCode }}" required
+                                id="invCode" type="text" name="invCode" value="{{ $invCode }}" required
                                 readonly>
                         </div>
                     </div>
