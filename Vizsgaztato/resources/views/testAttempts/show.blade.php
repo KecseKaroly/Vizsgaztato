@@ -3,13 +3,13 @@
 @section('content')
 
     <div class="mt-24 mb-24 select-none">
-        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hiddenlg:w-4/6 md:w-8/12 w-11/12">
+        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
             <div class="md:flex  md:justify-between ">
                 <div class="text-center mb-12 font-black text-3xl italic">Kitöltött feladatlapok</div>
                 <div class="pb-5">
                     <div class="w-48 ml-auto">
-                        <button data-modal-target="testGroups"
-                                data-modal-toggle="testGroups"
+                        <button data-modal-target="addGroups"
+                                data-modal-toggle="addGroups"
                                 class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg">
                             Csoportok kezelése
                         </button>
@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="attempts_of_group{{ $group->id }}" style="display: none;">
+                            <div id="toggle_group{{ $group->id }}" style="display: none;">
                                 @forelse($group->users as $user)
                                     <div
                                         class="bg-slate-500 rounded-md flex w-11/12 justify-between text-xl font-semibold py-2 px-3 ml-16">
@@ -175,7 +175,7 @@
         </div>
     </div>
 
-    <div id="testGroups" tabindex="-1"
+    <div id="addGroups" tabindex="-1"
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
         <div class="relative w-full h-full max-w-2xl md:h-auto">
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -183,13 +183,13 @@
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Hozzárendelt csoportok...
                     </h3>
-                    <button data-modal-hide="testGroups" type="button"
+                    <button data-modal-hide="addGroups" type="button"
                             class="text-gray-400 bg-transparent hover:bg-red-500 hover:text-white rounded-lg p-1.5">
                         <i class="fa-solid fa-xmark fa-2xl"></i>
                         <span class="sr-only">Bezárás</span>
                     </button>
                 </div>
-                @livewire('search-groups', ['currentGroups'=>$test->groups, 'test'=>$test])
+                @livewire('search-groups', ['currentGroups'=>$test->groups, 'objectToAttachTo'=>$test])
             </div>
         </div>
     </div>

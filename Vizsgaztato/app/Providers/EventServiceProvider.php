@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\CourseCreated;
+use App\Listeners\AddFirstUserToCourse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -27,12 +29,12 @@ class EventServiceProvider extends ServiceProvider
         TestEnded::class => [
             CalculateResults::class,
         ],
-        TestUpdated::class => [
-            CalculateResults::class,
+        CourseCreated::class => [
+            AddFirstUserToCourse::class,
         ],
         GroupCreated::class => [
             AddFirstUserToGroup::class,
-        ]
+        ],
     ];
 
     /**

@@ -29,7 +29,18 @@ class Course extends Model
             User::class,
             'courses_users',
             'course_id',
-            'user_id');
+            'user_id')
+            ->withPivot('id');
+    }
+
+    public function groups() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Group::class,
+            'courses_groups',
+            'course_id',
+            'group_id')
+            ->withPivot('id');
     }
 
     public function modules() : HasMany {

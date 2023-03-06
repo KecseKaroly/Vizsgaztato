@@ -63,7 +63,6 @@
 @push('scripts')
     <script>
         window.addEventListener('inviteRequestsSent', event => {
-            console.log("ASD");
             Swal.fire({
                 icon: 'success',
                 title: 'Sikeres rögzítés',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\CoursesUsersController;
 use Livewire\Component;
 use App\Models\User;
 use App\Http\Controllers\GroupInvController;
@@ -10,7 +11,8 @@ use Alert;
 
 class SearchUsers extends Component
 {
-    public $groupId;
+    public $objectToAttachTo;
+    public $objectType;
     public $searchValue;
     public $searchResults;
     public $selectedResults;
@@ -32,7 +34,13 @@ class SearchUsers extends Component
 
     public function saveSelectedResults() {
         if($this->selectedResults != []) {
-            $result = (new GroupInvController)->store($this->selectedResults, $this->groupId);
+            if($this->objectType == 'test')
+            {
+                (new GroupInvController)->store($this->selectedResults, $this->objectToAttachTo);
+            }
+            else {
+                (new CoursesUsersController)->store($this->selectedResults, $this->objectToAttachTo);
+            }
             $this->dispatchBrowserEvent('inviteRequestsSent');
             $this->selectedResults = [];
         }
@@ -43,9 +51,10 @@ class SearchUsers extends Component
         return view('livewire.search-users');
     }
 
-    public function mount($groupId)
+    public function mount($objectToAttachTo, $objectType = 'test')
     {
-        $this->groupId = $groupId;
+        $this->objectToAttachTo = $objectToAttachTo;
+        $this->objectType = $objectType;
         $this->selectedResults = [];
         $this->ResetInputField();
     }

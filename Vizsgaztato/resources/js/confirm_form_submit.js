@@ -151,3 +151,79 @@ $(".updateBtn").click(function (e) {
         }
     });
 });
+
+$(".deleteCourseBtn").click(function (e) {
+    e.preventDefault();
+    var form =  $(this).closest("form");
+    Swal.fire({
+        title: 'Biztosan törli a kurzust?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Igen',
+        cancelButtonText: 'Mégsem',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        } else if (result.dismiss == "cancel") {
+            Swal.fire('Művelet megszakítva', '', 'info');
+        }
+    });
+});
+
+
+$(".removeUserFromCourse").click(function (e) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Biztosan törli a felhasználót a csoportból?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Igen',
+        cancelButtonText: 'Mégsem',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const params = $(this).data();
+            const reqId = params["id"];
+            $.ajax({
+                type: 'DELETE',
+                url: `/course/user/${reqId}/remove`,
+                data: {courses_users_id: reqId},
+                success: function (data) {
+                    if (data.success) {
+                        document.getElementById(`course_user-${reqId}`).remove();
+                        Swal.fire({
+                            icon: 'success',
+                            title: data.success,
+                            text: data.message,
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hiba!',
+                            text: data.error,
+                        })
+                    }
+                }
+            });
+        } else if (result.dismiss === "cancel") {
+            Swal.fire('Művelet megszakítva', '', 'info')
+        }
+    })
+});
+
+$(".leaveFromCourse").click(function (e) {
+    e.preventDefault();
+    var form =  $(this).closest("form");
+    Swal.fire({
+        title: 'Biztosan kilép a kurzusból?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Igen',
+        cancelButtonText: 'Mégsem',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        } else if (result.dismiss == "cancel") {
+            Swal.fire('Művelet megszakítva', '', 'info');
+        }
+    });
+});

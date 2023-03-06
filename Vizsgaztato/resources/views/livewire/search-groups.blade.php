@@ -67,7 +67,7 @@
             <i class="fa-solid fa-user-plus"></i> Mentés
         </button>
         <button wire:click="ResetFields()"
-                data-modal-hide="testGroups" type="button"
+                data-modal-hide="addGroups" type="button"
                 class="border rounded bg-transparent hover:bg-stone-300 text-black p-2 ">Mégsem
         </button>
     </div>
@@ -77,11 +77,10 @@
 @push('scripts')
     <script>
         window.addEventListener('groupsAdded', event => {
-            console.log("ASD");
             Swal.fire({
                 icon: 'success',
                 title: 'Sikeres rögzítés',
-                text: 'A csoportokat hozzárendeltük a teszthez!',
+                text: 'A csoportok hozzárendelése sikeresen megtörtént!',
             });
         });
     </script>

@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Module;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ModuleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Course $course)
     {
-        //
+        try{
+            $this->authorize('create', $course);
+            return view('modules.create', ['course'=>$course]);
+        }
+        catch (AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.show', $course);
+        }
     }
 
     /**
@@ -35,7 +36,23 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $this->authorize('create', Course::find($request->course_id));
+
+            $module = new Module([
+                'title' => $request->title,
+                'topic'=>$request->topic,
+                'course_id' => $request->course_id,
+                ]);
+            $module->save();
+            Alert::success('Modul sikeresen létrehozva!');
+            return redirect()->route('courses.show', ['course'=>Course::find($request->course_id)]);
+        }
+        catch (AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.show', $request->course_id);
+        }
     }
 
     /**
@@ -46,7 +63,14 @@ class ModuleController extends Controller
      */
     public function show(Module $module)
     {
-        //
+        try{
+            $this->authorize('view', $module);
+            return view('modules.show', ['module'=>$module]);
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
     }
 
     /**
@@ -57,7 +81,14 @@ class ModuleController extends Controller
      */
     public function edit(Module $module)
     {
-        //
+        try{
+            $this->authorize('update', $module);
+            return view('modules.edit', ['module'=>$module]);
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
     }
 
     /**
@@ -69,7 +100,19 @@ class ModuleController extends Controller
      */
     public function update(Request $request, Module $module)
     {
-        //
+        try{
+            $this->authorize('update', $module);
+            $module->update([
+                'title'=>$request->title,
+                'topic'=>$request->topic,
+            ]);
+            Alert::success('Modul sikeresen frissítve!');
+            return view('modules.show', ['module'=>$module]);
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
     }
 
     /**
@@ -80,6 +123,17 @@ class ModuleController extends Controller
      */
     public function destroy(Module $module)
     {
-        //
+        try{
+            $this->authorize('delete', $module);
+            $module->delete();
+            $course = $module->course;
+            Alert::success('Modul sikeresen törölve!');
+            return redirect()->route('courses.show', $course);
+        }
+        catch(AuthorizationException $exception) {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
+
     }
 }

@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\CoursesGroupsController;
 use App\Models\group;
 use App\Http\Controllers\TestsGroupsController;
 use Livewire\Component;
 use Alert;
+
 class SearchGroups extends Component
 {
     public $searchValue;
-    public $test;
+    public $objectToAttachTo;
+    public $objectType;
     public $searchResults;
     public $selectedResults;
     public $currentGroups;
@@ -18,7 +21,7 @@ class SearchGroups extends Component
 
     public function updatedSearchValue()
     {
-        $this->searchResults = group::where('name', 'LIKE', '%' . $this->searchValue . '%')->where('creator_id', auth()->id())->get()->toArray();
+        $this->searchResults = group::where('name', 'LIKE', '%' . $this->searchValue . '%')->get()->toArray();
     }
 
     public function addToSelectedResults($index)
@@ -45,7 +48,14 @@ class SearchGroups extends Component
 
     public function saveSelectedResults()
     {
-        $result = (new TestsGroupsController)->store($this->selectedResults, $this->deletedGroups, $this->test);
+        if($this->objectType == 'test')
+        {
+            (new TestsGroupsController)->store($this->selectedResults, $this->deletedGroups, $this->objectToAttachTo);
+        }
+        else{
+            (new CoursesGroupsController)->store($this->selectedResults, $this->deletedGroups, $this->objectToAttachTo);
+            return redirect()->route('courses.members', $this->objectToAttachTo);
+        }
         $this->dispatchBrowserEvent('groupsAdded');
     }
 
@@ -54,10 +64,11 @@ class SearchGroups extends Component
         return view('livewire.search-groups');
     }
 
-    public function mount($currentGroups, $test)
+    public function mount($currentGroups, $objectToAttachTo, $objectType = 'test')
     {
         $this->givenGroups = $currentGroups->toArray();
-        $this->test = $test;
+        $this->objectToAttachTo = $objectToAttachTo;
+        $this->objectType = $objectType;
         $this->ResetFields();
     }
 

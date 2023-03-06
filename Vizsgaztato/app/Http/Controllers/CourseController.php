@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CourseCreated;
 use App\Models\Course;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 class CourseController extends Controller
 {
     /**
@@ -14,7 +17,12 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        $courses = DB::table('courses')->select('*')
+            ->whereIn('id', function ($query) {
+                $query->select('course_id')->from('courses_users')->where('user_id', auth()->id());
+            })
+            ->get();
+        return view('courses.index', ['courses' => $courses]);
     }
 
     /**
@@ -24,7 +32,15 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        try{
+            $this->authorize('create', Course::class);
+            return view('courses.create');
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
     }
 
     /**
@@ -35,51 +51,127 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $this->authorize('create', Course::class);
+            $course = new course([
+                'title'=>$request->name,
+                'creator_id'=>auth()->id(),
+            ]);
+            $course->save();
+            event(new CourseCreated($course));
+            Alert::success('Kruzus sikeresen mentve!');
+            return redirect()->route('courses.show', $course);
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Module  $module
+     * @param  \App\Models\Course $course
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(Course $course)
     {
-        //
+        try{
+            $this->authorize('view', $course);
+            return view('courses.show', ['course'=>$course]);
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Module  $module
+     * @param  \App\Models\Course $course
      * @return \Illuminate\Http\Response
      */
-    public function edit(Module $module)
+    public function edit(Course $course)
     {
-        //
+        try{
+            $this->authorize('update', $course);
+            return view('courses.edit', ['course'=>$course]);
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Module  $module
+     * @param  \App\Models\Course $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Module $module)
+    public function update(Request $request, Course $course)
     {
-        //
+        try{
+            $this->authorize('update', $course);
+            $course->title = $request->title;
+            $course->save();
+            Alert::success('Sikeres módosítás');
+            return redirect()->route('courses.show', $course);
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Module  $module
+     * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Module $module)
+    public function destroy(Course $course)
     {
-        //
+        try{
+            $this->authorize('delete', $course);
+            $course->delete();
+            Alert::success('Kurzus sikeresen törölve!');
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+
+        } finally {
+            return redirect()->route('courses.index');
+        }
+    }
+
+    /**
+     * Show all the members of a given course
+     *
+     * @param  \App\Models\Course  $course
+     * @return \Illuminate\Http\Response
+     */
+    public function members(Course $course)
+    {
+        try{
+            $this->authorize('view', $course);
+            $course->load('groups.users', 'users');
+            return view('courses.members', ['course'=>$course]);
+        }
+        catch(AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
     }
 }

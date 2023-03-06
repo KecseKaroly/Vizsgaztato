@@ -167,7 +167,7 @@ $(".acceptInvRequest").click(function (e) {
 $(".group_id").click(function (e) {
     const params = $(this).data();
     const group_id = params["group_id"];
-    $(`#attempts_of_group${group_id}`).toggle('fast');
+    $(`#toggle_group${group_id}`).toggle('fast');
     $(`#arrow_of_group${group_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up');
 });
 $(".user_id").click(function (e) {
