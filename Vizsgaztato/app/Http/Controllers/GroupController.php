@@ -71,7 +71,7 @@ class GroupController extends Controller
             $validated = $request->safe()->merge(['creator_id' => auth()->id()])->all();
 
             $group = group::create($validated);
-            
+
             // Hozzáadom az új csoporthoz adminként
             event(new GroupCreated($group));
 
