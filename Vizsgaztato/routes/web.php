@@ -3,6 +3,7 @@
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CoursesGroupsController;
 use App\Http\Controllers\CoursesUsersController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ModuleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
@@ -61,12 +62,16 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('courses', CourseController::class);
     Route::get('/courses/modules/create/{course}', [ModuleController::class, 'create'])->name('modules.create');
     Route::get('/courses/{course}/members/', [CourseController::class, 'members'])->name('courses.members');
+    Route::get('/courses/{course}/modules/', [ModuleController::class, 'index'])->name('courses.modules');
+    Route::get('/courses/{course}/quizzes/', [CourseController::class, 'members'])->name('courses.quizzes');
+    Route::get('/courses/{course}/tests/', [CourseController::class, 'members'])->name('courses.tests');
     Route::delete('/course/user/{course_user}/remove', [CoursesUsersController::class, 'destroy'])->name('removeUserFromCourse');
     Route::delete('/course/user/{id}', [CoursesUsersController::class, 'leave'])->name('leaveFromCourse');
     Route::delete('/course/group/{course_group}/remove', [CoursesGroupsController::class, 'destroy'])->name('removeGroupFromCourse');
 
     Route::resource('modules', \App\Http\Controllers\ModuleController::class)->except(['create']);
 
+    Route::post('media/image/store', [MediaController::class, 'storeImage'])->name('media.image.store');
 
 
 });

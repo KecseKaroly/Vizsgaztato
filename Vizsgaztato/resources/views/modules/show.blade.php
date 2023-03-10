@@ -43,10 +43,10 @@
                     </a>
                 </div>
             @endif
-            <div class="bg-slate-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double mt-4">
-                <div class="w-full">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum earum eum iste labore molestiae nam nihil placeat sequi voluptatum! Aliquid earum et, libero maiores minus nulla quos vitae voluptatem.
 
+            <div class="bg-slate-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double mt-4">
+                <div class="w-full prose">
+                    {!! $module->material !!}
                 </div>
 
             </div>

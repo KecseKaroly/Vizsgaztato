@@ -16,20 +16,6 @@
             </div>
 
             <div class="bg-slate-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double">
-                @cannot('create', App\Models\Course::class)
-                    <div class="my-6 w-10/12 mx-auto flex justify-between flex-wrap">
-
-                        <a class="nav-link" href="{{ route('inv_requests') }}">
-                            <button type="button" class="relative inline-flex items-center p-2 text-md font-semibold text-center text-white border rounded-lg bg-cyan-600 hover:bg-cyan-900 ">
-                                Meghívók
-                                <span class="sr-only">Meghívók</span>
-                                @if(1 > 0)
-                                    <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900">1</div>
-                                @endif
-                            </button>
-                        </a>
-                    </div>
-                @endcannot
                 <div class="w-full">
                     @forelse($courses as $course)
                         <div class="bg-slate-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">

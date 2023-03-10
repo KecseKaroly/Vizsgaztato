@@ -11,6 +11,24 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ModuleController extends Controller
 {
     /**
+     * Show all the modules of a given course.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Course $course)
+    {
+        try{
+            $this->authorize('view', $course);
+            return view('modules.index', ['course'=>$course]);
+        }
+        catch (AuthorizationException $exception)
+        {
+            Alert::warning($exception->getMessage());
+            return redirect()->route('courses.index');
+        }
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -42,11 +60,12 @@ class ModuleController extends Controller
             $module = new Module([
                 'title' => $request->title,
                 'topic'=>$request->topic,
+                'material'=>$request->material,
                 'course_id' => $request->course_id,
                 ]);
             $module->save();
             Alert::success('Modul sikeresen létrehozva!');
-            return redirect()->route('courses.show', ['course'=>Course::find($request->course_id)]);
+            return redirect()->route('courses.modules', ['course'=>$module->course]);
         }
         catch (AuthorizationException $exception)
         {
@@ -128,7 +147,7 @@ class ModuleController extends Controller
             $module->delete();
             $course = $module->course;
             Alert::success('Modul sikeresen törölve!');
-            return redirect()->route('courses.show', $course);
+            return redirect()->route('courses.modules', ['course'=>$course]);
         }
         catch(AuthorizationException $exception) {
             Alert::warning($exception->getMessage());

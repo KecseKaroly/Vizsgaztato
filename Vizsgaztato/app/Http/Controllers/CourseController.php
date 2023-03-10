@@ -55,6 +55,7 @@ class CourseController extends Controller
             $this->authorize('create', Course::class);
             $course = new course([
                 'title'=>$request->name,
+                'goal'=>$request->goal,
                 'creator_id'=>auth()->id(),
             ]);
             $course->save();
@@ -80,6 +81,7 @@ class CourseController extends Controller
     {
         try{
             $this->authorize('view', $course);
+            //$course = $course->load('users', 'groups');
             return view('courses.show', ['course'=>$course]);
         }
         catch(AuthorizationException $exception)
@@ -121,6 +123,7 @@ class CourseController extends Controller
         try{
             $this->authorize('update', $course);
             $course->title = $request->title;
+            $course->goal = $request->goal;
             $course->save();
             Alert::success('Sikeres módosítás');
             return redirect()->route('courses.show', $course);
@@ -165,7 +168,10 @@ class CourseController extends Controller
     {
         try{
             $this->authorize('view', $course);
-            $course->load('groups.users', 'users');
+            $id = $course->creator_id;
+            $course->load(['groups.users' => function ($query) use($id){
+                $query->where('user_id', '!=', $id);
+            }, 'users']);
             return view('courses.members', ['course'=>$course]);
         }
         catch(AuthorizationException $exception)

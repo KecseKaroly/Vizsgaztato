@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('topic');
+            $table->binary('material');
             $table->foreignId('course_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

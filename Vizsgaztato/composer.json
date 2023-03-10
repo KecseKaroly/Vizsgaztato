@@ -12,7 +12,8 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "livewire/livewire": "^2.10",
-        "realrashid/sweet-alert": "^6.0"
+        "realrashid/sweet-alert": "^6.0",
+        "spatie/laravel-medialibrary": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('title');
+            $table->string('goal', 1000);
             $table->foreignId('creator_id');
             $table->foreign('creator_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
 

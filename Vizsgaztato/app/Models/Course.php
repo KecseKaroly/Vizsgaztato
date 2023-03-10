@@ -15,7 +15,7 @@ class Course extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['title', 'creator_id'];
+    protected $fillable = ['title', 'goal', 'creator_id'];
 
     public $timestamps = false;
 

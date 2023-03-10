@@ -104,10 +104,10 @@
         @yield('content')
     </main>
 </div>
-@stack('scripts')
-@include('sweetalert::alert')
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>
+@stack('scripts')
+@include('sweetalert::alert')
 @livewireScripts
 <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>
 

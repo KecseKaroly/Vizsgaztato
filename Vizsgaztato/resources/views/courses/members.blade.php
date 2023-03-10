@@ -11,29 +11,22 @@
             </a>
         </div>
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
-            <div class="lg:flex lg:justify-between mb-4 ">
-                <div class="font-black text-3xl">Kurzus ({{$course->title}}) tagjai</div>
-                <div class="w-fit">
-                    @can('create', [App\Models\Module::class, $course])
-                        <div class="flex mt-3">
-                            <button data-modal-target="courseUsers"
-                                    data-modal-toggle="courseUsers"
-                                    class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg">
-                                Diák hozzáadása
-                            </button>
-                            <button data-modal-target="addGroups"
-                                    data-modal-toggle="addGroups"
-                                    class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg">
-                                Csoportok kezelése
-                            </button>
-                        </div>
-                    @endcan
-                </div>
-            </div>
+            <div class="font-black text-3xl my-4">Kurzus ({{$course->title}}) tagjai</div>
             <div
                 class="bg-slate-50 w-full md:flex rounded-xl md:divide-x-4 md:divide-y-0 divide-y-4 divide-gray-400 divide-double mt-4">
                 <div class="md:w-1/2 w-full">
-                    <div class="mt-4 mb-4 px-6 text-2xl font-semibold">Tagok:</div>
+                    <div class="sm:flex sm:justify-between">
+                        <div class="mt-4 px-6 text-2xl font-semibold">Tagok:</div>
+                        <div class="mr-8">
+                            @can('create', [App\Models\Module::class, $course])
+                                    <button data-modal-target="courseUsers"
+                                            data-modal-toggle="courseUsers"
+                                            class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-2.5 rounded-lg my-2.5 ml-4">
+                                        Diák hozzáadása
+                                    </button>
+                            @endcan
+                        </div>
+                    </div>
                     <table class="table-auto w-11/12 mx-auto mb-4 border-collapse border border-4 border-black">
                         @forelse($course->users as $user)
                             <tr @class([
@@ -89,7 +82,20 @@
 
                 </div>
                 <div class="md:w-1/2 w-full">
-                    <div class="mt-4 mb-4 px-6 text-2xl font-semibold">Csoportok:</div>
+                    <div class="sm:flex sm:justify-between">
+                        <div class="mt-4 px-6 text-2xl font-semibold">Csoportok:</div>
+                        <div class="mr-8">
+                            @can('create', [App\Models\Module::class, $course])
+
+                                <button data-modal-target="addGroups"
+                                        data-modal-toggle="addGroups"
+                                        class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-2.5 rounded-lg my-2.5 ml-4">
+                                    Csoportok kezelése
+                                </button>
+                            @endcan
+                        </div>
+                    </div>
+
                     <table class="table-auto w-11/12 mx-auto mb-4 border-collapse border border-4 border-black">
                         @forelse($course->groups as $group)
                             <tr class="border-y mx-auto text-lg bg-slate-600 text-stone-200">
@@ -104,9 +110,6 @@
                                 <td class="bg-slate-400" colspan="2">
                                     <table class="w-full">
                                         @forelse($group->users as $user)
-                                            @if($user->id == $group->creator_id || $user->id == $course->creator_id)
-                                                @continue
-                                            @endif
                                             <tr>
                                                 <td>
                                                     <div class="ml-16 flex text-center">
@@ -115,11 +118,10 @@
                                                     </div>
                                                 </td>
                                             </tr>
-
                                         @empty
                                             <tr>
                                                 <td>
-                                                    <div class="text-center text-lg font-semibold italic py-4">
+                                                    <div class="text-center text-lg font-semibold italic py-1">
                                                         A csoporthoz nincsen még ember rendelve...
                                                     </div>
                                                 </td>
