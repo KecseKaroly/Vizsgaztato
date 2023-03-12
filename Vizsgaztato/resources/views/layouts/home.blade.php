@@ -27,17 +27,7 @@
             </div>
     </nav>
     <main class="h-full  text-center text-8xl">
-        <a class="bg-gradient-to-r from-blue-700 to-blue-400 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 h-1/3 flex items-center justify-around" href="{{ route('groups.index') }}">
-            <button class="h-full">Profilom</button>
-        </a>
-        <div class="md:flex h-2/3">
-                <a class="bg-gradient-to-r from-yellow-500 via-yellow-300 to-yellow-400 hover:bg-gradient-to-r hover:from-yellow-400 hover:to-yellow-300 md:h-full h-1/2 md:w-1/2 w-full block" href="{{ route('test.index') }}">
-                    <button class="h-full w-full">{{ __('Tesztek') }}</button>
-                </a>
-                <a class="bg-gradient-to-r from-red-600 via-red-500 to-red-700 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 md:h-full h-1/2 md:w-1/2 w-full block" href="{{ route('groups.index') }}">
-                    <button class="h-full">{{__('Csoportok') }}</button>
-                </a>
-        </div>
+
     </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>

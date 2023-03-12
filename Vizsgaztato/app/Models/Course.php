@@ -46,4 +46,20 @@ class Course extends Model
     public function modules() : HasMany {
         return $this->hasMany(Module::class);
     }
+
+    public function quizzes() : BelongsToMany {
+        return $this->belongsToMany(
+            test::class,
+            'courses_quizzes',
+            'course_id',
+            'test_id');
+    }
+
+    public function tests() : BelongsToMany {
+        return $this->belongsToMany(
+            test::class,
+            'courses_exams',
+            'course_id',
+            'test_id');
+    }
 }

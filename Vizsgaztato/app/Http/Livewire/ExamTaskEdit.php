@@ -21,7 +21,8 @@ class ExamTaskEdit extends Component
 {
     public $deletedQuestions = [];
     public $deletedOptions = [];
-
+    public $type;
+    public $course;
     public $questions;
     public $testTitle;
     public $testAttempts;
@@ -69,14 +70,25 @@ class ExamTaskEdit extends Component
     ];
 
 
-    public function mount($testLiveWire)
+    public function mount($testLiveWire, $course, $type="test")
     {
+        $this->type = $type;
+        if($type == 'test')
+        {
+            $this->testAttempts = $testLiveWire['maxAttempts'];
+            $this->durationMinute = $testLiveWire['duration'];
+            $this->resultsViewable = $testLiveWire['resultsViewable'];
+        }
+        else {
+
+            $this->testAttempts = 1;
+            $this->durationMinute = 30;
+            $this->resultsViewable = 1;
+        }
+        $this->course = $course;
         $this->testId = $testLiveWire['id'];
         $this->questions = $testLiveWire['questions'];
         $this->testTitle = $testLiveWire['title'];
-        $this->testAttempts = $testLiveWire['maxAttempts'];
-        $this->durationMinute = $testLiveWire['duration'];
-        $this->resultsViewable = $testLiveWire['resultsViewable'];
     }
 
     protected $listeners = ['questionTypeChanged'];
@@ -153,18 +165,33 @@ class ExamTaskEdit extends Component
     {
         $this->validate();
         $test = test::find($this->testId);
-        $test->title = $this->testTitle;
-        $test->maxAttempts = $this->testAttempts;
-        $test->duration = $this->durationMinute;
-        $test->resultsViewable = (bool)($this->resultsViewable);
-        $test->save();
+        if($this->type == "test")
+        {
+            $test->maxAttempts = $this->testAttempts;
+            $test->duration = $this->durationMinute;
+            $test->resultsViewable = (bool)($this->resultsViewable);
+            $test->title = $this->testTitle;
+            $test->save();
+            (new TestService())->update($test, $this->questions);
+            (new DeleteQuestions())->delete($this->deletedQuestions);
+            (new DeleteOptions())->delete($this->deletedOptions);
+            Alert::success('A teszt módosítása sikeresen megtörtént!');
+            return redirect()->route('test.index', $this->course);
+        }
+        else
+        {
+            $test->maxAttempts = -1;
+            $test->duration = -1;
+            $test->resultsViewable = 1;
+            $test->title = $this->testTitle;
+            $test->save();
+            (new TestService())->update($test, $this->questions);
+            (new DeleteQuestions())->delete($this->deletedQuestions);
+            (new DeleteOptions())->delete($this->deletedOptions);
+            Alert::success('A teszt módosítása sikeresen megtörtént!');
+            return redirect()->route('quizzes.index', $this->course);
+        }
 
-        (new TestService())->update($test, $this->questions);
-        (new DeleteQuestions())->delete($this->deletedQuestions);
-        (new DeleteOptions())->delete($this->deletedOptions);
-        //event(new TestUpdated($test));
-        Alert::success('A teszt módosítása sikeresen megtörtént!');
-        return redirect()->route('test.index');
     }
 
     public function render()

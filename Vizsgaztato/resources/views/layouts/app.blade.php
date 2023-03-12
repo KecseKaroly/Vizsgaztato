@@ -55,11 +55,6 @@
                 @else
                     <div class=" hover:bg-slate-400 px-2 py-1 border  rounded ">
                         <div class="nav-item list-none">
-                            <a class="nav-link" href="{{ route('test.index') }}">{{ __('Tesztek') }}</a>
-                        </div>
-                    </div>
-                    <div class=" hover:bg-slate-400 px-2 py-1 border  rounded ">
-                        <div class="nav-item list-none">
                             <a class="nav-link" href="{{ route('courses.index') }}">{{ __('Kurzusok') }}</a>
                         </div>
                     </div>

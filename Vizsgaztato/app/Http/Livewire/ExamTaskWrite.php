@@ -9,7 +9,6 @@ use App\Models\question;
 use App\Models\option;
 use App\Models\answer;
 use App\Models\given_answer;
-use App\Models\group;
 use App\Models\testAttempt;
 use Illuminate\Session\Store;
 use Session;
@@ -19,6 +18,8 @@ class ExamTaskWrite extends Component
 {
 
     public $test;
+    public $type;
+    public $course;
 
     protected $listeners = ['timeRanOut', 'saveData'=>'SaveDataToSession'];
     public function updateOptionOrder($list) {
@@ -32,9 +33,15 @@ class ExamTaskWrite extends Component
     }
 
     public function endTest() {
-        $attempt = (new StoreTestAttempt())->store($this->test);
-        event(new TestEnded($attempt));
-        return redirect()->route('testAttempts.index', [$attempt->test_id, $attempt->group_id]);
+        if($this->type == "test")
+        {
+            $attempt = (new StoreTestAttempt())->store($this->test);
+            event(new TestEnded($attempt));
+            return redirect()->route('testAttempts.index', [$this->course[0]->id, $attempt->test_id]);
+        }
+        else {
+            dd("VÉGE A KVÍZNEK");
+        }
     }
 
     public function timeRanOut() {
@@ -45,12 +52,15 @@ class ExamTaskWrite extends Component
     {
         return view('livewire.exam-task-write');
     }
-    public function mount($testLiveWire)
+    public function mount($testLiveWire, $course, $type="test")
     {
+        $this->type = $type;
+        $this->course = $course;
         $this->test = $testLiveWire;
     }
 
     public function SaveDataToSession() {
-        Session::put('attempt_'.$this->test['attempt_id'], $this->test);
+        if($this->type == "test")
+            Session::put('attempt_'.$this->test['attempt_id'], $this->test);
     }
 }

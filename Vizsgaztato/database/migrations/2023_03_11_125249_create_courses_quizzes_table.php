@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('quiz_options', function (Blueprint $table) {
+        Schema::create('courses_quizzes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quiz_question_id')->constrained()->onDelete('cascade')->onUpdate('cascade');;
-            $table->string('text');
-            $table->foreignId('expected_answer_id')->constrained('answers')->onDelete('cascade')->onUpdate('cascade');;
-            $table->unsignedInteger('score');
+            $table->foreignId('course_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('test_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('module_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quiz_options');
+        Schema::dropIfExists('courses_quizzes');
     }
 };

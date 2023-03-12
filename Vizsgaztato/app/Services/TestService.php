@@ -13,7 +13,6 @@ class TestService
 
     public function store(test $test, $questions)
     {
-
         foreach ($questions as $questionIndex => $question) {
             $questionModel = new question;
             $questionModel->text = $question['text'];
@@ -148,23 +147,25 @@ class TestService
         return $testLiveWire;
     }
 
-    public function getTestToWrite($test, $groupId)
+    public function getTestToWrite($test, $submitAttempt = true)
     {
-        $attempt = new testAttempt([
-            'user_id'=>auth()->id(),
-            'test_id'=>$test->id,
-            'group_id'=>$groupId,
-        ]);
-        $attempt->save();
         $testLiveWire = [
             'id' => $test->id,
-            'attempt_id'=>$attempt->id,
             'title' => $test->title,
             'duration' => $test->duration,
             'resultsViewable' => $test->resultsViewable,
-            'group_id' => $groupId,
             'questions' => []
         ];
+        if($submitAttempt)
+        {
+            $attempt = new testAttempt([
+                'user_id'=>auth()->id(),
+                'test_id'=>$test->id,
+            ]);
+            $attempt->save();
+            $testLiveWire['attempt_id'] =$attempt->id;
+            $testLiveWire['started'] = now();
+        }
         foreach ($test->questions as $questionIndex => $question) {
             $testLiveWire['questions'][] = [
                 'id' => $question->id,
@@ -189,7 +190,10 @@ class TestService
             shuffle($testLiveWire['questions'][$questionIndex]['options']);
         }
         shuffle($testLiveWire['questions']);
-        Session::put('attempt_'. $attempt->id, $testLiveWire);
+        if($submitAttempt)
+        {
+            Session::put('attempt_'. $attempt->id, $testLiveWire);
+        }
         return $testLiveWire;
     }
 }

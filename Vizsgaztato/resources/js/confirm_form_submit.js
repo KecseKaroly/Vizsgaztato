@@ -227,3 +227,39 @@ $(".leaveFromCourse").click(function (e) {
         }
     });
 });
+
+$(".deleteModuleBtn").click(function (e) {
+    e.preventDefault();
+    var form =  $(this).closest("form");
+    Swal.fire({
+        title: 'Biztosan törli a modult?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Igen',
+        cancelButtonText: 'Mégsem',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        } else if (result.dismiss == "cancel") {
+            Swal.fire('Művelet megszakítva', '', 'info');
+        }
+    });
+});
+
+$(".deleteQuizBtn").click(function (e) {
+    e.preventDefault();
+    var form =  $(this).closest("form");
+    Swal.fire({
+        title: 'Biztosan törli a kvízt?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Igen',
+        cancelButtonText: 'Mégsem',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        } else if (result.dismiss == "cancel") {
+            Swal.fire('Művelet megszakítva', '', 'info');
+        }
+    });
+});

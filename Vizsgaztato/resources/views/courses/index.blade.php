@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Kurzusok')
 @section('content')
-
     <div class="mt-16">
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden lg:w-10/12 md:w-8/12 w-11/12">
             <div class="lg:flex lg:justify-between mb-12 ">

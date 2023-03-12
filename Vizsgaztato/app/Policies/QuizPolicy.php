@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CoursePolicy
+class QuizPolicy
 {
     use HandlesAuthorization;
 
@@ -33,7 +33,7 @@ class CoursePolicy
     {
         return $course->users->contains($user)  || $course->groups()->users()->contains($user)
             ? Response::allow()
-            : Response::deny('Jogosulatlan a kurzushoz!');
+            : Response::deny('Jogosulatlan a kvízhez!');
     }
 
     /**
@@ -42,11 +42,11 @@ class CoursePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, Course $course)
     {
-        return !$user->is_student
+        return $user == $course->creator
             ? Response::allow()
-            : Response::deny('Diákként nem hozhat létre kurzust!');
+            : Response::deny('Nem Ön hozta létre a kurzust, ezért kvízt sem adhat hozzá!');
     }
 
     /**
@@ -60,7 +60,7 @@ class CoursePolicy
     {
         return $user == $course->creator
             ? Response::allow()
-            : Response::deny('Nem Ön a kurzus készítője, így nem módosíthatja azt!');
+            : Response::deny('Nem Ön a kurzus készítője, így nem módosíthatja a kvízt!');
     }
 
     /**
@@ -74,7 +74,7 @@ class CoursePolicy
     {
         return $user == $course->creator
             ? Response::allow()
-            : Response::deny('Nem Ön a kurzus készítője, így nem törölheti azt!');
+            : Response::deny('Nem Ön a kurzus készítője, így nem törölheti annak kvízeit!');
     }
 
     /**
@@ -88,7 +88,7 @@ class CoursePolicy
     {
         return $user == $course->creator()
             ? Response::allow()
-            : Response::deny('Nem Ön a kurzus készítője, így nem módosíthatja azt!');
+            : Response::deny('Nem Ön a kurzus készítője, így nem módosíthatja annak kvízeit!');
     }
 
     /**
@@ -102,6 +102,6 @@ class CoursePolicy
     {
         return $user == $course->creator()
             ? Response::allow()
-            : Response::deny('Nem Ön a kurzus készítője, így nem törölheti azt!');
+            : Response::deny('Nem Ön a kurzus készítője, így nem törölheti annak kvízeit!');
     }
 }

@@ -1,13 +1,13 @@
 <div class="mt-5 mb-24">
     <div class="md:w-1/12 md:mr-0 ml-8 mr-24">
-        <a href="{{ route('test.index') }}">
+        <a href="{{ url()->previous() }}">
             <button
                 class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                 Vissza
             </button>
         </a>
     </div>
-        <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor készítése</p>
+        <p class="text-center mb-12 font-black text-3xl">{{ $type == "test" ? "Vizsga feladatsor készítése" : "Kvíz készítése" }}</p>
         <button wire:click="Add_Question"
                 class="fixed left-6 bottom-6 text-white text-lg bg-green-700 hover:bg-green-800 rounded-full px-5 py-2.5 text-center">
             <i class="fa-solid fa-circle-plus"></i> Új kérdés
@@ -19,15 +19,6 @@
                 <i class="fa-regular fa-floppy-disk"></i> Mentés
             </button>
         @endif
-    {{--
-    <ul wire:sortable="updateTaskOrder">
-        @foreach ([1,2,3,4,1,2,3,4] as $number)
-            <div wire:sortable.item="{{ "asd" }}" wire:key="number"  wire:sortable.handle>
-                <div>{{ $number }}</div>
-            </div>
-        @endforeach
-    </ul>
-    --}}
         <div class="max-w-full mx-auto overflow-hiddenlg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
             <div class="flex flex-col w-full relative rounded-xl bg-slate-50 border border-black py-5 px-8 mb-5">
                 <div class="flex flex-row flex-wrap justify-start ml-6">
@@ -40,6 +31,7 @@
                                class="w-full bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]">
                     </div>
                 </div>
+                @if($type == "test")
                 <div class="flex flex-row flex-wrap justify-start mt-3 ml-6">
                     <div class="pl-3 font-semibold text-lg">
                         <p><label for="numOfTestAttempt">Lehetséges kitöltések száma:  @error('testAttempts') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
@@ -58,12 +50,13 @@
                         <div>
                             <input type="number" wire:model="durationMinute" id="durationMinute"
                                    min="5" max="120"
-                                   class="bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]"/>
+                                   class="bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]" @disabled($type=="quiz")/>
                             <label for="durationMinute" class="font-semibold text-lg">perc</label>
                         </div>
                     </div>
                 </div>
 
+                @endif
                 <div class="flex flex-row justify-start mt-3 ml-6 ">
                     <div class="pl-3 w-fit font-semibold text-lg">
                         <p><label for="canViewResult">Eredmény elérhető:</label></p>
@@ -71,7 +64,7 @@
                     <div class="ml-5 w-fit">
                         <label class="relative inline-flex items-center mr-5 cursor-pointer">
                             <input type="checkbox" value="" class="sr-only peer" id="canViewResult"
-                                   wire:model="resultsViewable">
+                                   wire:model="resultsViewable" @disabled($type=="quiz")>
                             <div
                                 class="w-11 h-6 bg-gray-600 rounded-full peer-focus:ring-4 peer-focus:ring-blue opacity-80 peer-checked:bg-blue-600 peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                             <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{$resultsViewable ? 'Igen' : 'Nem'}}</span>

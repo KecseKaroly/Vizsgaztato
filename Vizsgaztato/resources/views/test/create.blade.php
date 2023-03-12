@@ -2,6 +2,6 @@
 @section('title', 'Feladatlap készítése')
 @section('content')
     <div>
-        @livewire('exam-task-creator')
+        @livewire('exam-task-creator', ['course'=>$course])
     </div>
 @endsection

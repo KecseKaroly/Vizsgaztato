@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\DB;
 
 class GroupInvController extends Controller
 {
-   public function store($selectedResults, $groupId) {
+   public function store($selectedResults, $group) {
         foreach($selectedResults as $selectedResult) {
-            if( !(groups_users::where(['group_id'=>$groupId, 'user_id'=>$selectedResult['id']]))->exists() &&
-                !(group_inv::where(['group_id'=>$groupId, 'invited_id'=>$selectedResult['id']]))->exists())
+            if( !(groups_users::where(['group_id'=>$group->id, 'user_id'=>$selectedResult['id']]))->exists() &&
+                !(group_inv::where(['group_id'=>$group->id, 'invited_id'=>$selectedResult['id']]))->exists())
             {
                 $group_inv = new group_inv;
                 $group_inv->sender_id = auth()->id();
-                $group_inv->group_id = $groupId;
+                $group_inv->group_id = $group->id;
                 $group_inv->invited_id = $selectedResult['id'];
                 $group_inv->save();
             }

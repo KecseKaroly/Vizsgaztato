@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Course;
 use App\Models\groups_users;
 use App\Models\testAttempt;
 use App\Models\TestsGroups;
@@ -21,9 +22,11 @@ class testPolicy
      * @param \App\Models\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user, Course $course)
     {
-        return true;
+        return $course->users->contains($user)  || $course->groups->users->contains($user)
+            ? Response::allow()
+            : Response::deny('Jogosulatlan a teszthez!');
     }
 
     /**
@@ -33,19 +36,14 @@ class testPolicy
      * @param \App\Models\test $test
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, test $test, group $group)
+    public function view(User $user, test $test)
     {
-        $user_group = groups_users::where(['group_id'=>$group->id, 'user_id'=>$user->id])->first();
-        if($user_group == null)
-            return Response::deny('Ön nem tagja a megadott csoportnak!');
-        $test_group = TestsGroups::where(['test_id'=>$test->id, 'group_id'=>$group->id])->first();
-        if($test_group == null)
-            return Response::deny('A csoportja nem férhet hozzá ehhez a teszthez!');
-        if(!($test_group->enabled_from < now() && $test_group->enabled_until > now()))
-            return Response::deny('A csoportjának lejárt az ideje ehhez a teszthez!');
-        if($test->maxAttempts <= testAttempt::where(['user_id'=>$user->id,'test_id'=>$test->id, 'group_id'=>$group->id])->count())
-            return Response::deny('Meghaladta a maximális kitöltések számát!');
-        return Response::allow();
+        $course = $test->courseOfExam;
+        if(!count($course))
+            $course = $test->courseOfQuiz;
+        return $course[0]->users->contains($user)  || $course[0]->groups->users->contains($user)
+            ? Response::allow()
+            : Response::deny('Jogosulatlan a teszthez!');
     }
 
     /**
@@ -66,11 +64,25 @@ class testPolicy
      * @param \App\Models\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
+    public function createForCourse(User $user, Course $course)
+    {
+        return $user == $course->creator
+            ? Response::allow()
+            : Response::deny('Nem Ön hozta létre a kurzust, ezért tesztet sem adhat hozzá!');
+
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
     public function create(User $user)
     {
         return !$user->is_student
             ? Response::allow()
-            : Response::deny('Nem engedélyezett művelet diákoknak!');;
+            : Response::deny('Nem engedélyezett művelet diákoknak!');
     }
 
     /**
@@ -155,5 +167,14 @@ class testPolicy
         return $test->creator_id == $user->id || $test->resultsViewable
             ? Response::allow()
             : Response::deny('Nem engedélyezett művelet! A feladatok megoldásai nem publikusak!');
+    }
+
+    public function write(User $user, test $test) {
+        $attempts = $user->load(['attempts' => function ($query) use ($test) {
+            $query->where('test_attempts.test_id', $test->id);
+        }])->attempts;
+        return $attempts->count() < $test->maxAttempts || count($attempts->where('submitted', 0))
+            ? Response::allow()
+            : Response::deny('Elérte a maximális kitöltések számát!');
     }
 }

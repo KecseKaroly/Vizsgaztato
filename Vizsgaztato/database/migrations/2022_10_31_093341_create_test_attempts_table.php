@@ -19,13 +19,11 @@ return new class extends Migration
             $table->unsignedInteger('maxScore')->default(0);
             $table->unsignedInteger('achievedScore')->default(0);
             $table->foreignId('user_id');
-            $table->foreignId('group_id');
             $table->foreignId('test_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('test_id')->references('id')->on('tests')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
         });
 
 

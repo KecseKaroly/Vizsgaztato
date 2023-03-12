@@ -124,6 +124,7 @@ class ModuleController extends Controller
             $module->update([
                 'title'=>$request->title,
                 'topic'=>$request->topic,
+                'material'=>$request->material,
             ]);
             Alert::success('Modul sikeresen frissítve!');
             return view('modules.show', ['module'=>$module]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\test;
 use App\Models\question;
 use App\Models\option;
@@ -32,14 +33,10 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Course $course)
     {
-        if(auth()->user()->is_student){
-            $groups = auth()->user()->load(['groups.tests'])->groups;
-            return view('test.index', ['groups' => $groups]);
-        }
-        $tests = test::whereIn('creator_id', [auth()->id()])->get();
-        return view('test.index', ['tests' => $tests]);
+        $tests = $course->tests;
+        return view('test.index', ['tests' => $tests, 'course'=>$course]);
     }
 
     /**
@@ -47,28 +44,16 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Course $course)
     {
         try{
-            $this->authorize('create', test::class);
-            return view('test.create');
+            $this->authorize('create', [test::class, $course]);
+            return view('test.create', ['course'=>$course]);
         }
         catch (AuthorizationException $exception) {
             Alert::warning($exception->getMessage());
-            return redirect()->route('test.index');
+            return redirect()->route('test.index', $course);
         }
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -77,21 +62,20 @@ class TestController extends Controller
      * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
-    public function show($testId, $groupId)
+    public function show(test $test)
     {
         try{
-            $test = test::find($testId);
-            $group = group::find($groupId);
-            $this->authorize('view', [$test, $group]);
+            $this->authorize('view', [$test]);
+            $this->authorize('write', [$test]);
             $test = $test->load('questions.options.expected_answer');
+            $course = $test->courseOfExam;
             $attempt = testAttempt::where([
-                'group_id'=>$groupId,
-                'test_id'=>$testId,
+                'test_id'=>$test->id,
                 'user_id'=>auth()->id(),
                 'submitted'=>'0'])->first();
             if(!$attempt)
             {
-                $testLiveWire = $this->testService->getTestToWrite($test, $groupId);
+                $testLiveWire = $this->testService->getTestToWrite($test);
             }
             else
             {
@@ -100,15 +84,14 @@ class TestController extends Controller
                 }
                 else {
                     $attempt->delete();
-                    $testLiveWire = $this->testService->getTestToWrite($test, $groupId);
+                    $testLiveWire = $this->testService->getTestToWrite($test);
                 }
-                //dd([$testLiveWire, Session::all()]);
             }
-            return view('test.write')->with('testLiveWire', $testLiveWire);
+            return view('test.write', ['testLiveWire' => $testLiveWire, 'course' => $course]);
         }
         catch (AuthorizationException $exception) {
             Alert::warning($exception->getMessage());
-            return redirect()->route('test.index');
+            return redirect()->route('courses.index');
         }
     }
 
@@ -118,7 +101,7 @@ class TestController extends Controller
      * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
-    public function edit(test $test)
+    public function edit(Course $course, test $test)
     {
         try{
             $this->authorize('update', $test);
@@ -128,47 +111,13 @@ class TestController extends Controller
                 },
                 'questions.options.expected_answer']);
             $testLiveWire = $this->testService->getTestToEdit($test);
-            return view('test.edit', ['testLiveWire' => $testLiveWire]);
+            return view('test.edit', ['testLiveWire' => $testLiveWire, 'course'=>$course]);
         }
         catch (AuthorizationException $exception) {
             Alert::warning($exception->getMessage());
-            return redirect()->route('test.index');
+            return redirect()->route('courses.index');
         }
 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\test $test
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, test $test)
-    {
-        dd('test.update');
-        try{
-            $this->authorize('update', $test);
-            $attempts = testAttempt::where('test_id', $test->id);
-            foreach ($attempts as $attempt) {
-                $given_answers = given_answer::where('attempt_id', $attempt->id);
-                $maxScore = 0;
-                $achievedScore = 0;
-                foreach ($given_answers as $given_answer) {
-                    $answer = answer::find($given_answer->answer_id);
-                    if ($given_answer->given_id == $answer->solution_id)
-                        $achievedScore += $answer->score;
-                    $maxScore = $answer->score;
-                }
-                $attempt->maxScore = $maxScore;
-                $attempt->achievedScore = $achievedScore;
-                $attempt->save();
-            }
-        }
-        catch (AuthorizationException $exception) {
-            Alert::warning($exception->getMessage());
-            return redirect()->route('test.index');
-        }
     }
 
     /**
@@ -177,7 +126,7 @@ class TestController extends Controller
      * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
-    public function destroy(test $test)
+    public function destroy(test $test, Course $course)
     {
         try{
             $this->authorize('delete', $test);
@@ -187,30 +136,27 @@ class TestController extends Controller
         }
         catch (AuthorizationException $exception) {
             Alert::warning($exception->getMessage());
-            return redirect()->route('test.index');
+            return redirect()->route('courses.index');
         }
 
     }
-    public function testInfo($testId)
+    public function testInfo(Course $course, test $test)
     {
         try{
-            $this->authorize('checkInfo', test::findOrFail($testId));
-            $test = test::with(
-                [
-                    'groups.users' => function ($query) use ($testId) {
-                        $query->where('groups_users.is_admin', 'like', '0');
-                    },
-                    'groups.users.attempts' => function ($query) use ($testId) {
-                        $query->where('test_attempts.test_id', 'like', $testId);
-                    },
-                ]
-            )
-                ->where('id', $testId)->first();
-            return view('testAttempts.show', ['test' => $test]);
+            $this->authorize('checkInfo', $test);
+            $course->load([
+                'users' => function($query) use ($test, $course) {
+                    $query->where('users.id', '!=', $course->creator_id);
+                },
+               'users.attempts' => function($query) use ($test) {
+                    $query->where('test_attempts.test_id', $test->id);
+               }
+            ]);
+            return view('testAttempts.show', ['test' => $test, 'course'=>$course]);
         }
         catch (AuthorizationException $exception) {
             Alert::warning($exception->getMessage());
-            return redirect()->route('test.index');
+            return redirect()->route('courses.index');
         }
     }
 }

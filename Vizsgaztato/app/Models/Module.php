@@ -22,16 +22,15 @@ class Module extends Model implements HasMedia
 
     public $timestamps = false;
 
-    /*public function registerMediaConversions(Media $media = null) : void {
-        $this->addMediaConversion('thumb')
-            ->width(400);
-    }*/
-
     public function course() : BelongsTo {
         return $this->belongsTo(Course::class);
     }
 
-    public function quiz() : HasOne {
-        return $this->hasMany(Quiz::class);
+    public function quizzes() : BelongsToMany {
+        return $this->belongsToMany(
+            test::class,
+            'courses_quizzes',
+            'module_id',
+            'test_id');
     }
 }

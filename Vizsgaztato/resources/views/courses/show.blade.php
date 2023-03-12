@@ -43,13 +43,13 @@
                         <div class="text-xl font-semibold">Modulok</div>
                         <div class="text-xs">({{$course->modules->count()}} db)</div>
                     </a>
-                    <a href="{{route('courses.quizzes', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200">
+                    <a href="{{route('quizzes.index', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200">
                         <div class="text-xl font-semibold">Kvízek</div>
-                        <div class="text-xs">({{$course->quizzes}} db)</div>
+                        <div class="text-xs">({{$course->quizzes->count()}} db)</div>
                     </a>
-                    <a href="{{route('courses.tests', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200 hover:rounded-r-full">
+                    <a href="{{route('test.index', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200 hover:rounded-r-full">
                         <div class="text-xl font-semibold">Tesztek</div>
-                        <div class="text-xs">({{$course->tests}} db)</div>
+                        <div class="text-xs">({{$course->tests->count()}} db)</div>
                     </a>
                 </div>
                 <div
@@ -67,7 +67,10 @@
                         </div>
                         <div class="md:w-1/2 w-full md:mt-0 mt-6">
                             <div
-                                class="md:flex justify-between py-7 px-6 mb-4 text-2xl bg-gray-400 border-4 md:border-l-0 border-gray-800 items-center">
+                                @class([
+                                         "md:flex justify-between px-6 mb-4 text-2xl bg-gray-400 border-4 md:border-l-0 border-gray-800 items-center",
+                                         auth()->id() == $course->creator_id ? "py-7" : "py-8",
+                                        ])>
                                 <div class="underline font-semibold">Modulok:</div>
                                 <div class="w-fit md:mt-0 mt-2">
                                     @can('create', [App\Models\Module::class, $course])
@@ -81,11 +84,11 @@
                                 </div>
                             </div>
                             <table class="table-auto w-11/12 mx-auto  border-separate border border border-black border-spacing-y-4 bg-slate-500">
-                                @if(count($course->modules))
+                                @if( count($course->modules) )
                                     <tr class="hover:cursor-pointer bg-slate-500 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center">
                                         <td colspan="2" class="text-sm font-semibold text-left pl-24 text-right pr-8">
                                             <a href="{{route('courses.modules', $course)}}">
-                                                << Minden kurzus megtekintése >>
+                                                << Minden modul megtekintése >>
                                             </a>
                                         </td>
                                     </tr>
