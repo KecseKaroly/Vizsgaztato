@@ -1,11 +1,20 @@
-<div class="mt-5 mb-24">
-    <div class="md:w-1/12 md:mr-0 ml-8 mr-24">
-        <a href="{{ url()->previous() }}">
-            <button
-                class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
-                Vissza
-            </button>
-        </a>
+<div class="mt-4 mb-24">
+    <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+        @if( $type == "test" )
+            <a href="{{route('test.index', $course )}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        @else
+            <a href="{{route('quizzes.index', $course )}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        @endif
     </div>
         <p class="text-center mb-12 font-black text-3xl">{{ $type == "test" ? "Vizsga feladatsor készítése" : "Kvíz készítése" }}</p>
         <button wire:click="Add_Question"
@@ -19,10 +28,10 @@
                 <i class="fa-regular fa-floppy-disk"></i> Mentés
             </button>
         @endif
-        <div class="max-w-full mx-auto overflow-hiddenlg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
+        <div class="max-w-full mx-auto overflow-hidden lg:w-4/6 md:10-12  w-11/12">
             <div class="flex flex-col w-full relative rounded-xl bg-slate-50 border border-black py-5 px-8 mb-5">
-                <div class="flex flex-row flex-wrap justify-start ml-6">
-                    <div class="pl-3 font-semibold text-lg">
+                <div class="flex flex-row flex-wrap justify-start">
+                    <div class="font-semibold text-lg">
                         <p><label for="titleOfTestAttempt">Feladatlap címe:  @error('testTitle') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
 
                     </div>
@@ -32,8 +41,8 @@
                     </div>
                 </div>
                 @if($type == "test")
-                <div class="flex flex-row flex-wrap justify-start mt-3 ml-6">
-                    <div class="pl-3 font-semibold text-lg">
+                <div class="flex flex-row flex-wrap justify-start mt-3">
+                    <div class="font-semibold text-lg">
                         <p><label for="numOfTestAttempt">Lehetséges kitöltések száma:  @error('testAttempts') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
                     </div>
                     <div class="w-full">
@@ -41,8 +50,8 @@
                                class="w-full bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]">
                     </div>
                 </div>
-                <div class="flex flex-row flex-wrap justify-start mt-3 ml-6">
-                    <div class="pl-3 font-semibold text-lg">
+                <div class="flex flex-row flex-wrap justify-start mt-3">
+                    <div class="font-semibold text-lg">
                         <p><label for="durationMinute">Teszt kitöltési ideje @error('durationMinute') <span
                                     class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
                     </div>
@@ -58,10 +67,10 @@
 
                 @endif
                 <div class="flex flex-row justify-start mt-3 ml-6 ">
-                    <div class="pl-3 w-fit font-semibold text-lg">
+                    <div class="w-fit font-semibold text-lg">
                         <p><label for="canViewResult">Eredmény elérhető:</label></p>
                     </div>
-                    <div class="ml-5 w-fit">
+                    <div class="w-fit">
                         <label class="relative inline-flex items-center mr-5 cursor-pointer">
                             <input type="checkbox" value="" class="sr-only peer" id="canViewResult"
                                    wire:model="resultsViewable" @disabled($type=="quiz")>
@@ -77,30 +86,22 @@
                     <div
                         class="lg:pl-12 lg:py-3 lg:my-5 md:pl-9 md:py-9 md:my-9 sm:pl-6 sm:py-6 sm:my-6 pl-3 pr-2 py-3 my-3 max-w w-full bg-white rounded-lg  shadow-lg">
                         <div class="lg:px-12 md:px-8 px-4 py-6">
-                            <div class="flex sm:flex-row flex-col">
-                                <div class="w-full h-full">
-                                    @error('questions.'.$questionIndex.'.type') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
-                                    <select name="question-types{{$questionIndex}}"
-                                            wire:model="questions.{{$questionIndex}}.type"
-                                            wire:change="$emit('questionTypeChanged', {{$questionIndex}})"
-                                            class="bg-orange-300 border-gray-300 text-orange-900 text-sm rounded-lg  font-bold
-                                            focus:ring-orange-100 focus:border-orange-800 block  py-3 w-fit">
-                                        <option selected hidden>Válasszon feladattípust...</option>
-                                        <option value="TrueFalse" class="font-bold">Igaz/Hamis</option>
-                                        <option value="OneChoice" class="font-bold">1 megoldásos választás</option>
-                                        <option value="MultipleChoice" class="font-bold">Több megoldásos választás
-                                        </option>
-                                        <option value="Sequence" class="font-bold">Sorrend</option>
-                                    </select>
-                                    @error('questions.'.$questionIndex.'.text') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
-                                    @error('questions.'.$questionIndex.'.right_option_index') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
-                                    @error('questions.'.$questionIndex.'.options') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
-                                    <input type="text"
-                                           wire:model="questions.{{$questionIndex}}.text"
-                                           placeholder="{{$questionIndex+1}}. Kérdés szövege"
-                                           class="w-11/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
-                                </div>
-                                <div class="flex sm:my-0 my-2">
+
+                            <div class="flex flex-wrap justify-between mb-3">
+                                @error('questions.'.$questionIndex.'.type') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+                                <select name="question-types{{$questionIndex}}"
+                                        wire:model="questions.{{$questionIndex}}.type"
+                                        wire:change="$emit('questionTypeChanged', {{$questionIndex}})"
+                                        class="bg-orange-300 border-gray-300 text-orange-900 text-sm rounded-lg  font-bold
+                                        focus:ring-orange-100 focus:border-orange-800 block  py-3 w-fit">
+                                    <option selected hidden>Válasszon feladattípust...</option>
+                                    <option value="TrueFalse" class="font-bold">Igaz/Hamis</option>
+                                    <option value="OneChoice" class="font-bold">1 megoldásos választás</option>
+                                    <option value="MultipleChoice" class="font-bold">Több megoldásos választás
+                                    </option>
+                                    <option value="Sequence" class="font-bold">Sorrend</option>
+                                </select>
+                                <div class="flex">
                                     @if($question['type'] != '' && $question['type'] != "TrueFalse")
                                         <button wire:click="Add_Option({{$questionIndex}})"
                                                 class="flex items-center text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-2.5 py-2.5  text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
@@ -113,6 +114,16 @@
                                     </button>
                                 </div>
                             </div>
+                            <div>
+                                    @error('questions.'.$questionIndex.'.text') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+                                    @error('questions.'.$questionIndex.'.right_option_index') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+                                    @error('questions.'.$questionIndex.'.options') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
+                                    <input type="text"
+                                           wire:model="questions.{{$questionIndex}}.text"
+                                           placeholder="{{$questionIndex+1}}. Kérdés szövege"
+                                           class="w-11/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
+                                </div>
+
                         </div>
                         <div
                             @class(['flex flex-col md:flex-row md:items-center md:justify-center' => $question['type']=='TrueFalse'])
@@ -122,18 +133,18 @@
                                 @switch($question["type"])
                                     @case("TrueFalse")
                                         <div
-                                            class="lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
+                                            class="md:mx-16 md:px-8 md:my-3 lg:py-4 mx-2 my-1 py-1 pl-6 items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
                                             <label>
-                                                {{$option["text"]}}
                                                 <input type="radio" name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="{{$optionIndex}}"
                                                        wire:model="questions.{{$questionIndex}}.right_option_index">
+                                                {{$option["text"]}}
                                             </label>
                                         </div>
                                         @break
                                     @case("OneChoice")
                                         <div
-                                            class="sm:flex-row flex-col lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
+                                            class="sm:flex-row flex-col md:mx-16 lg:px-8 md:my-2 md:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
                                             <div class="w-full">
                                                 <input type="radio" name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="{{$optionIndex}}"
@@ -153,7 +164,7 @@
                                         @break
                                     @case("MultipleChoice")
                                         <div
-                                            class="sm:flex-row flex-col lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
+                                            class="sm:flex-row flex-col lg:mx-16 md:px-8 md:my-2 md:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300">
                                             <div class="w-full">
                                                 <label>
                                                     <input type="checkbox"
@@ -177,7 +188,7 @@
                                         @break
                                     @case("Sequence")
                                         <div
-                                             class="sm:flex-row flex-col lg:ml-16 lg:px-8 lg:my-2 lg:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
+                                             class="sm:flex-row flex-col md:ml-16 md:px-8 md:my-2 md:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
                                              wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}"
                                              wire:key="option-{{$questionIndex}}_{{ $optionIndex }}"
                                              wire:sortable.handle>

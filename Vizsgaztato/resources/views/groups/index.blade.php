@@ -1,12 +1,11 @@
 @extends('layouts.app')
 @section('title', 'Csoportok')
 @section('content')
-
-    <div class="mt-16">
-        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden lg:w-10/12 md:w-8/12 w-11/12">
+    <div class="mt-4">
+        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
             <div class="lg:flex lg:justify-between mb-12 ">
                 <div class="font-black text-3xl">Csoportok</div>
-                <div class="w-fit">
+                <div class="w-fit mt-3">
                     @can('create', App\Models\group::class)
                         <button type="button"
                                 class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
@@ -18,9 +17,8 @@
             </div>
 
             <div class="bg-slate-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double">
-                @cannot('create', App\Models\group::class)
                     <div class="my-6 w-10/12 mx-auto flex justify-between flex-wrap">
-                        <form>
+                        <form class="md:mb-0 mb-4">
                             <div class="md:flex">
                                 <div class="form-group">
                                     <label for="invCode" class="text-lg font-semibold">Kód:</label>
@@ -30,7 +28,7 @@
                                 </div>
                                 <div class="form-group md:ml-6">
                                     <button id="sendInvCode"
-                                            class="hover:bg-indigo-800 bg-indigo-600 border-2 border-gray-100  text-white font-bold p-2 rounded-lg">
+                                            class="md:mt-0 mt-1 hover:bg-indigo-800 bg-indigo-600 border-2 border-gray-100 text-white font-bold p-2 rounded-lg">
                                         <i class="fa-regular fa-paper-plane"></i> Jelentkezés
                                     </button>
                                 </div>
@@ -48,8 +46,8 @@
                             </button>
                         </a>
                     </div>
-                @endcannot
                 <div class="w-full">
+
                     @forelse($groups as $group)
                         <div
                             class="bg-slate-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
@@ -66,7 +64,7 @@
                                         data-invCode="{{ $group->invCode }}"><i class="fa-regular fa-clone fa-lg"></i>
                                 </button>
                             </div>
-                            <div class="md:mt-0 my-2 lg:text-right w-fit font-medium relative">
+                            <div class="md:mt-0 my-2 lg:text-right w-1/4 font-medium relative">
                                 @if($group->creator_id == auth()->id())
                                     <a href="{{ route('join_requests', $group->id) }}">
                                         <button type="button"
@@ -104,10 +102,4 @@
             </div>
         </div>
     </div>
-    <div class="absolute bottom-4 right-2" id="invCodeCopiedMessage" style="display: none;">
-        <span
-            class="bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-2.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300"
-            id="copyMessage"></span>
-    </div>
-
 @endsection

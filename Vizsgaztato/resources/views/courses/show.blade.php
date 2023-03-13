@@ -2,7 +2,7 @@
 @section('title', 'A kurzusról')
 @section('content')
     <div class="mt-4 pb-6">
-        <div class="md:w-1/12 ml-12 mb-4">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
             <a href="{{route('courses.index')}}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
@@ -33,23 +33,23 @@
                 </div>
             @endif
             <div class="absoulte">
-                <div class="grid grid-cols-4 bg-stone-100 relative top-10 right-0 left-0 md:mx-32 border-4 border-gray-800 rounded-full
+                <div class="grid grid-cols-4 bg-stone-100 relative top-10 right-0 left-0 md:mx-32 mx-1 border-4 border-gray-800 rounded-full
                            text-center content-center divide-x-4 divide-gray-800 divide-dashed">
                     <a href="{{route('courses.members', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200 hover:rounded-l-full">
-                        <div class="text-xl font-semibold">Tagok</div>
-                        <div class="text-xs">({{$course->users->count()}} fő + {{$course->groups->count()}} csoport)</div>
+                        <div class="md:text-xl font-semibold">Tagok</div>
+                        <div class="md:text-xs text-2xs">{{$course->users->count()}} fő+{{$course->groups->count()}} csoport</div>
                     </a>
                     <a href="{{route('courses.modules', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200">
-                        <div class="text-xl font-semibold">Modulok</div>
-                        <div class="text-xs">({{$course->modules->count()}} db)</div>
+                        <div class="md:text-xl font-semibold">Modulok</div>
+                        <div class="md:text-xs text-2xs">{{$course->modules->count()}} db</div>
                     </a>
                     <a href="{{route('quizzes.index', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200">
-                        <div class="text-xl font-semibold">Kvízek</div>
-                        <div class="text-xs">({{$course->quizzes->count()}} db)</div>
+                        <div class="md:text-xl font-semibold">Kvízek</div>
+                        <div class="md:text-xs text-2xs">{{$course->quizzes->count()}} db</div>
                     </a>
                     <a href="{{route('test.index', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200 hover:rounded-r-full">
-                        <div class="text-xl font-semibold">Tesztek</div>
-                        <div class="text-xs">({{$course->tests->count()}} db)</div>
+                        <div class="md:text-xl font-semibold">Tesztek</div>
+                        <div class="md:text-xs text-2xs">{{$course->tests->count()}} db</div>
                     </a>
                 </div>
                 <div

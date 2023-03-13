@@ -16,7 +16,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 class ExamTaskWrite extends Component
 {
-
+    public $quizEnded = false;
     public $test;
     public $type;
     public $course;
@@ -40,7 +40,7 @@ class ExamTaskWrite extends Component
             return redirect()->route('testAttempts.index', [$this->course[0]->id, $attempt->test_id]);
         }
         else {
-            dd("VÉGE A KVÍZNEK");
+            $this->quizEnded = true;
         }
     }
 

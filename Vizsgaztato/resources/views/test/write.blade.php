@@ -39,17 +39,17 @@
 
 @push('scripts')
     <script>
-        const countDownClock = (minutes) => {
+        const countDownClock = (seconds) => {
             const remainingHours = document.getElementById('remainingHours');
             const remainingMinutes = document.getElementById('remainingMinutes');
             const remainingSeconds = document.getElementById('remainingSeconds');
             let countdown;
-            return timer(minutes * 60);
+            return timer(seconds);
 
             function timer(seconds) {
                 const now = Date.now();
                 const then = Date.parse(@json($testLiveWire['started']));
-                const secondsForTest = (@json($testLiveWire['duration']))*60;
+                const secondsForTest = (@json($testLiveWire['duration']));
 
                 countdown = setInterval(() => {
                     var secondsPast = Math.round((Date.now() - then) / 1000);

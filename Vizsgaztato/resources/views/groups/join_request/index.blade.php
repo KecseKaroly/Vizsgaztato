@@ -1,13 +1,20 @@
 @extends('layouts.app')
 @section('title', 'Csatlakozási kérelmek')
 @section('content')
-    <div class="flash-message"></div>
-    <div class="mt-24 mb-24">
-    <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
+    <div class="mt-4 mb-24">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+            <a href="{{route('groups.index')}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        </div>
+    <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
         <div class="flex">
             <div class="text-center mb-12 font-black text-3xl w-full">Csoport csatlakozási kérelmei</div>
         </div>
-        <div class="bg-slate-50 w-11/12 rounded-xl divide-y pb-3">
+        <div class="bg-slate-50 rounded-xl divide-y pb-3">
             <table class="table-auto w-full">
                 <thead class="bg-slate-400">
                   <tr>
@@ -39,7 +46,6 @@
                     @endforeach
                 </tbody>
               </table>
-
         </div>
     </div>
 </div>

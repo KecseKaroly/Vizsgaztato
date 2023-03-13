@@ -34,7 +34,7 @@ class SearchUsers extends Component
 
     public function saveSelectedResults() {
         if($this->selectedResults != []) {
-            if($this->objectType == 'test')
+            if($this->objectType == 'group')
             {
                 (new GroupInvController)->store($this->selectedResults, $this->objectToAttachTo);
             }
@@ -51,7 +51,7 @@ class SearchUsers extends Component
         return view('livewire.search-users');
     }
 
-    public function mount($objectToAttachTo, $objectType = 'test')
+    public function mount($objectToAttachTo, $objectType = 'group')
     {
         $this->objectToAttachTo = $objectToAttachTo;
         $this->objectType = $objectType;

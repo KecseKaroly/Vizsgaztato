@@ -9,11 +9,20 @@ $(".copyInvCode").click(function (e) {
     const params = $(this).data();
     const invCode = params["invcode"];
     navigator.clipboard.writeText(invCode);
-    $("#invCodeCopiedMessage").show();
-    $("#copyMessage").html(`Vágólapra másolva`);
-    setTimeout(function () {
-        $("#invCodeCopiedMessage").fadeOut(400);
-    }, 3000);
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('click', Swal.close)
+        }
+    })
+    Toast.fire({
+        icon: 'success',
+        title: 'Vágólapra másolva'
+    })
 });
 $("#sendInvCode").click(function (e) {
     e.preventDefault();
@@ -180,12 +189,13 @@ $(".user_id").click(function (e) {
 
 
 
-$(".showGroupTestInfo").click(function (e) {
+$(".showCourseExamInfo").click(function (e) {
+    console.log("ASD");
     const params = $(this).data();
     $("#enabled_from").val(params["enabled_from"].slice(0, -3));
     $("#enabled_until").val(params["enabled_until"].slice(0, -3));
     $("#test_id").val(params["test_id"]);
-    $("#group_id").val(params["group_id"]);
+    $("#course_id").val(params["course_id"]);
 });
 
 

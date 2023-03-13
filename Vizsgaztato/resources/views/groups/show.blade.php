@@ -1,7 +1,15 @@
 @extends('layouts.app')
 @section('title',  $group->name )
 @section('content')
-    <div class="mt-16  mx-auto">
+    <div class="mt-4 mx-auto">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+            <a href="{{route('groups.index')}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        </div>
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-10/12 md:w-8/12 w-11/12">
             <div class="lg:flex lg:justify-between mb-12">
                 <div class="font-black text-3xl">Csoport: {{ $group->name }}</div>
@@ -26,8 +34,8 @@
             @endif
             <div class="bg-slate-50 w-full rounded-xl  mx-auto">
                 @if($isAdmin)
-                    <div class="w-10/12 mx-auto my-5">
-                        @livewire('search-users', ['groupId'=>$group->id])
+                    <div class="mx-auto my-5 -ml-5">
+                        @livewire('search-users', ['objectToAttachTo'=>$group])
                     </div>
                 @endif
                 <div class="w-11/12 mx-auto pt-5 text-2xl font-bold underline">Csoport tagjai:</div>

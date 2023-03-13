@@ -24,7 +24,7 @@ class testPolicy
      */
     public function viewAny(User $user, Course $course)
     {
-        return $course->users->contains($user)  || $course->groups->users->contains($user)
+        return $course->users->contains($user) || $course->groups->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a teszthez!');
     }
@@ -39,9 +39,9 @@ class testPolicy
     public function view(User $user, test $test)
     {
         $course = $test->courseOfExam;
-        if(!count($course))
+        if (!count($course))
             $course = $test->courseOfQuiz;
-        return $course[0]->users->contains($user)  || $course[0]->groups->users->contains($user)
+        return $course[0]->users->contains($user) || $course[0]->groups->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a teszthez!');
     }
@@ -169,10 +169,16 @@ class testPolicy
             : Response::deny('Nem engedélyezett művelet! A feladatok megoldásai nem publikusak!');
     }
 
-    public function write(User $user, test $test) {
+    public function write(User $user, test $test)
+    {
         $attempts = $user->load(['attempts' => function ($query) use ($test) {
             $query->where('test_attempts.test_id', $test->id);
         }])->attempts;
+        $test->load(['courseOfExam' => function ($query) use ($test) {
+            $query->where('courses_exams.test_id', $test->id);
+        }]);
+        if ($test->courseOfExam[0]->pivot->enabled_from >= now() || $test->courseOfExam[0]->pivot->enabled_until <= now())
+            return Response::deny('A teszt kitöltése nincs engedélyezve ebben az időpontban!');
         return $attempts->count() < $test->maxAttempts || count($attempts->where('submitted', 0))
             ? Response::allow()
             : Response::deny('Elérte a maximális kitöltések számát!');

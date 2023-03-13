@@ -2,7 +2,7 @@
 @section('title', 'Kurzus módosítása')
 @section('content')
     <div class="mt-4 mb-24 select-none">
-        <div class="md:w-1/12 md:mr-0 ml-8 mr-24">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
             <a href="{{route('courses.show', $course )}}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
@@ -10,11 +10,11 @@
                 </button>
             </a>
         </div>
-        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
+        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
             <div class="flex">
                 <div class="text-center mb-12 font-black text-3xl w-10/12">Kurzus módosítása</div>
             </div>
-            <div class="bg-slate-50 w-11/12 rounded-xl">
+            <div class="bg-slate-50 w-full rounded-xl">
                 @if($errors->any())
                     <div class="text-red-600 text-center divide-y-2">
                         <h1 class="text-xl font-black">Hiba</h1>

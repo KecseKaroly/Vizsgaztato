@@ -147,24 +147,27 @@ class TestService
         return $testLiveWire;
     }
 
-    public function getTestToWrite($test, $submitAttempt = true)
+    public function getTestToWrite($test, $submitAttempt = true, $attempt = null)
     {
         $testLiveWire = [
             'id' => $test->id,
             'title' => $test->title,
-            'duration' => $test->duration,
             'resultsViewable' => $test->resultsViewable,
             'questions' => []
         ];
         if($submitAttempt)
         {
-            $attempt = new testAttempt([
-                'user_id'=>auth()->id(),
-                'test_id'=>$test->id,
-            ]);
-            $attempt->save();
+            if($attempt == null)
+            {
+                $attempt = new testAttempt([
+                    'user_id'=>auth()->id(),
+                    'test_id'=>$test->id,
+                ]);
+                $attempt->save();
+            }
             $testLiveWire['attempt_id'] =$attempt->id;
-            $testLiveWire['started'] = now();
+            $testLiveWire['started'] = $attempt->created_at;
+            $testLiveWire['duration'] = $test->duration * 60 - $attempt->created_at->diffInSeconds(now());;
         }
         foreach ($test->questions as $questionIndex => $question) {
             $testLiveWire['questions'][] = [
@@ -182,12 +185,14 @@ class TestService
                 $testLiveWire['questions'][$questionIndex]['options'][] = [
                     'id' => $option->id,
                     'text' => $option->text,
-                    'expected_ans' => $answer->solution,
+                    'expected_ans' => !$submitAttempt ? $answer->solution : '',
                     'actual_ans' => '',
                     'score' => $option->score
+
                 ];
             }
-            shuffle($testLiveWire['questions'][$questionIndex]['options']);
+            if($question->type != "TrueFalse")
+                shuffle($testLiveWire['questions'][$questionIndex]['options']);
         }
         shuffle($testLiveWire['questions']);
         if($submitAttempt)

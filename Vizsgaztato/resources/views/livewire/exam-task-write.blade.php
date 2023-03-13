@@ -1,6 +1,23 @@
-<div class="pt-24 mb-24 select-none">
+<div class="pt-4 mb-24 select-none" wire:poll.10s="SaveDataToSession">
+    <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+        @if( $type == "test" )
+            <a href="{{route('test.index', $course[0] )}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        @else
+            <a href="{{route('quizzes.index', $course[0] )}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        @endif
+    </div>
     <div class="max-w-full mx-auto rounded-xl overflow-hidden  lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
-        <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor kitöltése</p>
+        <p class="text-center mb-6 font-black text-3xl">{{ $type == "test" ? "Vizsga feladatsor kitöltése" : "Kvíz kitöltése" }}</p>
         <div class="md:flex ">
             <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-700 rounded-lg border  shadow-xl">
                 <div
@@ -32,15 +49,20 @@
                                                             @switch($question['type'])
                                                                 @case('TrueFalse')
                                                                     <div
-                                                                        class="border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300"
+                                                                        @class([
+                                                                            "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300",
+                                                                           "border-green-500" => $quizEnded && $question['actual_ans'] == $optionIndex && $option['expected_ans'] == "checked",
+                                                                           "border-green-500 border-dashed" => $quizEnded && $question['actual_ans'] != $optionIndex && $option['expected_ans'] == "checked",
+                                                                           "border-red-500" => $quizEnded && $question['actual_ans'] == $optionIndex && $option['expected_ans'] == "unchecked"
+                                                                        ])
                                                                         id="option_div_{{$option['id']}}"
-                                                                        onclick="saveData()">
+                                                                    >
                                                                         <input
-                                                                            wire:model="test.questions.{{$questionIndex}}.actual_ans"
+                                                                            wire:model.defer="test.questions.{{$questionIndex}}.actual_ans"
                                                                             value="{{$optionIndex}}"
                                                                             id="option_{{$option['id']}}"
                                                                             type="radio"
-                                                                            name="option_{{$option['id']}}"
+                                                                            name="question_{{$question['id']}}"
                                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ">
                                                                         <label for="option_{{$option['id']}}"
                                                                                class="break-words font-sans pl-2 w-full text-md italic font-normal text-gray-900">{{$option['text']}}</label>
@@ -48,15 +70,19 @@
                                                                     @break
                                                                 @case('OneChoice')
                                                                     <div
-                                                                        class="border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300"
-                                                                        id="option_{{$option['id']}}"
-                                                                        onclick="saveData()">
+                                                                        @class([
+                                                                                "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center rounded bg-slate-100 hover:bg-slate-300",
+                                                                                "border-green-500" => $quizEnded && $question['actual_ans'] == $optionIndex && $option['expected_ans'] == "checked",
+                                                                                "border-green-500 border-dashed" => $quizEnded && $question['actual_ans'] != $optionIndex && $option['expected_ans'] == "checked",
+                                                                                "border-red-500" => $quizEnded && $question['actual_ans'] == $optionIndex && $option['expected_ans'] == "unchecked"
+                                                                                ])
+                                                                        id="option_{{$option['id']}}">
                                                                         <input
-                                                                            wire:model="test.questions.{{$questionIndex}}.actual_ans"
+                                                                            wire:model.defer="test.questions.{{$questionIndex}}.actual_ans"
                                                                             value="{{$optionIndex}}"
                                                                             id="option_{{$question['id']}}_{{$option['id']}}"
                                                                             type="radio"
-                                                                            name="option_{{$option['id']}}"
+                                                                            name="question_{{$question['id']}}"
                                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300">
                                                                         <label
                                                                             for="option_{{$question['id']}}_{{$option['id']}}"
@@ -66,11 +92,15 @@
                                                                     @break
                                                                 @case('MultipleChoice')
                                                                     <div
-                                                                        class="border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300"
-                                                                        id="option_div_{{$option['id']}}"
-                                                                        onclick="saveData()">
+                                                                        @class([
+                                                                                    "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 lg:ml-2  ml-0 mx-0 my-1 py-1 pl-6 flex items-center rounded   bg-slate-100 hover:bg-slate-300",
+                                                                                    "border-green-500" => $type == 'quiz' && $quizEnded && $option['actual_ans'] && $option['expected_ans'] == "checked",
+                                                                                    "border-green-500 border-dashed" => $type == 'quiz' && $quizEnded && !$option['actual_ans'] && $option['expected_ans'] == "checked" ,
+                                                                                    "border-red-500" => $type == 'quiz' && $quizEnded && $option['actual_ans'] && $option['expected_ans'] == "unchecked",
+                                                                                ])
+                                                                        id="option_div_{{$option['id']}}">
                                                                         <input
-                                                                            wire:model="test.questions.{{$questionIndex}}.options.{{$optionIndex}}.actual_ans"
+                                                                            wire:model.defer="test.questions.{{$questionIndex}}.options.{{$optionIndex}}.actual_ans"
                                                                             id="option_{{$option['id']}}"
                                                                             type="checkbox"
                                                                             name="option_{{$option['id']}}"
@@ -81,7 +111,11 @@
                                                                     @break
                                                                 @case('Sequence')
                                                                     <div
-                                                                        class="lg:mx-16 lg:px-8 lg:my-4 lg:py-2 mx-2 my-1 py-1 pl-6 flex items-center rounded border  bg-slate-100 hover:bg-slate-300"
+                                                                        @class([
+                                                                                " border-4 lg:mx-16 lg:px-8 lg:my-4 lg:py-2 mx-2 my-1 py-1 pl-6 flex items-center rounded border  bg-slate-100 hover:bg-slate-300",
+                                                                                 "border-green-500" => $type == 'quiz' && $quizEnded && $optionIndex+1 == $option['expected_ans'],
+                                                                                 "border-red-500" => $type == 'quiz' && $quizEnded && $optionIndex+1 != $option['expected_ans'],
+                                                                        ])
                                                                         wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}_{{ $option['id'] }}"
                                                                         wire:key="question-{{$questionIndex}}-option--{{ $option['id'] }}"
                                                                         wire:sortable.handle>
@@ -109,7 +143,7 @@
 @push('scripts')
     <script>
         function endTest() {
-            @this.emit('timeRanOut');
+        @this.emit('timeRanOut');
         }
     </script>
 @endpush

@@ -6,8 +6,8 @@
 @endsection
 @section('content')
     <div class="mt-4">
-        <div class="md:w-1/12 ml-12 mb-4">
-            <a href="{{url()->previous()}}">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+            <a href="{{ route('courses.modules', $module->course) }}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                     Vissza
@@ -18,7 +18,7 @@
             <div class="flex">
                 <div class="text-center mb-12 font-black text-3xl w-10/12">Modul módosítása</div>
             </div>
-            <div class="bg-slate-50 w-full rounded-xl">
+            <div class="bg-slate-50 rounded-xl">
                 @if($errors->any())
                     <div class="text-red-600 text-center divide-y-2">
                         <h1 class="text-xl font-black">Hiba</h1>

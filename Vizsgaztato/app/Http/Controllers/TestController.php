@@ -83,8 +83,7 @@ class TestController extends Controller
                     $testLiveWire = Session::get('attempt_' . $attempt->id);
                 }
                 else {
-                    $attempt->delete();
-                    $testLiveWire = $this->testService->getTestToWrite($test);
+                    $testLiveWire = $this->testService->getTestToWrite($test, true, $attempt);
                 }
             }
             return view('test.write', ['testLiveWire' => $testLiveWire, 'course' => $course]);
@@ -150,7 +149,10 @@ class TestController extends Controller
                 },
                'users.attempts' => function($query) use ($test) {
                     $query->where('test_attempts.test_id', $test->id);
-               }
+               },
+               'tests' => function($query) use ($test) {
+                    $query->where('courses_exams.test_id', $test->id);
+                }
             ]);
             return view('testAttempts.show', ['test' => $test, 'course'=>$course]);
         }

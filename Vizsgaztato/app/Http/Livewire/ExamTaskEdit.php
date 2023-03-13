@@ -97,6 +97,11 @@ class ExamTaskEdit extends Component
     {
         if ($this->questions[$questionIndex]['type'] == 'TrueFalse')
         {
+            foreach($this->questions[$questionIndex]['options'] as $optionIndex => $option) {
+                if(array_key_exists('id', $option)) {
+                    array_push($this->deletedOptions, $this->questions[$questionIndex]['options'][$optionIndex]);
+                }
+            }
             $this->questions[$questionIndex]['options'] = [
                 [
                     'text' => 'Igaz',
@@ -110,11 +115,8 @@ class ExamTaskEdit extends Component
                 ]
             ];
         }
-        else if($this->questions[$questionIndex]['type'] == 'Sequence')
-        {
-            $this->questions[$questionIndex]['options'] = [];
-        }
     }
+
     public function Add_Question()
     {
         array_unshift($this->questions,

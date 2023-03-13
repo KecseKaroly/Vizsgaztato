@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('title', 'Kurzusok')
 @section('content')
-    <div class="mt-16">
-        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden lg:w-10/12 md:w-8/12 w-11/12">
+    <div class="mt-4">
+        <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
             <div class="lg:flex lg:justify-between mb-12 ">
                 <div class="font-black text-3xl">Kurzusok</div>
-                <div class="w-fit">
+                <div class="w-fit mt-3">
                     @can('create', App\Models\Course::class)
                         <button type="button" class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
                             <a href="{{ route('courses.create') }}"><i class="fa-solid fa-circle-plus"></i> Kurzus létrehozása</a>
@@ -14,8 +14,8 @@
                 </div>
             </div>
 
-            <div class="bg-slate-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double">
-                <div class="w-full">
+            <div class="bg-slate-50 rounded-xl divide-y-4 divide-gray-400 divide-double">
+
                     @forelse($courses as $course)
                         <div class="bg-slate-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
                             <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
@@ -40,8 +40,6 @@
                             @endif
                         </div>
                     @endforelse
-                </div>
-
             </div>
         </div>
     </div>

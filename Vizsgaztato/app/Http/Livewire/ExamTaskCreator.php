@@ -184,7 +184,7 @@ class ExamTaskCreator extends Component
             $course_quiz->save();
 
             Alert::success('A kvíz mentése sikeresen megtörtént!');
-            return redirect()->route('test.index', $this->course);
+            return redirect()->route('courses.quizzes', $this->course);
         }
     }
 

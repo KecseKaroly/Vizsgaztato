@@ -6,8 +6,8 @@
 @endsection
 @section('content')
     <div class="mt-4">
-        <div class="md:w-1/12 ml-12 mb-4">
-            <a href="{{url()->previous()}}">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+            <a href="{{ route('courses.modules', $module->course) }}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                     Vissza
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="bg-gray-50 w-full rounded-xl divide-y-4 divide-gray-400 divide-double mt-4">
+            <div class="bg-gray-50 rounded-xl divide-y-4 divide-gray-400 divide-double mt-4">
                     <div class="prose" style="margin: auto;">
                         <textarea name="material" id="module-material-textarea">
                             {{ $module->material }}

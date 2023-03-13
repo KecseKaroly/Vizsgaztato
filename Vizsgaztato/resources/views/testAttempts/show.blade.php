@@ -1,59 +1,62 @@
 @extends('layouts.app')
 @section('title', 'Kitöltött feladatlapok')
 @section('content')
-
-    <div class="mt-24 mb-24 select-none">
+    <div class="mt-4 mb-24 select-none">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
+            <a href="{{route('test.index', $course )}}">
+                <button
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                    Vissza
+                </button>
+            </a>
+        </div>
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
-            <div>
-                <div class="text-center mb-12 font-black text-3xl italic">Kitöltött feladatlapok</div>
-            </div>
+            <div class="text-center mb-12 font-black text-3xl italic">Kitöltött feladatlapok</div>
             <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 text-gray-100">
                 @forelse($course->users as $user)
-                    <div class="my-6">
-                        <div class="bg-slate-600 rounded-lg">
-                            <div class=" flex w-full justify-between text-2xl py-2 px-2 rounded-md">
-                                <div class="flex divide-x-2">
-                                    <div class="px-4"><i class="fa-solid fa-users"></i></div>
+
+                        <div class="bg-slate-600 rounded-lg flex w-full justify-between text-2xl py-2 px-2">
+                                <div class="flex divide-x-2 content-center">
+                                    <div class="px-4 my-auto"><i class="fa-solid fa-users"></i></div>
                                     <div class="px-4 font-bold">{{ $user->name }}</div>
                                 </div>
-                                {{--<div>
-                                    <button data-modal-target="testGroupDetails"
-                                            data-modal-toggle="testGroupDetails"
-                                            data-group_id="{{ $group->id }}"
+                                <div>
+                                    <button data-modal-target="courseExamDetails"
+                                            data-modal-toggle="courseExamDetails"
+                                            data-course_id="{{ $course->id }}"
                                             data-test_id="{{ $test->id }}"
 
-                                            data-enabled_from="{{ $group->pivot->enabled_from }}"
-                                            data-enabled_until="{{ $group->pivot->enabled_until }}"
-                                            class="showGroupTestInfo
-                                                {{ $group->pivot->enabled_from < now() &&
-                                                   $group->pivot->enabled_until > now() ?
+                                            data-enabled_from="{{ $course->tests[0]->pivot->enabled_from }}"
+                                            data-enabled_until="{{ $course->tests[0]->pivot->enabled_until }}"
+                                            class="showCourseExamInfo
+                                                {{ $course->tests[0]->pivot->enabled_from < now() &&
+                                                   $course->tests[0]->pivot->enabled_until > now() ?
                                                         "bg-green-500" :
                                                         "bg-red-500"}}
                                                    p-1 rounded text-lg">
-                                        <i class="fa-solid {{ $group->pivot->enabled_from < now() &&
-                                                   $group->pivot->enabled_until > now() ?
+                                        <i class="fa-solid {{ $course->tests[0]->pivot->enabled_from < now() &&
+                                                   $course->tests[0]->pivot->enabled_until > now() ?
                                                         "fa-eye" :
                                                         "fa-eye-slash"}}"></i>
-                                        {{ $group->pivot->enabled_from < now() &&
-                                               $group->pivot->enabled_until > now() ?
+                                        {{ $course->tests[0]->pivot->enabled_from < now() &&
+                                               $course->tests[0]->pivot->enabled_until > now() ?
                                                     "Aktív" :
                                                     "Inaktív"}}
                                     </button>
-                                </div>--}}
-                                <div class="pr-6">
+                                </div>
+                                <div class="pr-6 my-auto">
                                     <button data-user_id="{{ $user->id }}"
-                                            class="user_id hover:cursor-pointer hover:bg-slate-800  text-2xl md:w-10 md:h-10 w-6 h-6 rounded-full bg-slate-400  text-white">
+                                            class="user_id hover:cursor-pointer hover:bg-slate-800 text-2xl w-10 h-10 rounded-full bg-slate-400  text-white">
                                         <i class="fa-solid fa-angles-down" id="arrow_of_user{{ $user->id }}"></i>
                                     </button>
                                 </div>
-                            </div>
+
                         </div>
                         <div id="attempts_of_user{{ $user->id }}"
-                             style="display: none;">
+                             style="display: none;" class="divide-y-2">
                             @forelse($user->attempts as $testAttempt )
                                 <div id="testAttempt#{{ $testAttempt->id }}"
-                                     class="hover:bg-blue-400 bg-slate-400 rounded-md flex items-center w-10/12 justify-between text-base px-12 py-2 ml-32">
-                                    <div>
+                                     class="hover:bg-blue-400 bg-slate-400 md:flex md:justify-between items-center md:w-10/12 w-11/12 px-12 py-2 md:ml-32 ml-8">
                                         <a href="{{ route('testAttempts.show', [$course, $testAttempt->id]) }}"
                                            target="_blank">
                                             <button
@@ -61,7 +64,6 @@
                                                 <i class="fa-solid fa-eye"></i> Megtekint
                                             </button>
                                         </a>
-                                    </div>
                                     <div>
                                         {{ $testAttempt->achievedScore }}
                                         /{{ $testAttempt->maxScore }}
@@ -88,7 +90,6 @@
                             @endforelse
                         </div>
 
-                    </div>
                 @empty
                     Nincsen még cspoport
                 @endforelse
@@ -96,18 +97,18 @@
         </div>
     </div>
 
-    <div id="testGroupDetails" tabindex="-1"
+    <div id="courseExamDetails" tabindex="-1"
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
         <div class="relative w-full h-full max-w-2xl md:h-auto">
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <form method="POST" action=" {{ route('updateTestGroup') }}">
+                <form method="POST" action=" {{ route('updateTestCourse') }}">
                     @csrf
                     @method('PUT')
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Érvényesség kezelése...
                         </h3>
-                        <button data-modal-hide="testGroupDetails" type="button"
+                        <button data-modal-hide="courseExamDetails" type="button"
                                 class="text-gray-400 bg-transparent hover:bg-red-500 hover:text-white rounded-lg p-1.5">
                             <i class="fa-solid fa-xmark fa-2xl"></i>
                             <span class="sr-only">Bezárás</span>
@@ -117,7 +118,7 @@
                         <div>Aktív:</div>
                         <div class="flex justify-around">
                             <input type="hidden" name="test_id" id="test_id">
-                            <input type="hidden" name="group_id" id="group_id">
+                            <input type="hidden" name="course_id" id="course_id">
                             <div><input type="datetime-local" name="enabled_from" id="enabled_from">-től</div>
                             <div><input type="datetime-local" name="enabled_until" id="enabled_until">-ig</div>
                         </div>
@@ -126,30 +127,11 @@
                         <button type="submit"
                                 class="border rounded bg-green-500 hover:bg-green-700 text-white p-2">Mentés
                         </button>
-                        <button data-modal-hide="testGroupDetails" type="button"
+                        <button data-modal-hide="courseExamDetails" type="button"
                                 class="border rounded bg-transparent hover:bg-stone-300 text-black p-2 ">Mégsem
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <div id="addGroups" tabindex="-1"
-         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-        <div class="relative w-full h-full max-w-2xl md:h-auto">
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Hozzárendelt csoportok...
-                    </h3>
-                    <button data-modal-hide="addGroups" type="button"
-                            class="text-gray-400 bg-transparent hover:bg-red-500 hover:text-white rounded-lg p-1.5">
-                        <i class="fa-solid fa-xmark fa-2xl"></i>
-                        <span class="sr-only">Bezárás</span>
-                    </button>
-                </div>
-                @livewire('search-groups', ['currentGroups'=>$test->groups, 'objectToAttachTo'=>$test])
             </div>
         </div>
     </div>

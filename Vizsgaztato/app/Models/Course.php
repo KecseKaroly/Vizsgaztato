@@ -60,6 +60,7 @@ class Course extends Model
             test::class,
             'courses_exams',
             'course_id',
-            'test_id');
+            'test_id')
+            ->withPivot('enabled_from', 'enabled_until');
     }
 }

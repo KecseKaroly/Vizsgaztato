@@ -2,7 +2,7 @@
 @section('title', 'A kurzus tagjai')
 @section('content')
     <div class="mt-4">
-        <div class="md:w-1/12 ml-12 mb-4">
+        <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
             <a href="{{route('courses.show', $course )}}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
@@ -101,8 +101,8 @@
                             <tr class="border-y mx-auto text-lg bg-slate-600 text-stone-200">
                                 <td class="pl-10">{{$group->name}}</td>
 
-                                <td> <button data-group_id="{{ $group->id }}"
-                                             class="group_id hover:cursor-pointer hover:bg-slate-800  text-2xl md:w-10 md:h-10 w-6 h-6 rounded-full bg-slate-400  text-white">
+                                <td class="text-center"> <button data-group_id="{{ $group->id }}"
+                                             class="group_id hover:cursor-pointer hover:bg-slate-800  text-2xl md:w-10 md:h-10 w-8 h-8 rounded-full bg-slate-400  text-white">
                                         <i class="fa-solid fa-angles-down" id="arrow_of_group{{ $group->id }}"></i>
                                     </button></td>
                             </tr>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CoursesExamsController;
 use App\Http\Controllers\CoursesGroupsController;
 use App\Http\Controllers\CoursesUsersController;
 use App\Http\Controllers\MediaController;
@@ -44,7 +45,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/test/{test}/show', [TestController::class, 'show'])->name('test.show');
     Route::resource('test', TestController::class)->only(['update', 'destroy']);
 
-    Route::put('/test/group/update', [TestsGroupsController::class, 'update'])->name('updateTestGroup');
+    Route::put('/test/course/update', [CoursesExamsController::class, 'update'])->name('updateTestCourse');
 
     Route::post('/join_request/submit', [GroupJoinRequestController::class, 'SubmitRequest'])->name('JoinRequestSubmit');
     Route::post('/join_request/accept', [GroupJoinRequestController::class, 'AcceptRequest'])->name('acceptGroupJoinRequest');
