@@ -1,28 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Verify Your Email Address') }}</div>
-
-                <div class="card-body">
-                    @if (session('resent'))
-                        <div class="alert alert-success" role="alert">
-                            {{ __('A fresh verification link has been sent to your email address.') }}
+    <div id="verification-modal"  aria-hidden="true" class="z-50 p-4">
+        <div class="mx-auto my-auto w-full h-full max-w-md md:h-auto">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="px-6 py-6 lg:px-8">
+                    <div class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Erősítse meg az Email címét!</div>
+                    @if(session('resent'))
+                        <div class="bg-green-200 text-green-500 mb-4">
+                            Kiküldtük az email címére az új megerősítő levelet!
                         </div>
                     @endif
 
-                    {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }},
                     <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
                         @csrf
-                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">{{ __('click here to request another') }}</button>.
+                        Mielőtt folytatná, kérjük, ellenőrizze az email címére küldött megerősítő linket!
+                        Amennyiben nem kapott ilyet,
+                        <button type="submit" class="text-blue-600 hover:underline">{{ __('kattintson ide egy új igényléséhez') }}</button>.
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection

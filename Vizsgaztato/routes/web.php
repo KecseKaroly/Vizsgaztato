@@ -7,6 +7,7 @@ use App\Http\Controllers\CoursesUsersController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\GroupController;
@@ -28,11 +29,11 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Auth::routes();
-Route::middleware(['auth'])->group(function() {
+Auth::routes(['verify' => true]);
+Route::middleware(['auth'/*, 'verified'*/])->group(function() {
 
     Route::get('/', function () { return view('layouts.app'); });
-    Route::get('/home', function () { return view('layouts.home'); })->name('home');
+    Route::get('/home', function () { return view('layouts.app'); })->name('home');
 
     Route::get('courses/{course}/attempt/{attempt}/result', [TestAttemptController::class, 'show'])->name('testAttempts.show');
     Route::delete('/attempt/delete', [TestAttemptController::class, 'destroy'])->name('testAttempts.delete');
@@ -78,6 +79,9 @@ Route::middleware(['auth'])->group(function() {
     Route::delete('/quizzes/{test}/delete', [QuizController::class, 'destroy'])->name('quizzes.destroy');
     Route::get('/courses/{course}/quizzes/{test}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
     Route::get('/quizzes/{test}/show', [QuizController::class, 'show'])->name('quizzes.show');
+
+    Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
 
     Route::post('media/image/store', [MediaController::class, 'storeImage'])->name('media.image.store');
 });

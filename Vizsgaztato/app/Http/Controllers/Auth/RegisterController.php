@@ -54,6 +54,21 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'acceptTOS'=>['required'],
+        ],
+        [
+            'username.required' => 'Felhasználónév megadása kötelező!',
+            'username.max' => 'A felhasználónév hossza nem lehet több, mint 255 karakter!',
+            'name.required' => 'Név megadása kötelező!',
+            'name.max' => 'A nevének hossza nem lehet több, mint 255 karakter!',
+            'email.required' => 'Email megadása kötelező!',
+            'email.email' => 'Email formátuma nem megfelelő!',
+            'email.max' => 'A email címének hossza nem lehet több, mint 255 karakter!',
+            'email.unique' => 'A megadott email cím már foglalt!',
+            'password.required' => 'Jelszó megadása kötelező!',
+            'password.min' => 'Jelszó minimum 8 karakter hosszú!',
+            'password.confirmed' => 'A jelszavak nem egyeznek!',
+            'acceptTOS.required' => 'A felhasználási feltételek elfogadása kötelező!',
         ]);
     }
 
@@ -72,5 +87,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'is_student' => isset($data['is_student']),
         ]);
+        dd($data);
     }
 }
