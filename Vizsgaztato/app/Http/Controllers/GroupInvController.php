@@ -26,12 +26,13 @@ class GroupInvController extends Controller
    }
 
    public function index() {
+
     $inv_requests = DB::table('group_invs')
         ->join('users', 'users.id', '=', 'group_invs.sender_id')
         ->join('groups', 'groups.id', '=', 'group_invs.group_id')
         ->select('users.name as USERNAME', 'groups.name', 'group_invs.*')
         ->where('group_invs.invited_id', auth()->id())
-        ->get();
+        ->paginate(10);
     return view('groups.inv_request.index')->with('inv_requests', $inv_requests);
 }
 

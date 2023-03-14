@@ -29,7 +29,7 @@ class GroupController extends Controller
             ->whereIn('id', function ($query) {
                 $query->select('group_id')->from('groups_users')->where('user_id', auth()->id());
             })
-            ->get();
+            ->paginate(3);
         foreach ($groups as $group) {
             $group->join_requests = group_join_request::where('group_id', $group->id)->groupBy('group_id')->count();
         }
@@ -94,9 +94,9 @@ class GroupController extends Controller
     {
         try{
             $this->authorize('view', $group);
-            $groups = $group->load('users');
+            $users = $group->users()->paginate(5);
             $is_admin = groups_users::where(['user_id' => auth()->id(), 'group_id' => $group->id])->first()->is_admin;
-            return view('groups.show', ['groups' => $groups, 'group' => $group, 'isAdmin' => $is_admin]);
+            return view('groups.show', ['users' => $users, 'group' => $group, 'isAdmin' => $is_admin]);
 
         }
         catch(AuthorizationException $exception) {

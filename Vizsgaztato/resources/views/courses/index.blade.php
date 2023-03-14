@@ -40,6 +40,7 @@
                             @endif
                         </div>
                     @endforelse
+                {{ $courses->links() }}
             </div>
         </div>
     </div>

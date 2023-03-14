@@ -29,7 +29,8 @@ class QuizController extends Controller
     {
         try{
             $this->authorize('viewAny', [test::class, $course]);
-            return view('quizzes.index', ['course'=>$course]);
+            $quizzes = $course->quizzes()->paginate(10);
+            return view('quizzes.index', ['course'=>$course, 'quizzes'=>$quizzes]);
         }
         catch (AuthorizationException $exception) {
             Alert::warning($exception->getMessage());

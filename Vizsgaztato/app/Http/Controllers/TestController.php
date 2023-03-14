@@ -35,7 +35,7 @@ class TestController extends Controller
      */
     public function index(Course $course)
     {
-        $tests = $course->tests;
+        $tests = $course->tests()->paginate();
         return view('test.index', ['tests' => $tests, 'course'=>$course]);
     }
 

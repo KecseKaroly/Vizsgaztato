@@ -139,6 +139,7 @@
                             </div>
                         @endforelse
                     @endcan
+                    {{ $tests->links() }}
                 </div>
             </div>
         </div>

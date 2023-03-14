@@ -44,6 +44,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    {{ $join_requests->links() }}
                 </tbody>
               </table>
         </div>

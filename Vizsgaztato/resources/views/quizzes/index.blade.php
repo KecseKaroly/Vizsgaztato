@@ -13,7 +13,7 @@
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
             <div
                 class="bg-slate-50 w-full rounded-xl divide-gray-400 divide-double mt-4">
-                        @forelse($course->quizzes as $quiz)
+                        @forelse($quizzes as $quiz)
                             <div class="bg-slate-600 w-11/12 mx-auto mt-2 mb-2 text-gray-100 text-center md:px-6 px-3 md:py-2 py-1 flex">
                                 <div class="md:flex md:flex-wrap md:justify-between w-full">
                                     <div class="text-lg font-bold text-left basis-1/3">
@@ -58,6 +58,7 @@
                                 A kurzushoz még nincsen modul elkészítve... talán később
                             </div>
                         @endforelse
+                {{ $quizzes->links() }}
             </div>
         </div>
     </div>

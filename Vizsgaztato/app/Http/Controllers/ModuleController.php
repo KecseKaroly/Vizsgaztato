@@ -19,7 +19,8 @@ class ModuleController extends Controller
     {
         try{
             $this->authorize('view', $course);
-            return view('modules.index', ['course'=>$course]);
+            $modules = $course->modules()->paginate(2);
+            return view('modules.index', ['course'=>$course,'modules'=>$modules]);
         }
         catch (AuthorizationException $exception)
         {

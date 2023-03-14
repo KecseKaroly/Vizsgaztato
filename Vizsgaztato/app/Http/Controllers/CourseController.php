@@ -21,7 +21,7 @@ class CourseController extends Controller
             ->whereIn('id', function ($query) {
                 $query->select('course_id')->from('courses_users')->where('user_id', auth()->id());
             })
-            ->get();
+            ->paginate(3);
         return view('courses.index', ['courses' => $courses]);
     }
 

@@ -40,7 +40,7 @@
                 @endif
                 <div class="w-11/12 mx-auto pt-5 text-2xl font-bold underline">Csoport tagjai:</div>
                 <div class="divide-y-4 flex flex-col">
-                    @foreach($group->users as $user)
+                    @foreach($users as $user)
 
                         <div class="w-10/12 mx-auto text-gray-100  py-5 flex" id="group_user-{{ $user->pivot->id }}">
                             <div class="bg-slate-600 w-full px-3 flex justify-between content-start text-center">
@@ -80,6 +80,7 @@
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
         </div>

@@ -24,19 +24,18 @@
             </div>
             <div
                 class="bg-slate-50 rounded-xl divide-gray-400 divide-double mt-4">
-
                 <table class="my-4 table-auto w-11/12 mx-auto border-collapse border border-4 border-black">
-                    @forelse($course->modules as $module)
-                        <tr class="bg-slate-600 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center">
-                            <td class="text-lg font-bold text-left pl-6">
-                                <div>
-                                    {{$loop->iteration}}. modul
-                                    {{ $module->title }}
-                                </div>
-                                <div class="text-sm font-light pl-12">Témakör: {{ $module->topic }}</div>
-                            </td>
-                            <td class="flex justify-evenly">
-                                @can('delete', $module)
+                    @can('create', [App\Models\Module::class, $course])
+                        @forelse($modules as $module)
+                            <tr class="bg-slate-600 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center">
+                                <td class="text-lg font-bold text-left pl-6">
+                                    <div>
+                                        {{$loop->iteration}}. modul
+                                        {{ $module->title }}
+                                    </div>
+                                    <div class="text-sm font-light pl-12">Témakör: {{ $module->topic }}</div>
+                                </td>
+                                <td class="flex justify-evenly">
                                     <form method="POST" action="{{route('modules.destroy', $module) }}">
                                         @method('DELETE')
                                         @csrf
@@ -45,35 +44,64 @@
                                             <i class="fa-solid fa-trash fa-lg"></i>
                                         </button>
                                     </form>
-                                @endcan
-                                @can('update', $module)
                                     <a href="{{ route('modules.edit', $module) }}">
                                         <button
                                             class="bg-yellow-50 hover:bg-yellow-300 text-yellow-300 hover:text-yellow-50 border-4 border-yellow-300 hover:border-yellow-50 rounded-lg  font-semibold text-lg  w-fit py-1.5 px-2 mt-1.5 mb-2.5">
                                             <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                         </button>
                                     </a>
-                                @endcan
-                            </td>
-                            <td>
-                                <a href="{{ route('modules.show', $module) }}">
-                                    <button
-                                        class="text-2xl md:w-12 md:h-12 w-10 h-10 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
-                                        <i class="fa-solid fa-angles-right"></i>
-                                    </button>
-                                </a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('modules.show', $module) }}">
+                                        <button
+                                            class="text-2xl md:w-12 md:h-12 w-10 h-10 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
+                                            <i class="fa-solid fa-angles-right"></i>
+                                        </button>
+                                    </a>
 
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
 
-                            <td colspan="2" class="text-center text-lg font-semibold italic py-4">
-                                A kurzushoz még nincsen modul elkészítve... talán később
-                            </td>
-                        </tr>
-                    @endforelse
+                                <td colspan="2" class="text-center text-lg font-semibold italic py-4">
+                                    A kurzushoz még nincsen modul elkészítve... talán később
+                                </td>
+                            </tr>
+                        @endforelse
+                    @else
+                        @forelse($modules as $module)
+                            <tr class="bg-slate-600 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center">
+                                <td class="text-lg font-bold text-left pl-6">
+                                    <div>
+                                        {{$loop->iteration}}. modul
+                                        {{ $module->title }}
+                                    </div>
+                                    <div class="text-sm font-light pl-12">Témakör: {{ $module->topic }}</div>
+                                </td>
+                                <td class="flex justify-evenly">
+                                </td>
+                                <td>
+                                    <a href="{{ route('modules.show', $module) }}">
+                                        <button
+                                            class="text-2xl md:w-12 md:h-12 w-10 h-10 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
+                                            <i class="fa-solid fa-angles-right"></i>
+                                        </button>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+
+                                <td colspan="2" class="text-center text-lg font-semibold italic py-4">
+                                    A kurzushoz még nincsen modul elkészítve... talán később
+                                </td>
+                            </tr>
+                        @endforelse
+                    @endcan
                 </table>
+                {{ $modules->links() }}
             </div>
         </div>
     </div>

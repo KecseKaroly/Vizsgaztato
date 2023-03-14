@@ -44,7 +44,7 @@ class GroupJoinRequestController extends Controller
             ->join('users', 'users.id', '=', 'group_join_requests.requester_id')
             ->select('users.name','group_join_requests.*')
             ->where('group_join_requests.group_id', $group_id)
-            ->get();
+            ->paginate(10);
         return view('groups.join_request.index')->with('join_requests', $join_requests);
     }
 

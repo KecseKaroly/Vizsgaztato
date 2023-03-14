@@ -44,6 +44,7 @@
                         </td>
                     </tr>
                     @endforeach
+                    {{ $inv_requests->links() }}
                 </tbody>
               </table>
         </div>
