@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', 'Regisztráció')
+@section('title', 'Elfelejtett jelszó')
 
 @section('content')
     <div class="flex flex-col items-center justify-left border rounded-3xl bg-slate-50 mt-16 md:mx-24 mx-8 py-8">
-        <div class="text-4xl font-bold mb-8 text-center">Regisztráció</div>
+        <div class="text-4xl font-bold mb-8 text-center">Elfelejtett jelszó</div>
         <hr class="w-10/12 h-1 mx-auto bg-gray-100 border-0 rounded md:mb-10 dark:bg-gray-700">
-        <div class="w-full flex flex-col items-center ">
+        <div class="w-full flex flex-col items-center">
             @if (session('status'))
                 <div>
                     {{ session('status') }}

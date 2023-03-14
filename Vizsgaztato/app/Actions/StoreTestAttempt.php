@@ -8,9 +8,11 @@ use App\Models\given_answer;
 use Session;
 class StoreTestAttempt
 {
-    public function store($test): testAttempt
+    public function store($test)
     {
         $attempt = testAttempt::find($test['attempt_id']);
+        if($attempt->submitted)
+            return false;
         $attempt->submitted = true;
         $attempt->save();
         foreach ($test['questions'] as $questionIndex => $question) {
@@ -36,7 +38,7 @@ class StoreTestAttempt
             }
         }
         Session::forget('attempt_'.$attempt->id);
-
+        info("Attempt submitted with id:".$attempt->id);
         return $attempt;
     }
 }

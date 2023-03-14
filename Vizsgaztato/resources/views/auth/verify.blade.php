@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Email megerősítése')
 @section('content')
     <div id="verification-modal"  aria-hidden="true" class="z-50 p-4">
         <div class="mx-auto my-auto w-full h-full max-w-md md:h-auto">

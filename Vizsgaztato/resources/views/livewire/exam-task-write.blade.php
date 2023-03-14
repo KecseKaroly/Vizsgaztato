@@ -1,4 +1,4 @@
-<div class="pt-4 mb-24 select-none" wire:poll.10s="SaveDataToSession">
+<div class="pt-4 mb-24 select-none" wire:poll.5s="SaveDataToSession">
     <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
         @if( $type == "test" )
             <a href="{{route('test.index', $course[0] )}}">
@@ -58,7 +58,7 @@
                                                                         id="option_div_{{$option['id']}}"
                                                                     >
                                                                         <input
-                                                                            wire:model.defer="test.questions.{{$questionIndex}}.actual_ans"
+                                                                            wire:model="test.questions.{{$questionIndex}}.actual_ans"
                                                                             value="{{$optionIndex}}"
                                                                             id="option_{{$option['id']}}"
                                                                             type="radio"
@@ -78,7 +78,7 @@
                                                                                 ])
                                                                         id="option_{{$option['id']}}">
                                                                         <input
-                                                                            wire:model.defer="test.questions.{{$questionIndex}}.actual_ans"
+                                                                            wire:model="test.questions.{{$questionIndex}}.actual_ans"
                                                                             value="{{$optionIndex}}"
                                                                             id="option_{{$question['id']}}_{{$option['id']}}"
                                                                             type="radio"
@@ -100,7 +100,7 @@
                                                                                 ])
                                                                         id="option_div_{{$option['id']}}">
                                                                         <input
-                                                                            wire:model.defer="test.questions.{{$questionIndex}}.options.{{$optionIndex}}.actual_ans"
+                                                                            wire:model="test.questions.{{$questionIndex}}.options.{{$optionIndex}}.actual_ans"
                                                                             id="option_{{$option['id']}}"
                                                                             type="checkbox"
                                                                             name="option_{{$option['id']}}"

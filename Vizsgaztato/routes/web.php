@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Auth::routes(['verify' => true]);
-Route::middleware(['auth'/*, 'verified'*/])->group(function() {
+Route::middleware(['auth', 'verified'])->group(function() {
 
     Route::get('/', function () { return view('layouts.app'); });
     Route::get('/home', function () { return view('layouts.app'); })->name('home');

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Jobs\CloseAttemptJob;
+use App\Jobs\EndTestAttemptJob;
 use App\Models\testAttempt;
 use App\Models\test;
 use App\Models\question;
@@ -10,7 +12,6 @@ use App\Models\answer;
 use Session;
 class TestService
 {
-
     public function store(test $test, $questions)
     {
         foreach ($questions as $questionIndex => $question) {
@@ -155,20 +156,6 @@ class TestService
             'resultsViewable' => $test->resultsViewable,
             'questions' => []
         ];
-        if($submitAttempt)
-        {
-            if($attempt == null)
-            {
-                $attempt = new testAttempt([
-                    'user_id'=>auth()->id(),
-                    'test_id'=>$test->id,
-                ]);
-                $attempt->save();
-            }
-            $testLiveWire['attempt_id'] =$attempt->id;
-            $testLiveWire['started'] = $attempt->created_at;
-            $testLiveWire['duration'] = $test->duration * 60 - $attempt->created_at->diffInSeconds(now());;
-        }
         foreach ($test->questions as $questionIndex => $question) {
             $testLiveWire['questions'][] = [
                 'id' => $question->id,
@@ -195,8 +182,22 @@ class TestService
                 shuffle($testLiveWire['questions'][$questionIndex]['options']);
         }
         shuffle($testLiveWire['questions']);
+
         if($submitAttempt)
         {
+            if($attempt == null)
+            {
+                $attempt = new testAttempt([
+                    'user_id'=>auth()->id(),
+                    'test_id'=>$test->id,
+                ]);
+                $attempt->save();
+                $testLiveWire['attempt_id'] = $attempt->id;
+                dispatch(new EndTestAttemptJob($testLiveWire))->delay(now()->addSecond($test->duration*60 + 1));
+            }
+            $testLiveWire['attempt_id'] =$attempt->id;
+            $testLiveWire['started'] = $attempt->created_at;
+            $testLiveWire['duration'] = $test->duration * 60 - $attempt->created_at->diffInSeconds(now());
             Session::put('attempt_'. $attempt->id, $testLiveWire);
         }
         return $testLiveWire;
