@@ -84,4 +84,9 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
 
     Route::post('media/image/store', [MediaController::class, 'storeImage'])->name('media.image.store');
+
+
+    Route::get('/groups/{group}/chat', [App\Http\Controllers\GroupMessageController::class, 'index'])->name('group.messages');
+    Route::get('/groups/{group}/message', [App\Http\Controllers\GroupMessageController::class, 'latest'])->name('messages.latest');
+    Route::post('/groups/{group}/message', [App\Http\Controllers\GroupMessageController::class, 'store'])->name('message.store');
 });

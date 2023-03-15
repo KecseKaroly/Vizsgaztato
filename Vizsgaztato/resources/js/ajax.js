@@ -199,3 +199,23 @@ $(".showCourseExamInfo").click(function (e) {
 });
 
 
+$("#sendGroupMessage").click(function (e) {
+    e.preventDefault();
+    var message = $("input[name=message]").val();
+    var name = $("input[name=name]").val();
+    var group_id = $("input[name=group_id]").val();
+    $.ajax({
+        type: 'POST',
+        url: `/groups/${group_id}/message`,
+        data: {message: message},
+        success: function (data) {
+            $("input[name=message]").val('');
+            $("#chat").append(`<div>${data.user.name} said: ${data.message}</div>`);
+        },
+        error: function (data) {
+            alert("Valami hiba történt...");
+        }
+    });
+});
+
+

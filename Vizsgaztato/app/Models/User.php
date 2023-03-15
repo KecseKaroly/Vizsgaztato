@@ -59,4 +59,9 @@ class User extends Authenticatable  implements  \Illuminate\Contracts\Auth\MustV
             'group_id')
             ->withPivot(['is_admin']);
     }
+
+    public function groupMessages()
+    {
+        return $this->hasMany(GroupMessage::class);
+    }
 }

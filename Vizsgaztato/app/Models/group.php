@@ -36,4 +36,9 @@ class group extends Model
             'test_id')
             ->withPivot('enabled_from', 'enabled_until');
     }
+
+    public function groupMessages()
+    {
+        return $this->hasMany(GroupMessage::class);
+    }
 }

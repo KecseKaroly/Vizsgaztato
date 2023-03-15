@@ -21,9 +21,11 @@
     <script src="https://kit.fontawesome.com/9b89b1cf87.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/datepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.30/vue.global.min.js"></script>
 
     <script src="https://unpkg.com/@themesberg/flowbite@1.1.1/dist/flowbite.bundle.js"></script>
     @vite('resources/js/confirm_form_submit.js')
+    @vite('resources/js/app.js')
     @vite('resources/js/ajax.js')
     @livewireStyles
 </head>
