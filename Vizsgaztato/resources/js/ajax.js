@@ -219,3 +219,39 @@ $("#sendGroupMessage").click(function (e) {
 });
 
 
+var left = 0;
+var mouseleft = false;
+var testDiv = $("#testDiv");
+console.log(testDiv);
+console.log(left);
+testDiv.mouseleave(function(){
+    console.log("left");
+    mouseleft = true;
+    left = Date.now();
+});
+testDiv.mouseenter(function(){
+    console.log("entered");
+    if(mouseleft) {
+        mouseleft = false;
+        const diff = left - Date.now();
+        console.log(diff);
+        if(diff < -1000)
+        {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Teszt vége!',
+                text: 'Túl sok ideig tartózkodott az engedélyezett tartományon kívül!',
+                confirmButtonText: 'Értem',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.close;
+                    endTest();
+                }
+            });
+        }
+    }
+});
+
+
