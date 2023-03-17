@@ -129,10 +129,17 @@
                                             @endforeach
                                     </div>
                                     <div class="flex flex-col items-center mb-10 w-full">
+                                        @if(!$quizEnded)
                                         <button wire:click="endTest()"
                                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-1/2">
                                             Befejezés
                                         </button>
+                                        @else
+                                            <button wire:click="resetQuiz()"
+                                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-1/2">
+                                                Újra
+                                            </button>
+                                        @endif
                                     </div>
                         </div>
                 </div>
@@ -143,7 +150,7 @@
 @push('scripts')
     <script>
         function endTest() {
-        @this.emit('timeRanOut');
+            @this.emit('timeRanOut');
         }
     </script>
 @endpush

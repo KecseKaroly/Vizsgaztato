@@ -20,6 +20,7 @@ class ExamTaskWrite extends Component
     public $test;
     public $type;
     public $course;
+    public $defaultTestLiveWire;
 
     protected $listeners = ['timeRanOut', 'saveData'=>'SaveDataToSession'];
     public function updateOptionOrder($list) {
@@ -55,6 +56,9 @@ class ExamTaskWrite extends Component
     public function mount($testLiveWire, $course, $type="test")
     {
         $this->type = $type;
+        if($this->type == 'quiz') {
+            $this->defaultTestLiveWire = $testLiveWire;
+        }
         $this->course = $course;
         $this->test = $testLiveWire;
     }
@@ -62,5 +66,9 @@ class ExamTaskWrite extends Component
     public function SaveDataToSession() {
         if($this->type == "test")
             Session::put('attempt_'.$this->test['attempt_id'], $this->test);
+    }
+
+    public function resetQuiz() {
+        return redirect()->route('quizzes.show', $this->test['id']);
     }
 }
