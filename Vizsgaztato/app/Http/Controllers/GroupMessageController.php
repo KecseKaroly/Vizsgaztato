@@ -27,6 +27,6 @@ class GroupMessageController extends Controller
         ]);
         $message->save();
         broadcast(new GroupMessageSent($group->id))->toOthers();
-        return $message->load('user');
+        return $message;
     }
 }

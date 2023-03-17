@@ -190,7 +190,6 @@ $(".user_id").click(function (e) {
 
 
 $(".showCourseExamInfo").click(function (e) {
-    console.log("ASD");
     const params = $(this).data();
     $("#enabled_from").val(params["enabled_from"].slice(0, -3));
     $("#enabled_until").val(params["enabled_until"].slice(0, -3));
@@ -199,31 +198,12 @@ $(".showCourseExamInfo").click(function (e) {
 });
 
 
-$("#sendGroupMessage").click(function (e) {
-    e.preventDefault();
-    var message = $("input[name=message]").val();
-    var name = $("input[name=name]").val();
-    var group_id = $("input[name=group_id]").val();
-    $.ajax({
-        type: 'POST',
-        url: `/groups/${group_id}/message`,
-        data: {message: message},
-        success: function (data) {
-            $("input[name=message]").val('');
-            $("#chat").append(`<div>${data.user.name} said: ${data.message}</div>`);
-        },
-        error: function (data) {
-            alert("Valami hiba történt...");
-        }
-    });
-});
+
 
 
 var left = 0;
 var mouseleft = false;
 var testDiv = $("#testDiv");
-console.log(testDiv);
-console.log(left);
 testDiv.mouseleave(function(){
     console.log("left");
     mouseleft = true;

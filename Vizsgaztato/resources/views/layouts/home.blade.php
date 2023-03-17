@@ -15,7 +15,7 @@
     @vite('resources/css/app.css')
 </head>
 <body class="bg-slate-300">
-<div id="app" class="relative  md:h-[89.9vh] h-screen">
+<div id="app" class="relative h-screen">
     <nav class="bg-white shadow-sm p-5">
             <div class="flex justify-between w-full">
                 <a href="{{route('home')}}" class="flex text-2xl font-bold italic">Online vizsgáztató rendszer</a>

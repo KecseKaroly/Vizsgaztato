@@ -11,8 +11,12 @@
             </a>
         </div>
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden  lg:w-10/12 md:w-8/12 w-11/12">
-            <div class="lg:flex lg:justify-between mb-12">
+            <div class="mb-12">
                 <div class="font-black text-3xl">Csoport: {{ $group->name }}</div>
+                <a href="{{ route('group.messages', $group) }}" class="inline-flex items-center p-2 mt-2 text-lg font-semibold text-center text-white border rounded-lg bg-cyan-600 hover:bg-cyan-900">
+                    <i class="fa-regular fa-comments pr-3"></i>Üzenetek
+                </a>
+
             </div>
             @if($isAdmin)
                 <div class="w-fit">
@@ -80,7 +84,6 @@
                             </div>
                         </div>
                     @endforeach
-
                 </div>
             </div>
         </div>
