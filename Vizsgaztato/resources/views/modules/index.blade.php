@@ -30,7 +30,6 @@
                             <tr class="bg-slate-600 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center">
                                 <td class="text-lg font-bold text-left pl-6">
                                     <div>
-                                        {{$loop->iteration}}. modul
                                         {{ $module->title }}
                                     </div>
                                     <div class="text-sm font-light pl-12">Témakör: {{ $module->topic }}</div>

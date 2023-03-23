@@ -63,14 +63,14 @@
                                 </div>
                                 <div class="flex sm:w-1/2 w-full sm:justify-evenly justify-between">
                                     <div class="flex">
+                                        <button
+                                            class="deleteTestBtn bg-red-50 hover:bg-red-500 text-red-500 hover:text-red-50 border-4 border-red-500 hover:border-red-50 rounded-lg  font-semibold text-lg  w-fit py-1.5 px-2 mt-1.5 mb-2.5">
+                                            <i class="fa-solid fa-trash fa-lg"></i>
+                                        </button>
                                         @can('delete', $test)
-                                            <form method="POST" action="{{route('test.destroy', $test) }}">
-                                                @method('DELETE')
+                                            <form method="POST" >
                                                 @csrf
-                                                <button
-                                                    class="deleteQuizBtn bg-red-50 hover:bg-red-500 text-red-500 hover:text-red-50 border-4 border-red-500 hover:border-red-50 rounded-lg  font-semibold text-lg  w-fit py-1.5 px-2 mt-1.5 mb-2.5">
-                                                    <i class="fa-solid fa-trash fa-lg"></i>
-                                                </button>
+
                                             </form>
                                         @endcan
                                         @can('update', $test)

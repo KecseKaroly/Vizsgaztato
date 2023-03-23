@@ -116,6 +116,7 @@
             });
         }
     </script>
+    @vite('resources/js/bootstrap.js')
     <script type="module">
         var groupId = 1;
         var messageDiv = document.getElementById('messages');
