@@ -31,13 +31,20 @@
                             @forelse($user->attempts as $testAttempt )
                                 <div id="testAttempt#{{ $testAttempt->id }}"
                                      class="hover:bg-blue-400 bg-slate-400 md:flex md:justify-between items-center md:w-10/12 w-11/12 px-12 py-2 md:ml-32 ml-8">
-                                        <a href="{{ route('testAttempts.show', [$course, $testAttempt->id]) }}"
+                                    @if($testAttempt->submitted)
+                                    <a href="{{ route('testAttempts.show', [$course, $testAttempt->id]) }}"
                                            target="_blank">
                                             <button
                                                 class="bg-lime-500 hover:bg-lime-300 p-1.5 border rounded-lg text-lime-900 ">
                                                 <i class="fa-solid fa-eye"></i> Megtekint
                                             </button>
                                         </a>
+                                    @else
+                                        <button
+                                            class="bg-stone-300 p-1.5 border rounded-lg text-lime-900 cursor-default">
+                                            Kitöltés alatt...
+                                        </button>
+                                    @endif
                                     <div>
                                         {{ $testAttempt->achievedScore }}
                                         /{{ $testAttempt->maxScore }}

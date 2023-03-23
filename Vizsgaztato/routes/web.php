@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/group/{id}/join_requests', [GroupJoinRequestController::class, 'index'])->name('join_requests');
 
     Route::get('/groups/invites', [GroupInvController::class, 'index'])->name('inv_requests');
-    Route::post('/inv_request/accept', [GroupInvController::class, 'AcceptRequest'])->name('declineGroupInvRequest');
+    Route::post('/inv_request/accept', [GroupInvController::class, 'AcceptRequest'])->name('acceptGroupInvRequest');
     Route::delete('/inv_request/decline', [GroupInvController::class, 'RejectRequest'])->name('declineGroupInvRequest');
 
     Route::delete('/group/user/{id}/remove', [GroupsUsersController::class, 'destroy'])->name('deleteUserFromGroup');
