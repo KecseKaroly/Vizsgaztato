@@ -4,6 +4,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CoursesExamsController;
 use App\Http\Controllers\CoursesGroupsController;
 use App\Http\Controllers\CoursesUsersController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\QuizController;
@@ -34,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/register/teacher', [UserController::class, 'create'])->name('registration.teacher');
     Route::post('/register/teacher', [UserController::class, 'store'])->name('register.teacher');
     Route::get('/', function () { return view('layouts.app'); });
-    Route::get('/home', function () { return view('layouts.app'); })->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::get('courses/{course}/attempt/{attempt}/result', [TestAttemptController::class, 'show'])->name('testAttempts.show');
     Route::delete('/attempt/delete', [TestAttemptController::class, 'destroy'])->name('testAttempts.delete');

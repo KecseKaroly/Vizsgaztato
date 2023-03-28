@@ -32,7 +32,7 @@
 
     <nav class="border-gray-200 bg-gray-100">
             <div class="container mx-auto flex flex-wrap items-center justify-between">
-                <a href="#" class="flex">
+                <a href="{{ route('home') }}" class="flex">
                     <img src="{{ asset('./logo_black.png') }}" alt="logo" class="h-15 -my-4" width="120" height="120"/>
                     <span class="self-center text-lg font-semibold whitespace-nowrap">ExamOnline</span>
                 </a>
@@ -58,7 +58,7 @@
                     @else
                         <ul class="flex-col md:flex-row flex md:space-x-8 mt-4 md:mt-0 md:text-sm md:font-medium">
                         <li>
-                            <a href="#" class="bg-blue-700 md:bg-transparent text-white block pl-3 pr-4 py-2 md:text-blue-700 md:p-0 rounded focus:outline-none" aria-current="page">Főoldal</a>
+                            <a href="{{ route('home') }}" class="bg-blue-700 md:bg-transparent text-white block pl-3 pr-4 py-2 md:text-blue-700 md:p-0 rounded focus:outline-none" aria-current="page">Főoldal</a>
                         </li>
                         @if(auth()->user()->auth != 9)
                             <li>
@@ -78,9 +78,6 @@
                                 <ul class="py-1" aria-labelledby="dropdownLargeButton">
                                     <li>
                                         <a href="{{ route('users.show', auth()->user()) }}" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Profilom</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Eredményeim</a>
                                     </li>
                                 </ul>
                                 <div class="py-1">
