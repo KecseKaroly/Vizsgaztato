@@ -64,4 +64,13 @@ class User extends Authenticatable  implements  \Illuminate\Contracts\Auth\MustV
     {
         return $this->hasMany(GroupMessage::class);
     }
+
+    public function courses() : BelongsToMany {
+        return $this->belongsToMany(
+            Course::class,
+            'courses_users',
+            'user_id',
+            'course_id'
+        );
+    }
 }
