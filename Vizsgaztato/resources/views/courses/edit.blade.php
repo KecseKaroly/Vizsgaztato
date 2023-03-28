@@ -32,7 +32,7 @@
                         <div class="md:w-2/5">
                             <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-8 md:mx-0 mx-3"
                                    for="title">
-                                Kurzus címe
+                                Kurzus megnevezése
                             </label>
                         </div>
                         <div class="md:w-3/5">

@@ -94,6 +94,17 @@
                         </label>
                     </div>
                 </div>
+                <div class="md:flex md:items-center md:text-left mt-6">
+                    <div class="md:w-4/12">
+                    </div>
+                    <div class="md:w-4/12">
+                        Már regisztrált?
+                        <a class="text-blue-500 font-bold mb-1 md:mb-0"
+                           href="{{ route('login') }}">
+                            {{ __('Jelentkezzen be itt!') }}
+                        </a>
+                    </div>
+                </div>
                 <div class="md:flex md:items-center">
                     <div class="md:w-4/12"></div>
                     <div class="md:w-4/12">

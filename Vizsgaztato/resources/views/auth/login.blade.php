@@ -58,6 +58,18 @@
                     </div>
                 @endif
 
+                <div class="md:flex md:items-center md:text-left my-6">
+                    <div class="md:w-4/12">
+                    </div>
+                    <div class="md:w-4/12">
+                        Nincs még fiókja?
+                        <a class="text-blue-500 font-bold mb-1 md:mb-0"
+                           href="{{ route('register') }}">
+                            {{ __('Itt regisztrálhat!') }}
+                        </a>
+                    </div>
+                </div>
+
                 <div class="md:flex md:items-center mb-4">
                     <div class="md:w-1/3"></div>
                     <div class="md:w-2/3">

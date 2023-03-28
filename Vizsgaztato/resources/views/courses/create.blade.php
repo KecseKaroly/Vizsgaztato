@@ -30,14 +30,14 @@
                     <div class="md:flex md:items-center mb-6 mt-10">
                         <div class="md:w-2/5">
                             <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-8 md:mx-0 mx-3"
-                                   for="name">
-                                Kurzus neve
+                                   for="title">
+                                Kurzus megnevezése
                             </label>
                         </div>
                         <div class="md:w-3/5">
                             <input
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="name" type="text" name="name" required autofocus>
+                                id="name" type="text" name="title" required autofocus>
                         </div>
                     </div>
                     <div class="md:flex md:items-center mb-6 mt-10">

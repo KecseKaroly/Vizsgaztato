@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\CourseCreated;
+use App\Http\Requests\StoreCourseRequest;
 use App\Models\Course;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -50,16 +51,13 @@ class CourseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
         try{
             $this->authorize('create', Course::class);
-            $course = new course([
-                'title'=>$request->name,
-                'goal'=>$request->goal,
-                'creator_id'=>auth()->id(),
-            ]);
-            $course->save();
+            $validated = $request->safe()->merge(['creator_id' => auth()->id()])->all();
+            $course = Course::create($validated);
+
             event(new CourseCreated($course));
             Alert::success('Kruzus sikeresen mentve!');
             return redirect()->route('courses.show', $course);
@@ -82,7 +80,7 @@ class CourseController extends Controller
     {
         try{
             $this->authorize('view', $course);
-            //$course = $course->load('users', 'groups');
+            $course = $course->load('users', 'groups');
             $course->load('quizzes');
             return view('courses.show', ['course'=>$course]);
         }
@@ -120,13 +118,11 @@ class CourseController extends Controller
      * @param  \App\Models\Course $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(StoreCourseRequest $request, Course $course)
     {
         try{
             $this->authorize('update', $course);
-            $course->title = $request->title;
-            $course->goal = $request->goal;
-            $course->save();
+            $course->update($request->validated());
             Alert::success('Sikeres módosítás');
             return redirect()->route('courses.show', $course);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ModuleRequest;
 use App\Models\Course;
 use App\Models\Module;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -53,18 +54,12 @@ class ModuleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ModuleRequest $request)
     {
         try{
             $this->authorize('create', Course::find($request->course_id));
-
-            $module = new Module([
-                'title' => $request->title,
-                'topic'=>$request->topic,
-                'material'=>$request->material,
-                'course_id' => $request->course_id,
-                ]);
-            $module->save();
+            $validated = $request->safe()->merge(['course_id' => $request->course_id])->all();
+            $module = Module::create($validated);
             Alert::success('Modul sikeresen létrehozva!');
             return redirect()->route('courses.modules', ['course'=>$module->course]);
         }
@@ -118,15 +113,11 @@ class ModuleController extends Controller
      * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Module $module)
+    public function update(ModuleRequest $request, Module $module)
     {
         try{
             $this->authorize('update', $module);
-            $module->update([
-                'title'=>$request->title,
-                'topic'=>$request->topic,
-                'material'=>$request->material,
-            ]);
+            $module->update($request->validated());
             Alert::success('Modul sikeresen frissítve!');
             return view('modules.show', ['module'=>$module]);
         }
