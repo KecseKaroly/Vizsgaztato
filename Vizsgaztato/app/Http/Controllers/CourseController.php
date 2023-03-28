@@ -18,12 +18,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = DB::table('courses')->select('*')
-            ->whereIn('id', function ($query) {
-                $query->select('course_id')->from('courses_users')->where('user_id', auth()->id());
-            })
-            ->orWhereIn('id',auth()->user()->groups->pluck('id'))
-            ->paginate(3);
+        $courses = auth()->user()->courses()->paginate(3);
         return view('courses.index', ['courses' => $courses]);
     }
 
