@@ -25,11 +25,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = DB::table('groups')->select('*')
-            ->whereIn('id', function ($query) {
-                $query->select('group_id')->from('groups_users')->where('user_id', auth()->id());
-            })
-            ->paginate(3);
+        $groups = auth()->user()->groups()->paginate(3);
         foreach ($groups as $group) {
             $group->join_requests = group_join_request::where('group_id', $group->id)->groupBy('group_id')->count();
         }
