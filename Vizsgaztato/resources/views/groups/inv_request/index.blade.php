@@ -5,7 +5,7 @@
     <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
         <a href="{{route('groups.index')}}">
             <button
-                class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
+                class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-teal-200 rounded-md w-full">
                 Vissza
             </button>
         </a>
