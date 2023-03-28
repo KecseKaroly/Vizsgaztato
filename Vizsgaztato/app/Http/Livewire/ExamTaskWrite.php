@@ -38,7 +38,7 @@ class ExamTaskWrite extends Component
         {
             $attempt = (new StoreTestAttempt())->store($this->test);
             event(new TestEnded($attempt));
-            return redirect()->route('testAttempts.index', [$this->course[0]->id, $attempt->test_id]);
+            return redirect()->route('testAttempts.index', [$this->course->id, $attempt->test_id]);
         }
         else {
             $this->quizEnded = true;

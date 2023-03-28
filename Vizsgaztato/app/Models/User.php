@@ -24,7 +24,7 @@ class User extends Authenticatable  implements  \Illuminate\Contracts\Auth\MustV
         'name',
         'email',
         'password',
-        'is_student',
+        'auth',
     ];
 
     /**

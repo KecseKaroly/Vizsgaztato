@@ -1,6 +1,6 @@
 <div class="mt-4 mb-24">
     <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
-        @if( $type == "test" )
+        @if( $is_exam )
             <a href="{{route('test.index', $course )}}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
@@ -16,7 +16,7 @@
             </a>
         @endif
     </div>
-    <p class="text-center mb-12 font-black text-3xl">{{ $type == "test" ? "Vizsga feladatsor készítése" : "Kvíz készítése" }}</p>
+    <p class="text-center mb-12 font-black text-3xl">{{ $is_exam ? "Vizsga feladatsor készítése" : "Kvíz készítése" }}</p>
     <button wire:click="Add_Question"
             class="fixed left-6 bottom-6 text-white text-lg bg-green-700 hover:bg-green-800 rounded-full px-5 py-2.5 text-center">
         <i class="fa-solid fa-circle-plus"></i> Új kérdés
@@ -40,7 +40,7 @@
                            class="w-full bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]">
                 </div>
             </div>
-            @if($type == "test")
+            @if($is_exam)
                 <div class="flex flex-row flex-wrap justify-start mt-3">
                     <div class="font-semibold text-lg">
                         <p><label for="numOfTestAttempt">Lehetséges kitöltések száma:  @error('testAttempts') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
@@ -59,7 +59,7 @@
                         <div>
                             <input type="number" wire:model="durationMinute" id="durationMinute"
                                    min="5" max="120"
-                                   class="bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]" @disabled($type=="quiz")/>
+                                   class="bg-zinc-200 border-2 rounded-lg text-lg placeholder-[#716156]" @disabled(!$is_exam)/>
                             <label for="durationMinute" class="font-semibold text-lg">perc</label>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                 <div class="w-fit">
                     <label class="relative inline-flex items-center mr-5 cursor-pointer">
                         <input type="checkbox" value="" class="sr-only peer" id="canViewResult"
-                               wire:model="resultsViewable" @disabled($type=="quiz")>
+                               wire:model="resultsViewable" @disabled(!$is_exam)>
                         <div
                             class="w-11 h-6 bg-gray-600 rounded-full peer-focus:ring-4 peer-focus:ring-blue opacity-80 peer-checked:bg-blue-600 peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                         <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{$resultsViewable ? 'Igen' : 'Nem'}}</span>

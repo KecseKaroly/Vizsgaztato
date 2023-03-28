@@ -64,13 +64,25 @@
                         </div>
                     </div>
                 </div>
+                @else
+                    <div class="flex flex-wrap justify-between mb-3">
+                        <select name="module-selection"
+                                wire:model="module_id"
+                                class="bg-orange-300 border-gray-300 text-orange-900 text-sm rounded-lg  font-bold
+                                        focus:ring-orange-100 focus:border-orange-800 block  py-3 w-fit">
+                            <option @selected($module_id == null) hidden>Válasszon modult!...</option>
 
+                            @foreach($course->modules as $module)
+                                <option value="{{$module->id}}" @selected($module_id == $module->id)>{{ $module->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 @endif
-                <div class="flex flex-row justify-start mt-3 ml-6 ">
+                <div class="flex flex-row justify-start mt-3 items-center">
                     <div class="w-fit font-semibold text-lg">
                         <p><label for="canViewResult">Eredmény elérhető:</label></p>
                     </div>
-                    <div class="w-fit">
+                    <div class="w-fit ml-3 pt-2">
                         <label class="relative inline-flex items-center mr-5 cursor-pointer">
                             <input type="checkbox" value="" class="sr-only peer" id="canViewResult"
                                    wire:model="resultsViewable" @disabled($type=="quiz")>

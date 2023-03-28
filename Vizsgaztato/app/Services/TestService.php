@@ -26,7 +26,6 @@ class TestService
                 $optionModel->question_id = $questionModel['id'];
                 $optionModel->text = $option['text'];
                 $answer = null;
-
                 switch ($questionModel->type) {
                     case 'TrueFalse':
                     case 'OneChoice':
@@ -39,7 +38,7 @@ class TestService
                         }
                         break;
                     case 'MultipleChoice':
-                        if ($option['solution'] >= 0) {
+                        if ($option['solution']) {
                             $answer = answer::firstOrCreate(['solution' => 'checked']);
                             $option['score'] = 1;
                         } else {
@@ -82,7 +81,7 @@ class TestService
                         }
                         break;
                     case 'MultipleChoice':
-                        if ($option['solution'] >= 0) {
+                        if ($option['solution']) {
                             $answer = answer::firstOrCreate(['solution'=>'checked']);
                             $option['score'] = 1;
                         } else {
@@ -109,6 +108,7 @@ class TestService
     {
         $testLiveWire = [
             'id' => $test->id,
+            'is_exam' => $test->is_exam,
             'title' => $test->title,
             'maxAttempts' => $test->maxAttempts,
             'duration' => $test->duration,
@@ -148,7 +148,7 @@ class TestService
         return $testLiveWire;
     }
 
-    public function getTestToWrite($test, $submitAttempt = true, $attempt = null)
+    public function getTestToWrite($test, $attempt = null)
     {
         $testLiveWire = [
             'id' => $test->id,
@@ -172,7 +172,7 @@ class TestService
                 $testLiveWire['questions'][$questionIndex]['options'][] = [
                     'id' => $option->id,
                     'text' => $option->text,
-                    'expected_ans' => !$submitAttempt ? $answer->solution : '',
+                    'expected_ans' => !$test->is_exam ? $answer->solution : '',
                     'actual_ans' => '',
                     'score' => $option->score
 
@@ -183,7 +183,7 @@ class TestService
         }
         shuffle($testLiveWire['questions']);
 
-        if($submitAttempt)
+        if($test->is_exam)
         {
             if($attempt == null)
             {

@@ -31,7 +31,8 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'verified'])->group(function() {
-
+    Route::get('/register/teacher', [UserController::class, 'create'])->name('registration.teacher');
+    Route::post('/register/teacher', [UserController::class, 'store'])->name('register.teacher');
     Route::get('/', function () { return view('layouts.app'); });
     Route::get('/home', function () { return view('layouts.app'); })->name('home');
 
@@ -46,7 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/test/{test}/show', [TestController::class, 'show'])->name('test.show');
     Route::resource('test', TestController::class)->only(['update', 'destroy']);
 
-    Route::put('/test/course/update', [CoursesExamsController::class, 'update'])->name('updateTestCourse');
+    Route::put('/test/course/update', [TestController::class, 'update'])->name('exam.update');
 
     Route::post('/join_request/submit', [GroupJoinRequestController::class, 'SubmitRequest'])->name('JoinRequestSubmit');
     Route::post('/join_request/accept', [GroupJoinRequestController::class, 'AcceptRequest'])->name('acceptGroupJoinRequest');
@@ -75,7 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::resource('modules', ModuleController::class)->except(['create']);
 
     Route::get('/courses/{course}/quizzes/', [QuizController::class, 'index'])->name('quizzes.index');
-    Route::get('/coursese/{course}/modules/{module}/quizzes/create', [QuizController::class, 'create'])->name('quizzes.create');
+    Route::get('/coursese/{course}/quizzes/create/{module?}', [QuizController::class, 'create'])->name('quizzes.create');
     Route::delete('/quizzes/{test}/delete', [QuizController::class, 'destroy'])->name('quizzes.destroy');
     Route::get('/courses/{course}/quizzes/{test}/edit', [QuizController::class, 'edit'])->name('quizzes.edit');
     Route::get('/quizzes/{test}/show', [QuizController::class, 'show'])->name('quizzes.show');

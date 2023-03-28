@@ -6,16 +6,15 @@
         <div class="text-4xl font-bold mb-8 text-center">Jelszó helyreállítása</div>
         <hr class="w-10/12 h-1 mx-auto bg-gray-100 border-0 rounded md:mb-10 dark:bg-gray-700">
         <div class="w-full flex flex-col items-center ">
-            @if (session('status'))
-                <div>
-                    {{ session('status') }}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="text-red-500">{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
-            @error('email')
-            <div class="mb-3 text-red-600">
-                <strong>{{ $message }}</strong>
-            </div>
-            @enderror
                 <form method="POST" action="{{ route('password.update') }}" class="w-full">
                 @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
@@ -62,7 +61,6 @@
                         </button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>

@@ -13,13 +13,13 @@ use App\Models\group;
 use App\Services\TestService;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ExamTaskCreator extends Component
 {
     public $type;
+    public $module_id;
     public $course;
-    public $module;
     public $questions;
     public $testTitle;
     public $testAttempts;
@@ -65,11 +65,11 @@ class ExamTaskCreator extends Component
         'questions.*.options.*.text.max' => 'A válaszlehetőség szövege legfeljebb 70 karakter hosszú lehet!',
     ];
 
-    public function mount($course, $module = null, $type = "test")
+    public function mount($course, $module_id = null, $type = "test")
     {
         $this->type = $type;
         $this->course = $course;
-        $this->module = $module;
+        $this->module_id = $module_id;
         $this->questions = [];
         $this->testTitle = '';
         $this->resultsViewable = true;
@@ -152,39 +152,35 @@ class ExamTaskCreator extends Component
         $this->validate();
         if ($this->type == "test") {
             $test = new test;
+            $test->is_exam = true;
             $test->title = $this->testTitle;
             $test->maxAttempts = $this->testAttempts;
             $test->duration = $this->durationMinute;
             $test->resultsViewable = $this->resultsViewable;
             $test->creator_id = auth()->id();
+            $test->course_id = $this->course->id;
             $test->save();
+
             (new TestService())->store($test, $this->questions);
-            $course_exam = new CoursesExams([
-                'test_id' => $test->id,
-                'course_id' => $this->course->id,
-            ]);
-            $course_exam->save();
 
             Alert::success('A teszt mentése sikeresen megtörtént!');
             return redirect()->route('test.index', $this->course);
         } else if ($this->type == "quiz") {
             $test = new test;
+            $test->is_exam = false;
             $test->title = $this->testTitle;
             $test->maxAttempts = -1;
             $test->duration = -1;
             $test->resultsViewable = 1;
             $test->creator_id = auth()->id();
+            $test->course_id = $this->course->id;
+            $test->module_id = $this->module_id;
             $test->save();
+
             (new TestService())->store($test, $this->questions);
-            $course_quiz = new CoursesQuizzes([
-                'test_id' => $test->id,
-                'course_id' => $this->course->id,
-                'module_id' => $this->module->id,
-            ]);
-            $course_quiz->save();
 
             Alert::success('A kvíz mentése sikeresen megtörtént!');
-            return redirect()->route('courses.quizzes', $this->course);
+            return redirect()->route('quizzes.index', $this->course);
         }
     }
 

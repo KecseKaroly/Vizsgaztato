@@ -78,17 +78,7 @@
                             autocomplete="new-password" >
                     </div>
                 </div>
-                <div class="md:flex md:items-center mb-2">
-                    <div class="md:w-4/12">
-                        <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-8" for="is_student">
-                            {{ __('Diák?') }}
-                        </label>
-                    </div>
-                    <div class="md:w-4/12 mr-2">
-                        <input type="checkbox" checked class="focus:ring-purple-600 rounded-lg text-purple-500"
-                               id="is_student" name="is_student">
-                    </div>
-                </div>
+
                 <div class="md:flex md:items-center mb-4">
                     <div class="md:w-4/12">
                     </div>
@@ -97,10 +87,10 @@
 
                         <input type="checkbox" unchecked class="focus:ring-purple-600 rounded-lg text-purple-500"
                                id="acceptTOS" name="acceptTOS">
-                        <label class="text-gray-500 font-bold" for="acceptTOS">
-                            Elfogadom a <button type="button" data-modal-target="ToSModal"
+                        <label class="text-gray-500 font-bold text-sm" for="acceptTOS">
+                            Elfogadom az <button type="button" data-modal-target="ToSModal"
                                                 data-modal-toggle="ToSModal"
-                                                >felhasználási feltételeket</button>*
+                                                >adatvédelmi nyilatkozatot</button>*
                         </label>
                     </div>
                 </div>

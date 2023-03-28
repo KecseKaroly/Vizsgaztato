@@ -14,7 +14,7 @@ return [
     */
 
     'reset' => 'Jelszó alaphelyzetbe állítva!',
-    'sent' => 'Elküldtök az email címére a jelszóhelyreállító linket!',
+    'sent' => 'Elküldtük az email címére a jelszóhelyreállító linket!',
     'throttled' => 'Kérjük, várjon a következő próbálkozásáig.',
     'token' => 'This password reset token is invalid.',
     'user' => "A megadott email címmel nem találtunk felhasználót.",

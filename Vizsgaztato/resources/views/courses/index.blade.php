@@ -15,7 +15,6 @@
             </div>
 
             <div class="bg-slate-50 rounded-xl divide-y-4 divide-gray-400 divide-double">
-
                     @forelse($courses as $course)
                         <div class="bg-slate-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
                             <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
@@ -33,7 +32,7 @@
                         </div>
                     @empty
                         <div class="text-center text-lg font-semibold italic py-4">
-                            @if(auth()->user()->is_student)
+                            @if(auth()->user()->auth)
                                 Üresség... Még nincsen kurzusom
                             @else
                                 Még nem hoztam létre kurzust.

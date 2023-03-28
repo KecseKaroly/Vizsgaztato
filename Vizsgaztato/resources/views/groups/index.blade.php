@@ -90,7 +90,7 @@
                         </div>
                     @empty
                         <div class="text-center text-lg font-semibold italic py-4">
-                            @if(auth()->user()->is_student)
+                            @if(auth()->user()->auth)
                                 Üresség... Még nem csatlakoztam egy csoportba sem
                             @else
                                 Még nem hoztam létre csoportot.

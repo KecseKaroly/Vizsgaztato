@@ -1,14 +1,14 @@
 <div class="pt-4 mb-24 select-none" wire:poll.5s="SaveDataToSession">
     <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
         @if( $type == "test" )
-            <a href="{{route('test.index', $course[0] )}}">
+            <a href="{{route('test.index', $course )}}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                     Vissza
                 </button>
             </a>
         @else
-            <a href="{{route('quizzes.index', $course[0] )}}">
+            <a href="{{route('quizzes.index', $course )}}">
                 <button
                     class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                     Vissza

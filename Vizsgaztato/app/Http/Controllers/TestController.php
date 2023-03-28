@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CoursesExams;
 use App\Models\test;
 use App\Models\question;
 use App\Models\option;
@@ -35,7 +36,7 @@ class TestController extends Controller
      */
     public function index(Course $course)
     {
-        $tests = $course->tests()->paginate();
+        $tests = $course->exams()->paginate(10);
         return view('test.index', ['tests' => $tests, 'course'=>$course]);
     }
 
@@ -68,7 +69,7 @@ class TestController extends Controller
             $this->authorize('view', [$test]);
             $this->authorize('write', [$test]);
             $test = $test->load('questions.options.expected_answer');
-            $course = $test->courseOfExam;
+            $course = $test->course;
             $attempt = testAttempt::where([
                 'test_id'=>$test->id,
                 'user_id'=>auth()->id(),
@@ -83,7 +84,7 @@ class TestController extends Controller
                     $testLiveWire = Session::get('attempt_' . $attempt->id);
                 }
                 else {
-                    $testLiveWire = $this->testService->getTestToWrite($test, true, $attempt);
+                    $testLiveWire = $this->testService->getTestToWrite($test, $attempt);
                 }
             }
             return view('test.write', ['testLiveWire' => $testLiveWire, 'course' => $course]);
@@ -119,6 +120,14 @@ class TestController extends Controller
 
     }
 
+    public function update(Request $request) {
+        $test = test::find($request->test_id);
+        $test->enabled_from = $request->enabled_from;
+        $test->enabled_until = $request->enabled_until;
+        $test->save();
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -150,10 +159,19 @@ class TestController extends Controller
                'users.attempts' => function($query) use ($test) {
                     $query->where('test_attempts.test_id', $test->id);
                },
-               'tests' => function($query) use ($test) {
-                    $query->where('courses_exams.test_id', $test->id);
-                }
+                'groups.users' => function($query) use ($test, $course) {
+                    $query->where('users.id', '!=', $course->creator_id);
+                },
+                'groups.users.attempts' => function($query) use ($test) {
+                    $query->where('test_attempts.test_id', $test->id);
+                },
             ]);
+
+            $courseAllUsers = $course->users;
+            foreach($course->groups as $group) {
+                $courseAllUsers = $courseAllUsers->merge($group->users);
+            }
+            $course->users = $courseAllUsers;
             return view('testAttempts.show', ['test' => $test, 'course'=>$course]);
         }
         catch (AuthorizationException $exception) {

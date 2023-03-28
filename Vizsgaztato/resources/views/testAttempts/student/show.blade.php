@@ -36,8 +36,10 @@
 
                                     <p class="text-lg font-bold">{{$question->text}}</p>
                                     <div class="flex flex-col">
-
                                     @foreach($question->options as $optionIndex => $option)
+                                            @if(!count($option->given_answers))
+                                                @continue
+                                            @endif
                                         @switch($question['type'])
                                              @case('TrueFalse')
                                                  <div @class(["border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300",

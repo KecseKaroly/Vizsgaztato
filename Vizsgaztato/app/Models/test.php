@@ -16,7 +16,17 @@ class test extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['title', 'maxAttempts', 'resultsViewable', 'duration', 'creator_id'];
+    protected $fillable = [
+        'is_exam',
+        'title',
+        'maxAttempts',
+        'resultsViewable',
+        'duration',
+        'creator_id',
+        'course_id',
+        'module_id',
+        'enabled_from',
+        'enabled_until',];
 
     public $timestamps = true;
 
@@ -35,41 +45,12 @@ class test extends Model
         return $this->hasMany(attempt::class);
     }
 
-    public function groups(): BelongsToMany
+    public function course(): BelongsTo
     {
-        return $this->belongsToMany(
-            group::class,
-            'tests_groups',
-            'test_id',
-            'group_id')
-            ->withPivot('enabled_from', 'enabled_until');
+        return $this->belongsTo(Course::class);
     }
-
-    public function modules(): BelongsToMany
+    public function module(): BelongsTo
     {
-        return $this->belongsToMany(
-            Module::class,
-            'courses_quizzes',
-            'test_id',
-            'module_id');
-    }
-
-    public function courseOfQuiz(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Course::class,
-            'courses_quizzes',
-            'test_id',
-            'course_id');
-    }
-
-    public function courseOfExam(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Course::class,
-            'courses_exams',
-            'test_id',
-            'course_id')
-            ->withPivot('enabled_from', 'enabled_until');
+        return $this->belongsTo(Module::class);
     }
 }

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\NotifyKickedUser;
+use App\Mail\UserKickedFromGroupNotification;
+use App\Models\group;
 use App\Models\groups_users;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Alert;
+use Illuminate\Support\Facades\Mail;
 
 class GroupsUsersController extends Controller
 {
@@ -13,8 +18,11 @@ class GroupsUsersController extends Controller
         try
         {
             $group_user = groups_users::findOrFail($groups_users_id);
+            $user = User::find($group_user->user_id);
+            $group = group::find($group_user->group_id);
             $group_user->delete();
-            return response()->json(['success'=>"Sikeres törlés"]);
+            NotifyKickedUser::dispatch($user, $group);
+            return response()->json(['success'=>"Sikeres törlés\nA felhasználót emailben értesítjük a kirúgásáról."]);
         }
         catch(ModelNotFoundException $e)
         {

@@ -31,7 +31,14 @@ class CoursePolicy
      */
     public function view(User $user, Course $course)
     {
-        return $course->users->contains($user)  || $course->groups()->users()->contains($user)
+        $groups = $course->groups;
+        if(count($groups)) {
+            foreach($groups as $group) {
+                if($group->users->contains($user))
+                    return Response::allow();
+            }
+        }
+        return $course->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a kurzushoz!');
     }
@@ -44,7 +51,7 @@ class CoursePolicy
      */
     public function create(User $user)
     {
-        return !$user->is_student
+        return !$user->auth
             ? Response::allow()
             : Response::deny('Diákként nem hozhat létre kurzust!');
     }

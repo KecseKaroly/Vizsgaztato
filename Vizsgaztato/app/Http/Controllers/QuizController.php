@@ -29,7 +29,7 @@ class QuizController extends Controller
     {
         try{
             $this->authorize('viewAny', [test::class, $course]);
-            $quizzes = $course->quizzes()->paginate(10);
+            $quizzes = $course->quizzes()->with('module')->paginate(10);
             return view('quizzes.index', ['course'=>$course, 'quizzes'=>$quizzes]);
         }
         catch (AuthorizationException $exception) {
@@ -79,8 +79,8 @@ class QuizController extends Controller
         try{
             $this->authorize('view', [$test, $course]);
             $test = $test->load('questions.options.expected_answer');
-            $course = $test->courseOfQuiz;
-            $testLiveWire = $this->testService->getTestToWrite($test, false);
+            $course = $test->course;
+            $testLiveWire = $this->testService->getTestToWrite($test);
             return view('quizzes.show', ['testLiveWire' => $testLiveWire, 'course' => $course]);
         }
         catch (AuthorizationException $exception) {

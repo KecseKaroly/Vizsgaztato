@@ -72,7 +72,11 @@
                         </div>
 
                 @empty
-                    Nincsen még cspoport
+                    <div class="bg-slate-600 rounded-lg flex w-full justify-between text-2xl py-2 px-2">
+                        <div class="flex divide-x-2 content-center">
+                            <div class="px-4 font-bold">Nincsen még a teszthez felhasználó rendelve!</div>
+                        </div>
+                    </div>
                 @endforelse
             </div>
         </div>

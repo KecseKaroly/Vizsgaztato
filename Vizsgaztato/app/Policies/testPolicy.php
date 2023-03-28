@@ -24,9 +24,17 @@ class testPolicy
      */
     public function viewAny(User $user, Course $course)
     {
-        return $course->users->contains($user) || $course->groups->users->contains($user)
+        $groups = $course->groups;
+        if(count($groups)) {
+            foreach($groups as $group) {
+                if($group->users->contains($user))
+                    return Response::allow();
+            }
+        }
+        return $course->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a teszthez!');
+
     }
 
     /**
@@ -38,10 +46,15 @@ class testPolicy
      */
     public function view(User $user, test $test)
     {
-        $course = $test->courseOfExam;
-        if (!count($course))
-            $course = $test->courseOfQuiz;
-        return $course[0]->users->contains($user) || $course[0]->groups->users->contains($user)
+        $course = $test->course;
+        $groups = $course->groups;
+        if(count($groups)) {
+            foreach($groups as $group) {
+                if($group->users->contains($user))
+                    return Response::allow();
+            }
+        }
+        return $course->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a teszthez!');
     }
@@ -80,7 +93,7 @@ class testPolicy
      */
     public function create(User $user)
     {
-        return !$user->is_student
+        return !$user->auth
             ? Response::allow()
             : Response::deny('Nem engedélyezett művelet diákoknak!');
     }
@@ -174,10 +187,7 @@ class testPolicy
         $attempts = $user->load(['attempts' => function ($query) use ($test) {
             $query->where('test_attempts.test_id', $test->id);
         }])->attempts;
-        $test->load(['courseOfExam' => function ($query) use ($test) {
-            $query->where('courses_exams.test_id', $test->id);
-        }]);
-        if ($test->courseOfExam[0]->pivot->enabled_from >= now() || $test->courseOfExam[0]->pivot->enabled_until <= now())
+        if ($test->enabled_from >= now() || $test->enabled_until <= now())
             return Response::deny('A teszt kitöltése nincs engedélyezve ebben az időpontban!');
         return $attempts->count() < $test->maxAttempts || count($attempts->where('submitted', 0))
             ? Response::allow()

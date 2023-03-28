@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\test;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,6 +34,7 @@ class Course extends Model
             ->withPivot('id');
     }
 
+
     public function groups() : BelongsToMany
     {
         return $this->belongsToMany(
@@ -47,20 +49,11 @@ class Course extends Model
         return $this->hasMany(Module::class);
     }
 
-    public function quizzes() : BelongsToMany {
-        return $this->belongsToMany(
-            test::class,
-            'courses_quizzes',
-            'course_id',
-            'test_id');
+    public function quizzes() : HasMany {
+        return $this->hasMany(test::class)->where('is_exam', false);
     }
 
-    public function tests() : BelongsToMany {
-        return $this->belongsToMany(
-            test::class,
-            'courses_exams',
-            'course_id',
-            'test_id')
-            ->withPivot('enabled_from', 'enabled_until');
+    public function exams() : HasMany {
+        return $this->HasMany(test::class)->where('is_exam', true);
     }
 }

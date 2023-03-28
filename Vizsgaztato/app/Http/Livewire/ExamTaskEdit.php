@@ -21,8 +21,8 @@ class ExamTaskEdit extends Component
 {
     public $deletedQuestions = [];
     public $deletedOptions = [];
-    public $type;
     public $course;
+    public $is_exam;
     public $questions;
     public $testTitle;
     public $testAttempts;
@@ -70,21 +70,20 @@ class ExamTaskEdit extends Component
     ];
 
 
-    public function mount($testLiveWire, $course, $type="test")
+    public function mount($testLiveWire, $course)
     {
-        $this->type = $type;
-        if($type == 'test')
+        if($testLiveWire['is_exam'])
         {
             $this->testAttempts = $testLiveWire['maxAttempts'];
             $this->durationMinute = $testLiveWire['duration'];
             $this->resultsViewable = $testLiveWire['resultsViewable'];
         }
         else {
-
             $this->testAttempts = 1;
             $this->durationMinute = 30;
             $this->resultsViewable = 1;
         }
+        $this->is_exam = $testLiveWire['is_exam'];
         $this->course = $course;
         $this->testId = $testLiveWire['id'];
         $this->questions = $testLiveWire['questions'];
@@ -167,7 +166,7 @@ class ExamTaskEdit extends Component
     {
         $this->validate();
         $test = test::find($this->testId);
-        if($this->type == "test")
+        if($test->is_exam)
         {
             $test->maxAttempts = $this->testAttempts;
             $test->duration = $this->durationMinute;

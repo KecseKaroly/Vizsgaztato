@@ -31,7 +31,14 @@ class QuizPolicy
      */
     public function view(User $user, Course $course)
     {
-        return $course->users->contains($user)  || $course->groups()->users()->contains($user)
+        $groups = $course->groups;
+        if(count($groups)) {
+            foreach($groups as $group) {
+                if($group->users->contains($user))
+                    return Response::allow();
+            }
+        }
+        return $course->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a kvízhez!');
     }

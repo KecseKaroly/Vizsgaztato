@@ -25,16 +25,9 @@ class group extends Model
             'groups_users',
             'group_id',
             'user_id')
-            ->withPivot(['id', 'is_admin']);
-    }
-    public function tests() : BelongsToMany
-    {
-        return $this->belongsToMany(
-            test::class,
-            'tests_groups',
-            'group_id',
-            'test_id')
-            ->withPivot('enabled_from', 'enabled_until');
+            ->withPivot(['id', 'is_admin'])
+            ->orderBy('is_admin', 'desc')
+            ->orderBy('users.name');
     }
 
     public function groupMessages()

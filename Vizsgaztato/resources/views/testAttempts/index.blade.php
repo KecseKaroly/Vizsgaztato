@@ -22,11 +22,11 @@
                     <div class="text-center mt-12 mb-6">
                         <a href="{{ route('test.show', [$test]) }}">
                             <button @class(["w-6/12 focus:outline-none text-white bg-purple-400 hover:bg-purple-600 font-bold rounded-xl text-md py-3.5",
-                                                "opacity-50 cursor-not-allowed" => $course->tests[0]->pivot->enabled_from >= now() ||
-                                                                                   $course->tests[0]->pivot->enabled_until <= now() ||
+                                                "opacity-50 cursor-not-allowed" => $test->enabled_from >= now() ||
+                                                                                   $test->enabled_until <= now() ||
                                                                                    !count($ongoing) && count($submitted) >= $test->maxAttempts])
-                                @disabled( $course->tests[0]->pivot->enabled_from >= now() ||
-                                           $course->tests[0]->pivot->enabled_until <= now() ||
+                                @disabled( $test->enabled_from >= now() ||
+                                           $test->enabled_until <= now() ||
                                            !count($ongoing) && count($submitted) >= $test->maxAttempts)>
                                 {{ count($ongoing) ? "Feladatsor folytatása" : "Feladatsor kitöltése" }}
                             </button>

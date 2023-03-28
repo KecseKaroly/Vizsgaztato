@@ -32,7 +32,14 @@ class ModulePolicy
      */
     public function view(User $user, Module $module)
     {
-        return $module->course->users->contains($user) /* || $course->groups()->users()->contains($user)*/
+        $groups = $module->course->groups;
+        if(count($groups)) {
+            foreach($groups as $group) {
+                if($group->users->contains($user))
+                    return Response::allow();
+            }
+        }
+        return $module->course->users->contains($user)
             ? Response::allow()
             : Response::deny('Jogosulatlan a modulhoz!');
     }

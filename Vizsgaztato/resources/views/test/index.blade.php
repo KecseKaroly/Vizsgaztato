@@ -41,20 +41,20 @@
                                                     data-course_id="{{ $course->id }}"
                                                     data-test_id="{{ $test->id }}"
 
-                                                    data-enabled_from="{{ $course->tests[0]->pivot->enabled_from }}"
-                                                    data-enabled_until="{{ $course->tests[0]->pivot->enabled_until }}"
+                                                    data-enabled_from="{{ $test->enabled_from }}"
+                                                    data-enabled_until="{{ $test->enabled_until }}"
                                                     class="showCourseExamInfo w-fit py-1.5 px-2 mt-1.5 mb-2.5
-                                                {{ $course->tests[0]->pivot->enabled_from < now() &&
-                                                   $course->tests[0]->pivot->enabled_until > now() ?
+                                                {{ $test->enabled_from < now() &&
+                                                   $test->enabled_until > now() ?
                                                         "bg-green-500 hover:bg-green-300 text-green-100 hover:text-green-500 border-green-400 border-4" :
                                                         "bg-red-500 hover:bg-red-300 text-red-100 hover:text-red-500 border-red-400 border-4"}}
                                                    p-1 rounded text-lg">
-                                                <i class="fa-solid {{ $course->tests[0]->pivot->enabled_from < now() &&
-                                                   $course->tests[0]->pivot->enabled_until > now() ?
+                                                <i class="fa-solid {{ $test->enabled_from < now() &&
+                                                   $test->enabled_until > now() ?
                                                         "fa-eye" :
                                                         "fa-eye-slash"}}"></i>
-                                                {{ $course->tests[0]->pivot->enabled_from < now() &&
-                                                       $course->tests[0]->pivot->enabled_until > now() ?
+                                                {{ $test->enabled_from < now() &&
+                                                   $test->enabled_until > now() ?
                                                             "Aktív" :
                                                             "Inaktív"}}
                                             </button>
@@ -104,12 +104,12 @@
                                         {{$test->title}}
                                     </a>
                                 </div>
-                                @if(isset($test->pivot->enabled_from) && isset($test->pivot->enabled_until))
+                                @if(isset($test->enabled_from) && isset($test->enabled_until))
                                     <div>
-                                        {{Carbon\Carbon::parse($test->pivot->enabled_from)->format('Y.m.d H:i:s')}}
-                                        - {{Carbon\Carbon::parse($test->pivot->enabled_until)->format('Y.m.d H:i:s')}}
+                                        {{Carbon\Carbon::parse($test->enabled_from)->format('Y.m.d H:i:s')}}
+                                        - {{Carbon\Carbon::parse($test->enabled_until)->format('Y.m.d H:i:s')}}
                                     </div>
-                                    @if($test->pivot->enabled_from < now() && $test->pivot->enabled_until > now())
+                                    @if($test->enabled_from < now() && $test->enabled_until > now())
                                         <a href="{{ route('testAttempts.index', [$course, $test]) }}">
                                             <button class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
                                                 <i class="fa-solid fa-angles-right"></i>                                                </button>
@@ -149,7 +149,7 @@
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
         <div class="relative w-full h-full max-w-2xl md:h-auto">
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <form method="POST" action=" {{ route('updateTestCourse') }}">
+                <form method="POST" action=" {{ route('exam.update') }}">
                     @csrf
                     @method('PUT')
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">

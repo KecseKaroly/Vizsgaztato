@@ -11,6 +11,14 @@
             </a>
         </div>
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
+            <div class="w-fit">
+                @can('create', [App\Models\Module::class, $course])
+                    <button type="button"
+                            class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
+                        <a href="{{ route('quizzes.create', [$course]) }}"><i class="fa-solid fa-circle-plus"></i> Kvíz hozzáadása</a>
+                    </button>
+                @endcan
+            </div>
             <div
                 class="bg-slate-50 w-full rounded-xl divide-gray-400 divide-double mt-4">
                         @forelse($quizzes as $quiz)
@@ -21,7 +29,7 @@
                                         {{ \Illuminate\Support\Str::limit($quiz->title, 6, $end='...')}}
                                     </div>
                                     <div class="basis-1/3">
-                                        Modul: {{ $quiz->modules[0]->title }}
+                                        Modul: {{ $quiz->module->title }}
                                     </div>
                                     <div class="flex sm:justify-evenly basis-1/3">
                                         @can('delete', $quiz)
