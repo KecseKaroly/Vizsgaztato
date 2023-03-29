@@ -14,9 +14,9 @@
                 </div>
             </div>
 
-            <div class="bg-yellow-200 rounded-xl divide-y-4 divide-gray-400 divide-double">
+            <div class="bg-slate-50 rounded-xl divide-y-4 divide-gray-400 divide-double">
                     @forelse($courses as $course)
-                        <div class="bg-yellow-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
+                        <div class="bg-slate-600 w-10/12 mx-auto mt-4 mb-4 text-gray-100 px-6 py-4 flex flex-wrap justify-between items-center">
                             <div class="lg:w-1/4 hover:underline text-lg font-bold md:mt-0 my-2">
                                 <a href="{{ route('courses.show', $course->id) }}">
                                     {{ $course->title }}
@@ -24,7 +24,7 @@
                             </div>
                             <div>
                                 <a href="{{ route('courses.show', $course->id) }}">
-                                    <button class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-yellow-400 hover:bg-yellow-500 text-white">
+                                    <button class="text-2xl md:w-16 md:h-16 w-12 h-12 rounded-full bg-slate-400 hover:bg-slate-500 text-white">
                                         <i class="fa-solid fa-angles-right"></i>
                                     </button>
                                 </a>

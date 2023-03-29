@@ -5,7 +5,7 @@
         <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
             <a href="{{route('groups.index')}}">
                 <button
-                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-teal-200 rounded-md w-full">
+                    class="text-center my-2 ml-4  py-1.5 text-lg font-bold text-blue-900 bg-slate-100 rounded-md w-full">
                     Vissza
                 </button>
             </a>
@@ -36,7 +36,7 @@
                     </a>
                 </div>
             @endif
-            <div class="bg-lime-500 w-full rounded-xl  mx-auto">
+            <div class="bg-slate-50 w-full rounded-xl  mx-auto">
                 @if($isAdmin)
                     <div class="mx-auto my-5 -ml-5">
                         @livewire('search-users', ['objectToAttachTo'=>$group])
@@ -45,8 +45,9 @@
                 <div class="w-11/12 mx-auto pt-5 text-2xl font-bold underline">Csoport tagjai:</div>
                 <div class="divide-y-4 flex flex-col">
                     @foreach($users as $user)
-                        <div class="w-10/12 mx-auto text-gray-100  py-3 flex" id="group_user-{{ $user->pivot->id }}">
-                            <div class="bg-lime-800 w-full px-3 flex justify-between content-start text-center">
+
+                        <div class="w-10/12 mx-auto text-gray-100  py-5 flex" id="group_user-{{ $user->pivot->id }}">
+                            <div class="bg-slate-600 w-full px-3 flex justify-between content-start text-center">
                                 <div class="divide-x-2 flex text-xl py-3">
                                     @if($user->pivot->is_admin)
                                         <div class="ml-2 pr-5"><i class="fa-solid fa-user-graduate fa-lg"></i></div>
