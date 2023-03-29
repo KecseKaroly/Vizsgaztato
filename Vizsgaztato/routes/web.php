@@ -34,7 +34,7 @@ Auth::routes(['verify' => true]);
 Route::middleware(['auth', 'verified'])->group(function() {
     Route::get('/register/teacher', [UserController::class, 'create'])->name('registration.teacher');
     Route::post('/register/teacher', [UserController::class, 'store'])->name('register.teacher');
-    Route::get('/', function () { return view('layouts.app'); });
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::get('courses/{course}/attempt/{attempt}/result', [TestAttemptController::class, 'show'])->name('testAttempts.show');
