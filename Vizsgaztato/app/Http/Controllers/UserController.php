@@ -40,6 +40,7 @@ class UserController extends Controller
         $user->update(
             $request->validated()
         );
+        Alert::success('Sikeres módosítás!');
         return redirect()->back();
     }
 }
