@@ -69,6 +69,12 @@ class ExamTaskWrite extends Component
     }
 
     public function resetQuiz() {
-        return redirect()->route('quizzes.show', $this->test['id']);
+        foreach($this->defaultTestLiveWire['questions'] as $question) {
+            if($question['type'] != 'TrueFalse')
+                shuffle($question['options']);
+        }
+        shuffle($this->defaultTestLiveWire['questions']);
+        $this->test = $this->defaultTestLiveWire;
+        $this->quizEnded = false;
     }
 }
