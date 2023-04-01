@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Csoportok')
+@section('scripts')
+    @vite('resources/js/ajax.js')
+@endsection
 @section('content')
     <div class="mt-4">
         <div class="flex flex-col max-w-full mx-auto rounded-xl overflow-hidden w-11/12">

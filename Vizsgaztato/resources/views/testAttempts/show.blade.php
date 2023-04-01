@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Kitöltött feladatlapok')
+@section('scripts')
+    @vite('resources/js/ajax.js')
+@endsection
 @section('content')
     <div class="mt-4 mb-24 select-none">
         <div class="md:w-1/12 md:ml-12 mb-4 mr-8">

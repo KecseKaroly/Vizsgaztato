@@ -169,9 +169,6 @@ $(".acceptInvRequest").click(function (e) {
     });
 });
 
-
-
-
 /* TestInfo-n a csoportok és felhasználók kinyitása/összecsukása */
 $(".group_id").click(function (e) {
     const params = $(this).data();
@@ -186,9 +183,6 @@ $(".user_id").click(function (e) {
     $(`#arrow_of_user${user_id}`).toggleClass('fa-solid fa-angles-down fa-solid fa-angles-up', 1000);
 });
 
-
-
-
 $(".showCourseExamInfo").click(function (e) {
     const params = $(this).data();
     $("#enabled_from").val(params["enabled_from"].slice(0, -3));
@@ -196,42 +190,3 @@ $(".showCourseExamInfo").click(function (e) {
     $("#test_id").val(params["test_id"]);
     $("#course_id").val(params["course_id"]);
 });
-
-
-
-
-
-var left = 0;
-var mouseleft = false;
-var testDiv = $("#testDiv");
-testDiv.mouseleave(function(){
-    console.log("left");
-    mouseleft = true;
-    left = Date.now();
-});
-testDiv.mouseenter(function(){
-    console.log("entered");
-    if(mouseleft) {
-        mouseleft = false;
-        const diff = left - Date.now();
-        console.log(diff);
-        if(diff < -1000)
-        {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Teszt vége!',
-                text: 'Túl sok ideig tartózkodott az engedélyezett tartományon kívül!',
-                confirmButtonText: 'Értem',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.close;
-                    endTest();
-                }
-            });
-        }
-    }
-});
-
-

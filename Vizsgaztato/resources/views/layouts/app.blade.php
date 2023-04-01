@@ -24,12 +24,11 @@
 
     <script src="https://unpkg.com/@themesberg/flowbite@1.1.1/dist/flowbite.bundle.js"></script>
     @vite('resources/js/confirm_form_submit.js')
-    @vite('resources/js/ajax.js')
+    @yield('scripts')
     @livewireStyles
 </head>
 <body class="bg-slate-300">
 <div id="app" class="relative h-screen">
-
     <nav class="border-gray-200 bg-gray-100">
             <div class="container mx-auto flex flex-wrap items-center justify-between">
                 <a href="{{ route('home') }}" class="flex">
