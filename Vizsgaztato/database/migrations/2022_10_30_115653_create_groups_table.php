@@ -17,11 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('invCode');
-            $table->foreignId('creator_id');
+            $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('creator_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-
+            //$table->foreign('creator_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
