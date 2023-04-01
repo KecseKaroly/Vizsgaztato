@@ -69,18 +69,6 @@
                         </a>
                     </div>
                 </div>
-
-                <div class="md:flex md:items-center mb-4">
-                    <div class="md:w-1/3"></div>
-                    <div class="md:w-2/3">
-                        <input class="form-check-input" type="checkbox" name="remember"
-                               id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                        <label class="form-check-label" for="remember">
-                            {{ __('Emlékezz rám') }}
-                        </label>
-                    </div>
-                </div>
                 <div class="md:flex md:items-center">
                     <div class="md:w-1/3"></div>
                     <div class="md:w-2/3">
