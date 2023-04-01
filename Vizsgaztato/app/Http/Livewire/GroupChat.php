@@ -15,8 +15,8 @@ class GroupChat extends Component
     public function mount($group) {
         $this->group = $group;
     }
-
     public function newMessageReceived($newMessage) {
+        $this->dispatchBrowserEvent('messageAdded');
     }
     public function render()
     {

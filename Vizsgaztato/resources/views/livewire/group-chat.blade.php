@@ -87,14 +87,12 @@
                 if(e.keyCode === 13 && !e.shiftKey){
                     e.preventDefault();
                     sendForm();
-                    messageDiv.scrollTop = messageDiv.scrollHeight;
                     return true;
                 }
             });
             $("#groupMessageForm").submit(function (e) {
                 e.preventDefault();
                 sendForm();
-                messageDiv.scrollTop = messageDiv.scrollHeight;
             });
         });
 
@@ -115,11 +113,14 @@
                 }
             });
         }
+
+        window.addEventListener('messageAdded', (e) => {
+            document.getElementById('messages').scroll({ top: document.getElementById('messages').scrollHeight, behavior: "smooth"})
+        });
     </script>
     @vite('resources/js/bootstrap.js')
     <script type="module">
         var groupId = 1;
-        var messageDiv = document.getElementById('messages');
         Echo.private(`groupMessages.${groupId}`)
             .listen('GroupMessageSent', (e) => {
                 var group_id = $("input[name=group_id]").val();
@@ -128,7 +129,6 @@
                     url: `/groups/${group_id}/message`,
                     success: function (data) {
                         Livewire.emit('newMessageReceived', data);
-                        messageDiv.scrollTop = messageDiv.scrollHeight;
                     },
                     error: function (data) {
                         alert("Valami hiba történt...");
