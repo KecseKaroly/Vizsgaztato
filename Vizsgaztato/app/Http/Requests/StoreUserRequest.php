@@ -42,6 +42,7 @@ class StoreUserRequest extends FormRequest
             'email.email' => 'Email formátuma nem megfelelő!',
             'email.max' => 'A email címének hossza nem lehet több, mint 255 karakter!',
             'email.unique' => 'A megadott email cím már foglalt!',
+            'password.required' => 'Jelszó megadása kötelező!',
             'password.min' => 'Jelszó minimum 8 karakter hosszú!',
             'password.confirmed' => 'A jelszavak nem egyeznek!',
         ];
