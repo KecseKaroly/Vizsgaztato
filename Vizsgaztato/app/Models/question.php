@@ -20,7 +20,7 @@ class question extends Model
 
     public function options() : HasMany
     {
-        return $this->hasMany(option::class, 'kerdoiv_id', '');
+        return $this->hasMany(option::class);
     }
 
     public function test()  : BelongsTo

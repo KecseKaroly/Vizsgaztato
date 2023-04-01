@@ -134,7 +134,7 @@ class TestController extends Controller
      * @param \App\Models\test $test
      * @return \Illuminate\Http\Response
      */
-    public function destroy(test $test, Course $course)
+    public function destroy(test $test)
     {
         try{
             $this->authorize('delete', $test);
