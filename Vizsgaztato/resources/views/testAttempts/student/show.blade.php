@@ -25,24 +25,28 @@
                 </a>
             @endif
         </div>
-        <div class="max-w-full mx-auto rounded-xl overflow-hidden w-11/12">
-            <p class="text-center mb-12 font-black text-3xl">Vizsga feladatsor eredménye</p>
+        <div class="max-w-full mx-auto rounded-xl overflow-hidden lg:w-4/6 md:w-8/12 sm:w-11/12 w-11/12">
+            <p class="text-center mb-6 font-black text-3xl">Vizsga feladatsor eredménye</p>
             <div class="md:flex ">
                 <div class="max-w w-full lg:px-8 md:px-6 sm:px-4 px-2 bg-slate-700 rounded-lg border  shadow-xl">
-                        <div class="lg:px-12 lg:py-12 lg:my-12 md:px-9 md:py-9 md:my-9 sm:px-6 sm:py-6 sm:my-6  px-3 py-3 my-3 max-w w-full bg-gray-200 rounded-lg  shadow-lg ">
+                        <div class="lg:px-12 lg:py-12 lg:my-12 md:px-9 md:py-9 md:my-9 sm:px-6 sm:py-6 sm:my-6  px-3 py-3 my-3 max-w w-full bg-white rounded-lg shadow-lg">
                             <hr class="mx-auto w-full h-1 bg-gray-900 rounded border-0 my-3">
                             @foreach($attempt->test->questions as $questionIndex => $question)
                                 <div class="lg:px-12 md:px-8 px-4  py-6">
-
                                     <p class="text-lg font-bold">{{$question->text}}</p>
-                                    <div class="flex flex-col">
+                                    @if($question['type'] == 'TrueFalse')
+                                       <div class="flex flex-col md:flex-row">
+                                    @else
+                                       <div class="flex flex-col">
+                                    @endif
                                     @foreach($question->options as $optionIndex => $option)
                                             @if(!count($option->given_answers))
                                                 @continue
                                             @endif
                                         @switch($question['type'])
                                              @case('TrueFalse')
-                                                 <div @class(["border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300",
+                                                 <div @class([
+                                                             "border-solid border-4 lg:mx-16 lg:px-8 lg:my-2 lg:py-4 mx-2 my-1 py-1 pl-6 flex items-center w-full rounded   bg-slate-100 hover:bg-slate-300",
                                                              "correct" => $option->given_answers[0]->result == 1,
                                                              "incorrect" => $option->given_answers[0]->result == 2,
                                                              "missed" => $option->given_answers[0]->result == 3,
