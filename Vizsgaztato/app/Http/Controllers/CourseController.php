@@ -75,8 +75,7 @@ class CourseController extends Controller
     {
         try{
             $this->authorize('view', $course);
-            $course = $course->load('users', 'groups');
-            $course->load('quizzes');
+            $course->load('users', 'groups', 'quizzes');
             return view('courses.show', ['course'=>$course]);
         }
         catch(AuthorizationException $exception)
