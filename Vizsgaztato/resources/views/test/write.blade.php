@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Teszt kitöltése')
 @section('style')
     <style>
         div:has(>input:checked) {
@@ -6,12 +7,14 @@
         }
     </style>
 @endsection
-
+@section('scripts')
+    @vite('resources/js/preventCheatScript.js')
+@endsection
 @section('content')
-    <div class="border-4 border-red-600" id="testDiv">
+    <div class="testDiv border-4 border-red-600">
         @livewire('exam-task-write', ['testLiveWire' => $testLiveWire, 'course'=>$course])
     </div>
-    <div class="fixed p-3 bg-slate-800 bottom-2 right-2 border rounded-lg text-stone-100 text-xl">
+    <div class="testDiv fixed p-3 bg-slate-800 bottom-2 right-2 border rounded-lg text-stone-100 text-xl">
         <div class="flex text-center items-center">
             <i class="fa-solid fa-clock mr-2"></i>
             <div id="remainingHours">--:</div>
