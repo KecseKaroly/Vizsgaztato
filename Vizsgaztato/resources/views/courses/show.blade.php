@@ -48,7 +48,7 @@
                         <div class="md:text-xs text-2xs">{{$course->quizzes->count()}} db</div>
                     </a>
                     <a href="{{route('test.index', $course)}}" class="md:py-8 py-4 block hover:bg-stone-200 hover:rounded-r-full">
-                        <div class="md:text-xl font-semibold">Tesztek</div>
+                        <div class="md:text-xl font-semibold text-xs">Vizsga feladatsorok</div>
                         <div class="md:text-xs text-2xs">{{$course->exams->count()}} db</div>
                     </a>
                 </div>
