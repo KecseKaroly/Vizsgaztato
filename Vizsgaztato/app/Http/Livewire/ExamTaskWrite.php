@@ -30,7 +30,6 @@ class ExamTaskWrite extends Component
             array_push($newAnswers, $this->test['questions'][$indexek[0]]['options'][$indexek[1]]);
         }
         $this->test['questions'][$indexek[0]]['options'] = $newAnswers;
-        $this->SaveDataToSession();
     }
 
     public function endTest() {

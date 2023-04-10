@@ -59,9 +59,5 @@
             }
         }
         countDownClock(@json($testLiveWire['duration']));
-
-        function saveData() {
-            Livewire.emit('saveData');
-        }
     </script>
 @endpush
