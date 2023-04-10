@@ -18,8 +18,15 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = auth()->user()->courses()->paginate(3);
-        return view('courses.index', ['courses' => $courses]);
+        $courses = auth()->user()->load('courses', 'groups.courses');
+
+        $coursesToPass = $courses->courses;
+        foreach($courses->groups as $group) {
+            foreach($group->courses as $course) {
+                $coursesToPass[] = $course;
+            }
+        }
+        return view('courses.index', ['courses' => $coursesToPass->unique()->toQuery()->paginate(3)]);
     }
 
     /**
