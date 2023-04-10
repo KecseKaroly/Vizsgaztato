@@ -30,6 +30,15 @@ class group extends Model
             ->orderBy('users.name');
     }
 
+    public function courses() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Course::class,
+            'courses_groups',
+            'group_id',
+            'course_id');
+    }
+
     public function groupMessages()
     {
         return $this->hasMany(GroupMessage::class);
