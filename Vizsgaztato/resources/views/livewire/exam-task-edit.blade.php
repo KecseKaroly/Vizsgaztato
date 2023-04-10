@@ -32,7 +32,8 @@
         <div class="flex flex-col w-full relative rounded-xl bg-slate-50 border border-black py-5 px-8 mb-5">
             <div class="flex flex-row flex-wrap justify-start">
                 <div class="font-semibold text-lg">
-                    <p><label for="titleOfTestAttempt">Feladatlap címe:  @error('testTitle') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
+                    <p><label for="titleOfTestAttempt">Feladatlap címe:
+                            @error('testTitle') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror</label></p>
 
                 </div>
                 <div class="w-full">
@@ -191,7 +192,7 @@
                                 @case("Sequence")
                                     <div
                                         class="sm:flex-row flex-col md:ml-16 md:px-8 md:my-2 md:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
-                                        wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}"
+                                        wire:sortable.item="{{$questionIndex."_".$optionIndex}}"
                                         wire:key="option-{{$questionIndex}}_{{ $optionIndex }}"
                                         wire:sortable.handle>
                                         <div class="w-full">

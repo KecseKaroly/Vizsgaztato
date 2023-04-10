@@ -201,7 +201,7 @@
                                     @case("Sequence")
                                         <div
                                              class="sm:flex-row flex-col md:ml-16 md:px-8 md:my-2 md:py-4 ml-2 my-1 py-1 pl-6 flex items-center rounded border border-gray-200 bg-slate-100 hover:bg-slate-300"
-                                             wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}"
+                                             wire:sortable.item="{{$questionIndex."_".$optionIndex}}"
                                              wire:key="option-{{$questionIndex}}_{{ $optionIndex }}"
                                              wire:sortable.handle>
                                             <div class="w-full">

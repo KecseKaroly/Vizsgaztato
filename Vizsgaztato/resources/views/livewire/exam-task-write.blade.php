@@ -107,7 +107,7 @@
                                                                                  "border-green-500" => $type == 'quiz' && $quizEnded && $optionIndex+1 == $option['expected_ans'],
                                                                                  "border-red-500" => $type == 'quiz' && $quizEnded && $optionIndex+1 != $option['expected_ans'],
                                                                         ])
-                                                                        wire:sortable.item="{{$questionIndex}}_{{ $optionIndex }}_{{ $option['id'] }}"
+                                                                        wire:sortable.item="{{$questionIndex."_".$optionIndex}}"
                                                                         wire:key="question-{{$questionIndex}}-option--{{ $option['id'] }}"
                                                                         wire:sortable.handle>
                                                                         <h4 class="">{{ $option['text'] }}</h4>
@@ -141,7 +141,7 @@
 @push('scripts')
     <script>
         function endTest() {
-        @this.emit('timeRanOut');
+            @this.emit('timeRanOut');
         }
     </script>
 @endpush
