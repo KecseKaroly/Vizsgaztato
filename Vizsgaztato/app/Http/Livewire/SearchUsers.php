@@ -18,7 +18,10 @@ class SearchUsers extends Component
     public $selectedResults;
 
     public function updatedSearchValue() {
-        $this->searchResults = User::where('email', 'LIKE', '%'.$this->searchValue.'%')->where('id', '!=', auth()->id())->get()->toArray();
+            $this->searchResults = User::where('email', 'LIKE', '%'.$this->searchValue.'%')
+                                    ->where('auth', '1')
+                                    ->where('id', '!=', auth()->id())->get()->toArray();
+
     }
 
     public function addToSelectedResults($index) {
