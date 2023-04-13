@@ -26,7 +26,11 @@ class CourseController extends Controller
                 $coursesToPass[] = $course;
             }
         }
-        return view('courses.index', ['courses' => $coursesToPass->unique()->toQuery()->paginate(3)]);
+        if($coursesToPass->unique()->isEmpty())
+            $coursesToPass = Course::query()->whereNull('id');
+        else
+            $coursesToPass = $coursesToPass->unique()->toQuery();
+        return view('courses.index', ['courses' => $coursesToPass->paginate(3)]);
     }
 
     /**
