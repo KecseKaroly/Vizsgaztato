@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'A kurzus moduljai')
+@section('scripts')
+
+@endsection
 @section('content')
     <div class="mt-4">
         <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
@@ -27,7 +30,7 @@
                 <table class="my-4 table-auto w-11/12 mx-auto border-collapse border border-4 border-black">
                     @can('create', [App\Models\Module::class, $course])
                         @forelse($modules as $module)
-                            <tr class="bg-slate-600 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center">
+                            <tr class="bg-slate-600 w-10/12 mx-auto mt-2 mb-2 text-gray-100 px-3 py-2 text-center border-b-2">
                                 <td class="text-lg font-bold text-left pl-6">
                                     <div>
                                         {{ $module->title }}

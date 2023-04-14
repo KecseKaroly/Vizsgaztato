@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('title', 'A modulról')
-@section('style')
-    <link rel="stylesheet" type="text/css" href="{{asset('ckeditor/sample/styles.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{asset('ckeditor/ckeditor.css')}}" />
+@section('scripts')
+    @include('modules.tinymc_readonly')
 @endsection
 @section('content')
+
     <div class="mt-4">
         <div class="md:w-1/12 md:ml-12 mb-4 mr-8">
             <a href="{{ route('courses.modules', $module->course) }}">
@@ -22,20 +22,17 @@
                 </div>
                 <div class="w-fit">
                     @can('create', [App\Models\Module::class, $module->course])
-                    <button type="button"
-                            class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
-                        <a href="{{ route('quizzes.create', [$module->course, $module]) }}"><i class="fa-solid fa-circle-plus"></i> Kvíz hozzáadása</a>
-                    </button>
+                        <button type="button"
+                                class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
+                            <a href="{{ route('quizzes.create', [$module->course, $module]) }}"><i
+                                    class="fa-solid fa-circle-plus"></i> Kvíz hozzáadása</a>
+                        </button>
                     @endcan
                 </div>
             </div>
 
-            <div class="bg-gray-50 rounded-xl divide-y-4 divide-gray-400 divide-double mt-4">
-                    <div class="prose" style="margin: auto;">
-                        <textarea name="material" id="module-material-textarea">
-                            {{ $module->material }}
-                        </textarea>
-                    </div>
+            <div class="mb-6 mt-10 px-32">
+                <textarea name="material">{{ $module->material }}</textarea>
             </div>
         </div>
     </div>

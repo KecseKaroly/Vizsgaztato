@@ -1,8 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Modul módosítása')
-@section('style')
-    <link rel="stylesheet" type="text/css" href="{{asset('ckeditor/sample/styles.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{asset('ckeditor/ckeditor.css')}}" />
+@section('scripts')
+    @include('modules.tinymc_editable')
 @endsection
 @section('content')
     <div class="mt-4">
@@ -58,12 +57,8 @@
                                 id="topic" type="text" name="topic" value="{{$module->topic}}" required>
                         </div>
                     </div>
-                    <div class="mb-6 mt-10 px-8">
-                        <div class="prose" style="margin: auto;">
-                                <textarea name="material" id="module-material-textarea">
-                                    {{ $module->material }}
-                                </textarea>
-                        </div>
+                    <div class="mb-6 mt-10 px-32">
+                        <textarea name="material" id="myeditorinstance">{{ $module->material }}</textarea>
                     </div>
                     <div class="md:flex md:items-center mb-10 md:mx-0 mx-3">
                         <div class="md:w-2/5"></div>
