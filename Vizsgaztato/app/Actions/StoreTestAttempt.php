@@ -37,8 +37,6 @@ class StoreTestAttempt
                 $givenAnswer->save();
             }
         }
-        Session::forget('attempt_'.$attempt->id);
-        info("Attempt submitted with id:".$attempt->id);
         return $attempt;
     }
 }

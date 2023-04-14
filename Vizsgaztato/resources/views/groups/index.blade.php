@@ -11,6 +11,7 @@
                 <div class="w-fit mt-3">
                     @can('create', App\Models\group::class)
                         <button type="button"
+                                id="createGroup"
                                 class="hover:bg-green-700 bg-green-500 border-2 border-gray-100  text-white font-bold p-3.5 rounded-lg text-sm">
                             <a href="{{ route('groups.create') }}"><i class="fa-solid fa-circle-plus"></i> Csoport
                                 létrehozása</a>

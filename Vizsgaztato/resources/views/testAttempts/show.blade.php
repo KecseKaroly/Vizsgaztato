@@ -33,12 +33,12 @@
                              style="display: none;" class="divide-y-2">
                             @forelse($user->attempts as $testAttempt )
                                 <div id="testAttempt#{{ $testAttempt->id }}"
-                                     class="hover:bg-blue-400 bg-slate-400 md:flex md:justify-between items-center md:w-10/12 w-11/12 px-12 py-2 md:ml-32 ml-8">
+                                     class="hover:bg-blue-400 font-semibold rounded-md bg-slate-400 md:flex md:justify-between items-center md:w-10/12 w-11/12 px-12 py-2 md:ml-32 ml-8">
                                     @if($testAttempt->submitted)
                                     <a href="{{ route('testAttempts.show', [$course, $testAttempt->id]) }}"
                                            target="_blank">
                                             <button
-                                                class="bg-lime-500 hover:bg-lime-300 p-1.5 border rounded-lg text-lime-900 ">
+                                                class="bg-lime-500 hover:bg-lime-400 p-1.5 border rounded-lg text-lime-900">
                                                 <i class="fa-solid fa-eye"></i> Megtekint
                                             </button>
                                         </a>
@@ -48,11 +48,11 @@
                                             Kitöltés alatt...
                                         </button>
                                     @endif
-                                    <div>
+                                    <div class="text-stone-800">
                                         {{ $testAttempt->achievedScore }}
                                         /{{ $testAttempt->maxScore }}
                                     </div>
-                                    <div>
+                                    <div class="text-stone-800">
                                         Kitöltve: {{ $testAttempt->created_at }}
                                     </div>
                                     <div>

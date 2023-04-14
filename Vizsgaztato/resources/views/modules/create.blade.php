@@ -42,7 +42,7 @@
                         <div class="md:w-3/5">
                             <input
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="title" type="text" name="title" required autofocus>
+                                id="title" type="text" name="title" required autofocus value="{{ old('title') }}">
                         </div>
                     </div>
                     <div class="md:flex md:items-center mb-6 mt-10">
@@ -55,7 +55,7 @@
                         <div class="md:w-3/5">
                             <input
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="topic" type="text" name="topic" required>
+                                id="topic" type="text" name="topic" required value="{{ old('topic') }}">
                         </div>
                     </div>
                     <div class="mb-6 mt-10 px-8">

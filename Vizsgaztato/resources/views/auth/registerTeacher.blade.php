@@ -82,9 +82,10 @@
                     <div class="md:w-4/12"></div>
                     <div class="md:w-4/12">
                         <button
+                            id="register"
                             class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
                             type="submit">
-                            {{ __('Regisztráció') }}
+                            {{ __('Regisztrálás') }}
                         </button>
                     </div>
                 </div>

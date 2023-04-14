@@ -91,6 +91,7 @@
                         <div class="flex flex-wrap justify-between mb-3">
                             @error('questions.'.$questionIndex.'.type') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                             <select name="question-types{{$questionIndex}}"
+                                    id="typeSelector_{{$questionIndex}}"
                                     wire:model="questions.{{$questionIndex}}.type"
                                     wire:change="$emit('questionTypeChanged', {{$questionIndex}})"
                                     class="bg-orange-300 border-gray-300 text-orange-900 text-sm rounded-lg  font-bold
@@ -105,6 +106,7 @@
                             <div class="flex">
                                 @if($question['type'] != '' && $question['type'] != "TrueFalse")
                                     <button wire:click="Add_Option({{$questionIndex}})"
+                                            id="addOptionToQuestion_{{$questionIndex}}"
                                             class="flex items-center text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-2.5 py-2.5  text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                         <i class="fa-solid fa-circle-plus"></i> Válasz
                                     </button>
@@ -121,6 +123,7 @@
                             @error('questions.'.$questionIndex.'.options') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                             <input type="text"
                                    wire:model="questions.{{$questionIndex}}.text"
+                                   id="questionText_{{$questionIndex}}"
                                    placeholder="{{$questionIndex+1}}. Kérdés szövege"
                                    class="w-11/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                         </div>
@@ -138,6 +141,7 @@
                                         <label>
                                             <input type="radio" name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                    value="{{$optionIndex}}"
+                                                   id="option_{{$questionIndex}}_{{$optionIndex}}"
                                                    name="true_false_{{$optionIndex}}"
                                                    wire:model="questions.{{$questionIndex}}.right_option_index">
                                             {{$option["text"]}}
@@ -150,15 +154,18 @@
                                         <div class="w-full">
                                             <input type="radio" name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                    value="{{$optionIndex}}"
+                                                   id="option_{{$questionIndex}}_{{$optionIndex}}"
                                                    wire:model="questions.{{$questionIndex}}.right_option_index">
                                             <input type="text"
                                                    wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                    placeholder="Válasz szövege"
+                                                   id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                    name="one_choice_{{$questionIndex}}"
                                                    class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                         </div>
                                         <div class="grid place-items-center my-3">
                                             <button wire:click="Remove_Option({{$questionIndex}}, {{$optionIndex}})"
+                                                    id="optionRemove_{{$questionIndex}}_{{$optionIndex}}"
                                                     class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
@@ -171,11 +178,13 @@
                                         <div class="w-full">
                                             <label>
                                                 <input type="checkbox"
+                                                       id="option_{{$questionIndex}}_{{$optionIndex}}"
                                                        name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="{{$optionIndex}}"
                                                        wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.solution"/>
                                             </label>
                                             <input type="text"
+                                                   id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                    wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                    placeholder="{{$optionIndex}}. Válasz szövege"
                                                    class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]"/>
@@ -183,6 +192,7 @@
                                         <div class="grid place-items-center my-3">
                                             <button
                                                 wire:click="Remove_Option({{$questionIndex}}, {{$optionIndex}})"
+                                                id="optionRemove_{{$questionIndex}}_{{$optionIndex}}"
                                                 class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
@@ -198,6 +208,7 @@
                                         <div class="w-full">
                                             <input type="text"
                                                    value="#{{$optionIndex}}Option"
+                                                   id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                    wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                    placeholder="Válasz szövege"
                                                    class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">

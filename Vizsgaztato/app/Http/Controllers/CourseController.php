@@ -65,7 +65,7 @@ class CourseController extends Controller
             $course = Course::create($validated);
 
             event(new CourseCreated($course));
-            Alert::success('Kruzus sikeresen mentve!');
+            Alert::success('Kurzus sikeresen mentve!');
             return redirect()->route('courses.show', $course);
         }
         catch(AuthorizationException $exception)

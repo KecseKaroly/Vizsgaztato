@@ -56,6 +56,7 @@
                         <div class="md:w-2/5"></div>
                         <div class="md:w-3/5">
                             <button
+                                id="create"
                                 class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
                                 type="submit">
                                 {{ __('Létrehozás') }}

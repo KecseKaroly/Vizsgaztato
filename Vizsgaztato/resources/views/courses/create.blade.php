@@ -37,7 +37,7 @@
                         <div class="md:w-3/5">
                             <input
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                id="name" type="text" name="title" required autofocus>
+                                id="name" type="text" name="title" value="{{ old('title') }}" required autofocus>
                         </div>
                     </div>
                     <div class="md:flex md:items-center mb-6 mt-10">
@@ -48,7 +48,7 @@
                             </label>
                         </div>
                         <div class="md:w-3/5">
-                            <textarea id="goal" name="goal" rows="4" cols="50" required maxlength="1000" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"></textarea>
+                            <textarea id="goal" name="goal" rows="4" cols="50" required maxlength="1000" class="bg-gray-200 appearance-none border-2 border-gray-200 rounded md:w-8/12 w-11/12 py-3 md:mx-0 mx-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">{{ old('goal') }}</textarea>
                         </div>
                     </div>
                     <div class="md:flex md:items-center mb-10 md:mx-0 mx-3">

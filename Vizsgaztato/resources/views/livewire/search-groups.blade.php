@@ -6,7 +6,7 @@
                     <div class="lg:flex">
                         <div class="mb-2">
                             <div class="w-full ">
-                                <input type="text" wire:model.debounce.500ms="searchValue" id="emailInputField"
+                                <input type="text" wire:model.debounce.500ms="searchValue" id="groupInputField"
                                        placeholder="Csoport neve..." autocomplete="off"
                                        class="font-semibold text-md focus:border-blue-800 focus:bg-blue-100 bg-blue-50 rounded-t-lg border-blue-300  lg:w-fit w-full"
                                        size="40"/>

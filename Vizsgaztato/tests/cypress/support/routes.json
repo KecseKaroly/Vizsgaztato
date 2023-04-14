@@ -1,0 +1,891 @@
+{
+  "debugbar.openhandler": {
+    "name": "debugbar.openhandler",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@handle",
+    "uri": "_debugbar/open",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.clockwork": {
+    "name": "debugbar.clockwork",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@clockwork",
+    "uri": "_debugbar/clockwork/{id}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.assets.css": {
+    "name": "debugbar.assets.css",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@css",
+    "uri": "_debugbar/assets/stylesheets",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.assets.js": {
+    "name": "debugbar.assets.js",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@js",
+    "uri": "_debugbar/assets/javascript",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.cache.delete": {
+    "name": "debugbar.cache.delete",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\CacheController@delete",
+    "uri": "_debugbar/cache/{key}/{tags?}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "cypress.factory": {
+    "name": "cypress.factory",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@factory",
+    "uri": "__cypress__/factory",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.login": {
+    "name": "cypress.login",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@login",
+    "uri": "__cypress__/login",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.logout": {
+    "name": "cypress.logout",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@logout",
+    "uri": "__cypress__/logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.artisan": {
+    "name": "cypress.artisan",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@artisan",
+    "uri": "__cypress__/artisan",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.run-php": {
+    "name": "cypress.run-php",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@runPhp",
+    "uri": "__cypress__/run-php",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.csrf-token": {
+    "name": "cypress.csrf-token",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@csrfToken",
+    "uri": "__cypress__/csrf_token",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "cypress.routes": {
+    "name": "cypress.routes",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@routes",
+    "uri": "__cypress__/routes",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.current-user": {
+    "name": "cypress.current-user",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@currentUser",
+    "uri": "__cypress__/current-user",
+    "method": [
+      "POST"
+    ]
+  },
+  "sanctum.csrf-cookie": {
+    "name": "sanctum.csrf-cookie",
+    "domain": null,
+    "action": "Laravel\\Sanctum\\Http\\Controllers\\CsrfCookieController@show",
+    "uri": "sanctum/csrf-cookie",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "livewire.message": {
+    "name": "livewire.message",
+    "domain": null,
+    "action": "Livewire\\Controllers\\HttpConnectionHandler",
+    "uri": "livewire/message/{name}",
+    "method": [
+      "POST"
+    ]
+  },
+  "livewire.upload-file": {
+    "name": "livewire.upload-file",
+    "domain": null,
+    "action": "Livewire\\Controllers\\FileUploadHandler@handle",
+    "uri": "livewire/upload-file",
+    "method": [
+      "POST"
+    ]
+  },
+  "livewire.preview-file": {
+    "name": "livewire.preview-file",
+    "domain": null,
+    "action": "Livewire\\Controllers\\FilePreviewHandler@handle",
+    "uri": "livewire/preview-file/{filename}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "": {
+    "name": null,
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\ConfirmPasswordController@confirm",
+    "uri": "password/confirm",
+    "method": [
+      "POST"
+    ]
+  },
+  "ignition.healthCheck": {
+    "name": "ignition.healthCheck",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\HealthCheckController",
+    "uri": "_ignition/health-check",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "ignition.executeSolution": {
+    "name": "ignition.executeSolution",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\ExecuteSolutionController",
+    "uri": "_ignition/execute-solution",
+    "method": [
+      "POST"
+    ]
+  },
+  "ignition.updateConfig": {
+    "name": "ignition.updateConfig",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\UpdateConfigController",
+    "uri": "_ignition/update-config",
+    "method": [
+      "POST"
+    ]
+  },
+  "login": {
+    "name": "login",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\LoginController@showLoginForm",
+    "uri": "login",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "logout": {
+    "name": "logout",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\LoginController@logout",
+    "uri": "logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "register": {
+    "name": "register",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\RegisterController@showRegistrationForm",
+    "uri": "register",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.request": {
+    "name": "password.request",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\ForgotPasswordController@showLinkRequestForm",
+    "uri": "password/reset",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.email": {
+    "name": "password.email",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\ForgotPasswordController@sendResetLinkEmail",
+    "uri": "password/email",
+    "method": [
+      "POST"
+    ]
+  },
+  "password.reset": {
+    "name": "password.reset",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\ResetPasswordController@showResetForm",
+    "uri": "password/reset/{token}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.update": {
+    "name": "password.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\ResetPasswordController@reset",
+    "uri": "password/reset",
+    "method": [
+      "POST"
+    ]
+  },
+  "password.confirm": {
+    "name": "password.confirm",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\ConfirmPasswordController@showConfirmForm",
+    "uri": "password/confirm",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "verification.notice": {
+    "name": "verification.notice",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\VerificationController@show",
+    "uri": "email/verify",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "verification.verify": {
+    "name": "verification.verify",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\VerificationController@verify",
+    "uri": "email/verify/{id}/{hash}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "verification.resend": {
+    "name": "verification.resend",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\Auth\\VerificationController@resend",
+    "uri": "email/resend",
+    "method": [
+      "POST"
+    ]
+  },
+  "registration.teacher": {
+    "name": "registration.teacher",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@create",
+    "uri": "register/teacher",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "register.teacher": {
+    "name": "register.teacher",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@store",
+    "uri": "register/teacher",
+    "method": [
+      "POST"
+    ]
+  },
+  "home": {
+    "name": "home",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\HomeController@index",
+    "uri": "home",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "testAttempts.show": {
+    "name": "testAttempts.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestAttemptController@show",
+    "uri": "courses/{course}/attempt/{attempt}/result",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "testAttempts.delete": {
+    "name": "testAttempts.delete",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestAttemptController@destroy",
+    "uri": "attempt/delete",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "testAttempts.index": {
+    "name": "testAttempts.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestAttemptController@index",
+    "uri": "courses/{course}/test/{test}/result",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "test.index": {
+    "name": "test.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@index",
+    "uri": "courses/{course}/exams",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "test.create": {
+    "name": "test.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@create",
+    "uri": "courses/{course}/exam/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "checkTestInfo": {
+    "name": "checkTestInfo",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@testInfo",
+    "uri": "courses/{course}/test/{test}/info",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "test.edit": {
+    "name": "test.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@edit",
+    "uri": "courses/{course}/test/{test}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "test.show": {
+    "name": "test.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@show",
+    "uri": "test/{test}/show",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "test.update": {
+    "name": "test.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@update",
+    "uri": "test/{test}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "test.destroy": {
+    "name": "test.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@destroy",
+    "uri": "test/{test}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "exam.update": {
+    "name": "exam.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\TestController@update",
+    "uri": "test/course/update",
+    "method": [
+      "PUT"
+    ]
+  },
+  "JoinRequestSubmit": {
+    "name": "JoinRequestSubmit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupJoinRequestController@SubmitRequest",
+    "uri": "join_request/submit",
+    "method": [
+      "POST"
+    ]
+  },
+  "acceptGroupJoinRequest": {
+    "name": "acceptGroupJoinRequest",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupJoinRequestController@AcceptRequest",
+    "uri": "join_request/accept",
+    "method": [
+      "POST"
+    ]
+  },
+  "declineGroupJoinRequest": {
+    "name": "declineGroupJoinRequest",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupJoinRequestController@RejectRequest",
+    "uri": "join_request/decline",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "join_requests": {
+    "name": "join_requests",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupJoinRequestController@index",
+    "uri": "group/{id}/join_requests",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "inv_requests": {
+    "name": "inv_requests",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupInvController@index",
+    "uri": "groups/invites",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "acceptGroupInvRequest": {
+    "name": "acceptGroupInvRequest",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupInvController@AcceptRequest",
+    "uri": "inv_request/accept",
+    "method": [
+      "POST"
+    ]
+  },
+  "declineGroupInvRequest": {
+    "name": "declineGroupInvRequest",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupInvController@RejectRequest",
+    "uri": "inv_request/decline",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "deleteUserFromGroup": {
+    "name": "deleteUserFromGroup",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupsUsersController@destroy",
+    "uri": "group/user/{id}/remove",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "leaveUserFromGroup": {
+    "name": "leaveUserFromGroup",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupsUsersController@leave",
+    "uri": "group/user/{id}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "groups.index": {
+    "name": "groups.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@index",
+    "uri": "groups",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "groups.create": {
+    "name": "groups.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@create",
+    "uri": "groups/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "groups.store": {
+    "name": "groups.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@store",
+    "uri": "groups",
+    "method": [
+      "POST"
+    ]
+  },
+  "groups.show": {
+    "name": "groups.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@show",
+    "uri": "groups/{group}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "groups.edit": {
+    "name": "groups.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@edit",
+    "uri": "groups/{group}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "groups.update": {
+    "name": "groups.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@update",
+    "uri": "groups/{group}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "groups.destroy": {
+    "name": "groups.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupController@destroy",
+    "uri": "groups/{group}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "courses.members": {
+    "name": "courses.members",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@members",
+    "uri": "courses/{course}/members",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "courses.tests": {
+    "name": "courses.tests",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@members",
+    "uri": "courses/{course}/tests",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "removeUserFromCourse": {
+    "name": "removeUserFromCourse",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CoursesUsersController@destroy",
+    "uri": "course/user/{course_user}/remove",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "leaveFromCourse": {
+    "name": "leaveFromCourse",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CoursesUsersController@leave",
+    "uri": "course/user/{id}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "removeGroupFromCourse": {
+    "name": "removeGroupFromCourse",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CoursesGroupsController@destroy",
+    "uri": "course/group/{course_group}/remove",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "courses.index": {
+    "name": "courses.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@index",
+    "uri": "courses",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "courses.create": {
+    "name": "courses.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@create",
+    "uri": "courses/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "courses.store": {
+    "name": "courses.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@store",
+    "uri": "courses",
+    "method": [
+      "POST"
+    ]
+  },
+  "courses.show": {
+    "name": "courses.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@show",
+    "uri": "courses/{course}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "courses.edit": {
+    "name": "courses.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@edit",
+    "uri": "courses/{course}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "courses.update": {
+    "name": "courses.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@update",
+    "uri": "courses/{course}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "courses.destroy": {
+    "name": "courses.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CourseController@destroy",
+    "uri": "courses/{course}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "courses.modules": {
+    "name": "courses.modules",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@index",
+    "uri": "courses/{course}/modules",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "modules.create": {
+    "name": "modules.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@create",
+    "uri": "courses/modules/create/{course}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "modules.index": {
+    "name": "modules.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@index",
+    "uri": "modules",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "modules.store": {
+    "name": "modules.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@store",
+    "uri": "modules",
+    "method": [
+      "POST"
+    ]
+  },
+  "modules.show": {
+    "name": "modules.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@show",
+    "uri": "modules/{module}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "modules.edit": {
+    "name": "modules.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@edit",
+    "uri": "modules/{module}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "modules.update": {
+    "name": "modules.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@update",
+    "uri": "modules/{module}",
+    "method": [
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "modules.destroy": {
+    "name": "modules.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ModuleController@destroy",
+    "uri": "modules/{module}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "quizzes.index": {
+    "name": "quizzes.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\QuizController@index",
+    "uri": "courses/{course}/quizzes",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "quizzes.create": {
+    "name": "quizzes.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\QuizController@create",
+    "uri": "coursese/{course}/quizzes/create/{module?}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "quizzes.destroy": {
+    "name": "quizzes.destroy",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\QuizController@destroy",
+    "uri": "quizzes/{test}/delete",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "quizzes.edit": {
+    "name": "quizzes.edit",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\QuizController@edit",
+    "uri": "courses/{course}/quizzes/{test}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "quizzes.show": {
+    "name": "quizzes.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\QuizController@show",
+    "uri": "quizzes/{test}/show",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "users.show": {
+    "name": "users.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@show",
+    "uri": "users/{user}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "users.update": {
+    "name": "users.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserController@update",
+    "uri": "users/{user}",
+    "method": [
+      "PUT"
+    ]
+  },
+  "media.image.store": {
+    "name": "media.image.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\MediaController@storeImage",
+    "uri": "media/image/store",
+    "method": [
+      "POST"
+    ]
+  },
+  "group.messages": {
+    "name": "group.messages",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupMessageController@index",
+    "uri": "groups/{group}/chat",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "messages.latest": {
+    "name": "messages.latest",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupMessageController@latest",
+    "uri": "groups/{group}/message",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "message.store": {
+    "name": "message.store",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\GroupMessageController@store",
+    "uri": "groups/{group}/message",
+    "method": [
+      "POST"
+    ]
+  }
+}

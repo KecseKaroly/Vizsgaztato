@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('invCode');
+            $table->string('invCode', 15);
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
             //$table->foreign('creator_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

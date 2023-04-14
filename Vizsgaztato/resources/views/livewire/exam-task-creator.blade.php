@@ -104,18 +104,20 @@
                                 <select name="question-types{{$questionIndex}}"
                                         wire:model="questions.{{$questionIndex}}.type"
                                         wire:change="$emit('questionTypeChanged', {{$questionIndex}})"
+                                        id="typeSelector_{{$questionIndex}}"
                                         class="bg-orange-300 border-gray-300 text-orange-900 text-sm rounded-lg  font-bold
                                         focus:ring-orange-100 focus:border-orange-800 block  py-3 w-fit">
                                     <option selected hidden>Válasszon feladattípust...</option>
                                     <option value="TrueFalse" class="font-bold">Igaz/Hamis</option>
-                                    <option value="OneChoice" class="font-bold">1 megoldásos választás</option>
-                                    <option value="MultipleChoice" class="font-bold">Több megoldásos választás
+                                    <option value="OneChoice" class="font-bold">Egy megoldásos</option>
+                                    <option value="MultipleChoice" class="font-bold">Több megoldásos
                                     </option>
                                     <option value="Sequence" class="font-bold">Sorrend</option>
                                 </select>
                                 <div class="flex">
                                     @if($question['type'] != '' && $question['type'] != "TrueFalse")
                                         <button wire:click="Add_Option({{$questionIndex}})"
+                                                id="addOptionToQuestion_{{$questionIndex}}"
                                                 class="flex items-center text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-2.5 py-2.5  text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                             <i class="fa-solid fa-circle-plus"></i> Válasz
                                         </button>
@@ -131,6 +133,7 @@
                                     @error('questions.'.$questionIndex.'.right_option_index') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                                     @error('questions.'.$questionIndex.'.options') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                                     <input type="text"
+                                           id="questionText_{{$questionIndex}}"
                                            wire:model="questions.{{$questionIndex}}.text"
                                            placeholder="{{$questionIndex+1}}. Kérdés szövege"
                                            class="w-11/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
@@ -149,6 +152,7 @@
                                             <label>
                                                 <input type="radio" name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="{{$optionIndex}}"
+                                                       id="option_{{$questionIndex}}_{{$optionIndex}}"
                                                        wire:model="questions.{{$questionIndex}}.right_option_index">
                                                 {{$option["text"]}}
                                             </label>
@@ -160,14 +164,17 @@
                                             <div class="w-full">
                                                 <input type="radio" name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="{{$optionIndex}}"
+                                                       id="option_{{$questionIndex}}_{{$optionIndex}}"
                                                        wire:model="questions.{{$questionIndex}}.right_option_index">
                                                 <input type="text"
+                                                       id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                        wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                        placeholder="Válasz szövege"
                                                        class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                             </div>
                                             <div class="grid place-items-center my-3">
                                                 <button wire:click="Remove_Option({{$questionIndex}}, {{$optionIndex}})"
+                                                        id="optionRemove_{{$questionIndex}}_{{$optionIndex}}"
                                                         class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
@@ -180,11 +187,13 @@
                                             <div class="w-full">
                                                 <label>
                                                     <input type="checkbox"
+                                                           id="option_{{$questionIndex}}_{{$optionIndex}}"
                                                            name="Option_{{$questionIndex}}_{{$optionIndex}}"
                                                            value="{{$optionIndex}}"
                                                            wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.solution"/>
                                                 </label>
                                                 <input type="text"
+                                                       id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                        wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                        placeholder="{{$optionIndex}}. Válasz szövege"
                                                        class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]"/>
@@ -192,6 +201,7 @@
                                             <div class="grid place-items-center my-3">
                                                 <button
                                                     wire:click="Remove_Option({{$questionIndex}}, {{$optionIndex}})"
+                                                    id="optionRemove_{{$questionIndex}}_{{$optionIndex}}"
                                                     class=" text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-3 py-2.5  text-center ml-1.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
@@ -206,6 +216,7 @@
                                              wire:sortable.handle>
                                             <div class="w-full">
                                                 <input type="text"
+                                                       id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="#{{$optionIndex}}Option"
                                                        wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                        placeholder="Válasz szövege"
