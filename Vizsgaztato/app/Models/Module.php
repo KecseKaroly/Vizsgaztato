@@ -8,12 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Module extends Model implements HasMedia
+class Module extends Model
 {
-    use HasFactory, InteractsWithMedia;
     protected $table = 'modules';
 
     protected $primaryKey = 'id';

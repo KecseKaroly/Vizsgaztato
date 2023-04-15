@@ -14,8 +14,7 @@
         "livewire/livewire": "^2.10",
         "pusher/pusher-php-server": "^7.2",
         "realrashid/sweet-alert": "^6.0",
-        "spatie/laravel-cookie-consent": "^3.2",
-        "spatie/laravel-medialibrary": "*"
+        "spatie/laravel-cookie-consent": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
@@ -25,8 +24,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
