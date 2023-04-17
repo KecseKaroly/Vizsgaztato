@@ -134,7 +134,7 @@
                                     @error('questions.'.$questionIndex.'.options') <span class="text-sm text-red-500 font-bold">{{ $message }}</span> @enderror
                                     <input type="text"
                                            id="questionText_{{$questionIndex}}"
-                                           wire:model="questions.{{$questionIndex}}.text"
+                                           wire:model.debounce.500ms="questions.{{$questionIndex}}.text"
                                            placeholder="{{$questionIndex+1}}. Kérdés szövege"
                                            class="w-11/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                 </div>
@@ -168,7 +168,7 @@
                                                        wire:model="questions.{{$questionIndex}}.right_option_index">
                                                 <input type="text"
                                                        id="optionText_{{$questionIndex}}_{{$optionIndex}}"
-                                                       wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
+                                                       wire:model.debounce.500ms="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                        placeholder="Válasz szövege"
                                                        class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                             </div>
@@ -194,7 +194,7 @@
                                                 </label>
                                                 <input type="text"
                                                        id="optionText_{{$questionIndex}}_{{$optionIndex}}"
-                                                       wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
+                                                       wire:model.debounce.500ms="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                        placeholder="{{$optionIndex}}. Válasz szövege"
                                                        class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]"/>
                                             </div>
@@ -218,7 +218,7 @@
                                                 <input type="text"
                                                        id="optionText_{{$questionIndex}}_{{$optionIndex}}"
                                                        value="#{{$optionIndex}}Option"
-                                                       wire:model="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
+                                                       wire:model.debounce.500ms="questions.{{$questionIndex}}.options.{{$optionIndex}}.text"
                                                        placeholder="Válasz szövege"
                                                        class="w-10/12 bg-orange-200 border-amber-900 border-2 rounded-lg text-lg placeholder-[#716156]">
                                             </div>

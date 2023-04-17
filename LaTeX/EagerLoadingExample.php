@@ -1,0 +1,1 @@
+GroupMessage::with('user')->latest()->first();

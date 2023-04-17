@@ -69,7 +69,7 @@
                                             </button>
                                         </form>
                                         </a>
-                                    @else
+                                    @elseif($user->id != auth()->id() && $course->creator_id == $user->id)
                                         <div class="px-5 py-1 text-xl">
                                             <i class="fa-solid fa-key"></i>
                                         </div>

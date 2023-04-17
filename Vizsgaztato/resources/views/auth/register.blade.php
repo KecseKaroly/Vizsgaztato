@@ -130,7 +130,7 @@
                     <i class="fa-solid fa-xmark fa-2xl"></i>
                     <span class="sr-only">Bezárás</span>
                 </button>
-                <div class="px-16 py-8 prose h-72 overflow-y-auto bg-red-100 mx-auto">
+                <div class="px-16 py-8 prose h-72 overflow-y-auto mx-auto">
                     <ol>
                         <li>
                                 Tudomásul veszem, hogy járulékos kötelezettségeként köteles vagyok az Eszterházy Károly Katolikus Egyetem (a továbbiakban: Egyetem) gazdasági érdekeinek védelmére, továbbá a munkám során tudomásomra jutott</li>

@@ -50,6 +50,10 @@ class GroupJoinRequestController extends Controller
 
     public function AcceptRequest(Request $request) {
         try{
+            $groups_users_connetion = groups_users::where(['user_id'=>$request->requester_id, 'group_id'=>$request->group_id]);
+            if($groups_users_connetion->exists())
+                return response()->json(['success'=>'Csatlakozási kérelem elfogadva']);
+            
             $groups_users_connetion = new groups_users;
             $groups_users_connetion->user_id =  $request->requester_id;
             $groups_users_connetion->group_id =  $request->group_id;

@@ -29,7 +29,7 @@
 </head>
 <body class="bg-slate-300">
 <div id="app" class="relative h-screen">
-    <nav class="border-gray-200 bg-gray-100">
+    <nav class="border-gray-200 bg-gray-100 pr-14">
             <div class="container mx-auto flex flex-wrap items-center justify-between">
                 <a href="{{ route('home') }}" class="flex">
                     <img src="{{ asset('./logo_black.png') }}" alt="logo" class="h-15 -my-4" width="120" height="120"/>

@@ -120,6 +120,16 @@
       <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/psy/psysh" />
       <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/nesbot/carbon" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/pusher/pusher-php-server" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/spatie/laravel-cookie-consent" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/spatie/laravel-package-tools" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/guzzlehttp/uri-template" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/laracasts/cypress" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/paragonie/sodium_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/realrashid/sweet-alert" />
+      <excludeFolder url="file://$MODULE_DIR$/Vizsgaztato/vendor/symfony/yaml" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

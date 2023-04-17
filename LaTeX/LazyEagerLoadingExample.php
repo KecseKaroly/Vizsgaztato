@@ -1,0 +1,1 @@
+$course->load('users', 'groups', 'quizzes');

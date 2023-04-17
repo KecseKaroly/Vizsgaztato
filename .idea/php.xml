@@ -124,6 +124,16 @@
       <path value="$PROJECT_DIR$/Vizsgaztato/vendor/psy/psysh" />
       <path value="$PROJECT_DIR$/Vizsgaztato/vendor/composer" />
       <path value="$PROJECT_DIR$/Vizsgaztato/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/pusher/pusher-php-server" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/spatie/laravel-cookie-consent" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/spatie/laravel-package-tools" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/guzzlehttp/uri-template" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/laracasts/cypress" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/paragonie/sodium_compat" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/realrashid/sweet-alert" />
+      <path value="$PROJECT_DIR$/Vizsgaztato/vendor/symfony/yaml" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />
